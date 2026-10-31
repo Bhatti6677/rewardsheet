@@ -662,6 +662,11 @@ export const AdminUsersPage: React.FC = () => {
                       </Link>
                       <div className="flex items-center gap-1.5 text-[9px] font-mono truncate mt-0.5">
                         <span className="text-[#6B7280]">ID: {u.id.slice(-6)}</span>
+                        {u.isVerified && (
+                          <span className="text-emerald-700 bg-emerald-50 border border-emerald-200 px-1 rounded font-bold">
+                            CNIC Verified
+                          </span>
+                        )}
                       </div>
                     </td>
                     <td
