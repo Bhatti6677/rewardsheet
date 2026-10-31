@@ -19,6 +19,7 @@ export const AdminDepositsPage: React.FC = () => {
   const [status, setStatus] = useState('PENDING');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [pendingCount, setPendingCount] = useState<number>(0);
 
   // Review Modal State
   const [reviewingDep, setReviewingDep] = useState<any | null>(null);
@@ -27,12 +28,23 @@ export const AdminDepositsPage: React.FC = () => {
   const [updatingDeps, setUpdatingDeps] = useState<Record<string, 'APPROVE' | 'REJECT'>>({});
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
+  const fetchPendingCount = () => {
+    api.getAdminNotificationCounts()
+      .then((res: any) => {
+        if (typeof res?.counts?.deposits === 'number') {
+          setPendingCount(res.counts.deposits);
+        }
+      })
+      .catch(() => {});
+  };
+
   const loadDeposits = (p = 1, isManual = false) => {
     if (isManual) {
       setReloading(true);
     } else if (deposits.length === 0) {
       setLoading(true);
     }
+    fetchPendingCount();
     api.getAdminDeposits({ status: status || undefined, page: p, limit: 15 })
       .then((res) => {
         setDeposits(res.deposits || []);
@@ -78,6 +90,8 @@ export const AdminDepositsPage: React.FC = () => {
       setDeposits((prev) =>
         prev.map((d) => (d.id === targetDep.id ? { ...d, status: newStatus } : d))
       );
+      setPendingCount((prev) => Math.max(0, prev - 1));
+      window.dispatchEvent(new CustomEvent('royal_live_update', { detail: { type: 'deposit' } }));
       setMessage({ type: 'success', text: res.message || `Deposit ${newStatus.toLowerCase()} successfully.` });
     } catch (err: any) {
       setMessage({ type: 'error', text: err.message || 'Deposit review failed' });
@@ -93,11 +107,21 @@ export const AdminDepositsPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Title */}
-      <div>
-        <h1 className="text-xl sm:text-2xl font-bold text-[#111827]">Deposit Management</h1>
-        <p className="text-xs text-[#6B7280] mt-0.5">
-          Review manual transfers via Easypaisa, JazzCash, and banking networks. Approved deposits credit wallets exactly once.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-xl sm:text-2xl font-bold text-[#111827]">Deposit Management</h1>
+            {pendingCount > 0 && (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse" />
+                {pendingCount} Pending
+              </span>
+            )}
+          </div>
+          <p className="text-xs text-[#6B7280] mt-0.5">
+            Review manual transfers via Easypaisa, JazzCash, and banking networks. Approved deposits credit wallets exactly once.
+          </p>
+        </div>
       </div>
 
       {message && (
@@ -123,7 +147,9 @@ export const AdminDepositsPage: React.FC = () => {
           className="bg-white border border-[#D9E4F2] rounded-lg px-3 py-1.5 text-xs text-[#111827] focus:outline-none h-9"
         >
           <option value="">All Deposit States</option>
-          <option value="PENDING">Pending Verification</option>
+          <option value="PENDING">
+            Pending Verification {pendingCount > 0 ? `(${pendingCount})` : ''}
+          </option>
           <option value="APPROVED">Approved Deposits</option>
           <option value="REJECTED">Rejected Deposits</option>
         </select>
