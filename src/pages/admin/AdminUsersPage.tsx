@@ -882,19 +882,19 @@ export const AdminUsersPage: React.FC = () => {
                                 setWithdrawalLockModalUser(u);
                                 setLockWithdrawalReason(u.withdrawalLockReason || '');
                               }}
-                              className={`px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1 transition-all ${
+                              className={`px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1 transition-all cursor-pointer ${
                                 u.isWithdrawalLocked
-                                  ? 'bg-rose-100 text-rose-700 hover:bg-rose-200 border border-rose-300 shadow-xs'
-                                  : 'bg-slate-100 text-[#374151] hover:bg-rose-50 hover:text-rose-700 border border-slate-200'
+                                  ? 'bg-rose-600 text-white hover:bg-rose-700 shadow-xs ring-1 ring-rose-700'
+                                  : 'bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200'
                               }`}
                               title={
                                 u.isWithdrawalLocked
-                                  ? `Withdrawals LOCKED (${u.withdrawalLockReason || 'No reason specified'}) - Click to manage / unlock`
-                                  : `Block / Lock Withdrawals for ${u.name}`
+                                  ? `Withdrawal is SUSPENDED / BLOCKED: "${u.withdrawalLockReason || 'No reason specified'}" - Click (X) to manage or unblock`
+                                  : `Suspend or Block Withdrawals for ${u.name}`
                               }
                             >
-                              <Lock className={`w-3 h-3 ${u.isWithdrawalLocked ? 'text-rose-600' : 'text-slate-500'}`} />
-                              <span>{u.isWithdrawalLocked ? 'WD Locked' : 'Block WD'}</span>
+                              <X className="w-3.5 h-3.5 stroke-[2.5]" />
+                              <span>{u.isWithdrawalLocked ? 'WD Blocked' : 'Block WD'}</span>
                             </button>
                             <button
                               onClick={() => {
@@ -1351,12 +1351,12 @@ export const AdminUsersPage: React.FC = () => {
           <div className="bg-white rounded-2xl max-w-md w-full border border-[#D9E4F2] shadow-xl p-6 space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-[#E2E8F0]">
               <div className="flex items-center gap-2">
-                <div className={`p-2 rounded-xl ${withdrawalLockModalUser.isWithdrawalLocked ? 'bg-rose-100 text-rose-700' : 'bg-blue-100 text-[#2563EB]'}`}>
-                  <Lock className="w-5 h-5" />
+                <div className={`p-2 rounded-xl ${withdrawalLockModalUser.isWithdrawalLocked ? 'bg-rose-100 text-rose-700' : 'bg-rose-50 text-rose-600'}`}>
+                  <X className="w-5 h-5 stroke-[2.5]" />
                 </div>
                 <div>
                   <h3 className="font-bold text-sm text-[#111827]">
-                    Manage Withdrawal Access
+                    Suspend / Block User Withdrawal
                   </h3>
                   <p className="text-xs text-[#6B7280]">
                     User: {withdrawalLockModalUser.name} ({withdrawalLockModalUser.phone})
@@ -1459,8 +1459,8 @@ export const AdminUsersPage: React.FC = () => {
                       disabled={lockWithdrawalLoading || !lockWithdrawalReason.trim()}
                       className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed shadow-xs"
                     >
-                      <Lock className="w-3.5 h-3.5" />
-                      <span>{lockWithdrawalLoading ? 'Locking...' : 'Lock Withdrawals'}</span>
+                      <X className="w-3.5 h-3.5 stroke-[2.5]" />
+                      <span>{lockWithdrawalLoading ? 'Locking...' : 'Suspend / Block Withdrawal'}</span>
                     </button>
                   )}
                 </div>

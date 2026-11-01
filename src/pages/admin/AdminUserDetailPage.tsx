@@ -250,7 +250,7 @@ export const AdminUserDetailPage: React.FC = () => {
             }`}
             title="Block or Unblock Withdrawal for this user"
           >
-            <Lock className="w-3.5 h-3.5" />
+            <X className="w-3.5 h-3.5 stroke-[2.5]" />
             <span>{userData.isWithdrawalLocked ? 'Withdrawals Blocked (Manage)' : 'Block User Withdrawal'}</span>
           </button>
           <button
@@ -414,9 +414,9 @@ export const AdminUserDetailPage: React.FC = () => {
           }`}>
             <div className="flex items-start sm:items-center gap-3">
               <div className={`p-2.5 rounded-xl flex-shrink-0 ${
-                userData.isWithdrawalLocked ? 'bg-rose-200 text-rose-700' : 'bg-blue-50 text-[#2563EB]'
+                userData.isWithdrawalLocked ? 'bg-rose-200 text-rose-700' : 'bg-rose-50 text-rose-600'
               }`}>
-                <Lock className="w-5 h-5" />
+                <X className="w-5 h-5 stroke-[2.5]" />
               </div>
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
@@ -448,7 +448,7 @@ export const AdminUserDetailPage: React.FC = () => {
                   : 'bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300'
               }`}
             >
-              <Lock className="w-3.5 h-3.5" />
+              <X className="w-3.5 h-3.5 stroke-[2.5]" />
               <span>{userData.isWithdrawalLocked ? 'Manage / Unblock Withdrawal' : 'Block Withdrawal for User'}</span>
             </button>
           </div>
@@ -697,9 +697,9 @@ export const AdminUserDetailPage: React.FC = () => {
           }`}>
             <div className="flex items-start sm:items-center gap-3">
               <div className={`p-2.5 rounded-xl flex-shrink-0 ${
-                userData.isWithdrawalLocked ? 'bg-rose-200 text-rose-700' : 'bg-blue-50 text-[#2563EB]'
+                userData.isWithdrawalLocked ? 'bg-rose-200 text-rose-700' : 'bg-rose-50 text-rose-600'
               }`}>
-                <Lock className="w-5 h-5" />
+                <X className="w-5 h-5 stroke-[2.5]" />
               </div>
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
@@ -731,7 +731,7 @@ export const AdminUserDetailPage: React.FC = () => {
                   : 'bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300'
               }`}
             >
-              <Lock className="w-3.5 h-3.5" />
+              <X className="w-3.5 h-3.5 stroke-[2.5]" />
               <span>{userData.isWithdrawalLocked ? 'Manage / Unblock Withdrawal' : 'Block Withdrawal for User'}</span>
             </button>
           </div>
@@ -1262,12 +1262,12 @@ export const AdminUserDetailPage: React.FC = () => {
           <div className="bg-white rounded-2xl max-w-md w-full border border-[#D9E4F2] shadow-xl p-6 space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-[#E2E8F0]">
               <div className="flex items-center gap-2">
-                <div className={`p-2 rounded-xl ${userData.isWithdrawalLocked ? 'bg-rose-100 text-rose-700' : 'bg-blue-100 text-[#2563EB]'}`}>
-                  <Lock className="w-5 h-5" />
+                <div className={`p-2 rounded-xl ${userData.isWithdrawalLocked ? 'bg-rose-100 text-rose-700' : 'bg-rose-50 text-rose-600'}`}>
+                  <X className="w-5 h-5 stroke-[2.5]" />
                 </div>
                 <div>
                   <h3 className="font-bold text-sm text-[#111827]">
-                    Manage Withdrawal Access
+                    Suspend / Block User Withdrawal
                   </h3>
                   <p className="text-xs text-[#6B7280]">
                     Member: {userData.name} ({userData.phone})
@@ -1370,8 +1370,8 @@ export const AdminUserDetailPage: React.FC = () => {
                       disabled={lockWithdrawalLoading || !lockWithdrawalReason.trim()}
                       className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed shadow-xs"
                     >
-                      <Lock className="w-3.5 h-3.5" />
-                      <span>{lockWithdrawalLoading ? 'Locking...' : 'Lock Withdrawals'}</span>
+                      <X className="w-3.5 h-3.5 stroke-[2.5]" />
+                      <span>{lockWithdrawalLoading ? 'Processing...' : 'Suspend / Block Withdrawal'}</span>
                     </button>
                   )}
                 </div>
