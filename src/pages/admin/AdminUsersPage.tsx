@@ -49,7 +49,7 @@ const TABLE_COLUMNS: ColumnMeta[] = [
   { key: 'creditPoints', label: 'Credit Points', defaultWidth: 85, minWidth: 60, maxWidth: 160, align: 'left' },
   { key: 'walletBalance', label: 'Wallet Balance', defaultWidth: 95, minWidth: 70, maxWidth: 180, align: 'left' },
   { key: 'status', label: 'Status', defaultWidth: 85, minWidth: 55, maxWidth: 160, align: 'left' },
-  { key: 'actions', label: 'Actions', defaultWidth: 260, minWidth: 180, maxWidth: 420, align: 'right' },
+  { key: 'actions', label: 'Actions', defaultWidth: 210, minWidth: 150, maxWidth: 380, align: 'right' },
 ];
 
 const DEFAULT_WIDTHS: Record<ColumnKey, number> = {
@@ -59,7 +59,7 @@ const DEFAULT_WIDTHS: Record<ColumnKey, number> = {
   creditPoints: 85,
   walletBalance: 95,
   status: 85,
-  actions: 260,
+  actions: 210,
 };
 
 export const AdminUsersPage: React.FC = () => {
@@ -882,10 +882,10 @@ export const AdminUsersPage: React.FC = () => {
                                 setWithdrawalLockModalUser(u);
                                 setLockWithdrawalReason(u.withdrawalLockReason || '');
                               }}
-                              className={`px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1 transition-all cursor-pointer ${
+                              className={`p-1 rounded transition-colors ${
                                 u.isWithdrawalLocked
-                                  ? 'bg-rose-600 text-white hover:bg-rose-700 shadow-xs ring-1 ring-rose-700'
-                                  : 'bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200'
+                                  ? 'bg-rose-100 text-rose-700 hover:bg-rose-200'
+                                  : 'hover:bg-rose-50 text-[#4B5563] hover:text-rose-600'
                               }`}
                               title={
                                 u.isWithdrawalLocked
@@ -893,8 +893,7 @@ export const AdminUsersPage: React.FC = () => {
                                   : `Suspend or Block Withdrawals for ${u.name}`
                               }
                             >
-                              <X className="w-3.5 h-3.5 stroke-[2.5]" />
-                              <span>{u.isWithdrawalLocked ? 'WD Blocked' : 'Block WD'}</span>
+                              <X className={`w-3.5 h-3.5 ${u.isWithdrawalLocked ? 'text-rose-700 stroke-[2.5]' : 'stroke-[2]'}`} />
                             </button>
                             <button
                               onClick={() => {
