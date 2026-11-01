@@ -142,7 +142,7 @@ export const LandingPage: React.FC = () => {
             {[
               { lvl: 1, name: 'Apprentice Tier', desc: '10 free tasks at PKR 15 per task', tasksInfo: 'PKR 15 / Task' },
               { lvl: 2, name: 'Bronze Sovereign', desc: '9 free tasks (PKR 40) + 1 prepaid task', tasksInfo: 'Up to PKR 564' },
-              { lvl: 3, name: 'Silver Monarch', desc: '8 free tasks (PKR 60) + 2 prepaid tasks', tasksInfo: 'Up to PKR 2,200' },
+              { lvl: 3, name: 'Silver Monarch', desc: '8 free tasks (PKR 60) + 2 prepaid tasks', tasksInfo: 'Up to PKR 5,704' },
               { lvl: 4, name: 'Gold Viceroy', desc: '10 VIP prepaid tasks with 40% commission', tasksInfo: '40% Commission' },
               { lvl: 5, name: 'Emerald Regent', desc: '10 standard tasks unlocked after Level 4', tasksInfo: '10 Tasks' },
               { lvl: 10, name: 'Royal Emperor (Final)', desc: 'The apex tier of Earn Street progression', tasksInfo: '10 Tasks' },
