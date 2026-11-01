@@ -170,7 +170,7 @@ export const WithdrawalsPage: React.FC = () => {
           <div className="flex flex-wrap items-center gap-2 mt-2">
             {isAdminLocked ? (
               <span className="inline-flex items-center gap-1.5 text-xs font-bold text-rose-300 bg-rose-500/20 border border-rose-500/40 px-3 py-1 rounded-full shadow-xs">
-                <Lock className="w-3.5 h-3.5 text-rose-400" /> Withdrawals Locked by Admin
+                <Lock className="w-3.5 h-3.5 text-rose-400" /> Withdrawals Locked by System
               </span>
             ) : isLocked ? (
               <span className="inline-flex items-center gap-1.5 text-xs font-bold text-red-400 bg-red-500/15 border border-red-500/30 px-3 py-1 rounded-full">
@@ -232,14 +232,14 @@ export const WithdrawalsPage: React.FC = () => {
               <h3 className="text-lg font-bold text-white tracking-wide">Withdrawal Panel is Locked</h3>
               <div className="p-4 rounded-2xl bg-rose-950/40 border border-rose-500/30 text-left space-y-1.5">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-rose-400 flex items-center gap-1.5">
-                  <AlertCircle className="w-3.5 h-3.5" /> Reason Provided by Administration
+                  <AlertCircle className="w-3.5 h-3.5" /> Reason Provided by System
                 </span>
                 <p className="text-xs text-rose-100 font-medium leading-relaxed whitespace-pre-wrap">
                   {withdrawalQuota?.adminLockReason || withdrawalQuota?.withdrawalNotice || 'Withdrawal access has been locked by administration for your account.'}
                 </p>
               </div>
               <p className="text-[11px] text-slate-400">
-                If you have completed the required steps or believe this is in error, please contact customer support.
+                If you have completed the required steps or believe this is in error, please contact Administration.
               </p>
             </div>
             <div className="pt-2 flex items-center justify-center gap-3">
