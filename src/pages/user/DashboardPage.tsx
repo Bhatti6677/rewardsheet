@@ -497,11 +497,6 @@ export const DashboardPage: React.FC = () => {
           <div className="p-5 sm:p-7 rounded-3xl bg-[#071B3A] border border-[#173C73] shadow-xl space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  <span className="text-xs font-bold text-[#10D6A0] bg-[#10D6A0]/15 border border-[#10D6A0]/30 px-2.5 py-0.5 rounded-full">
-                    {eligibleWithdrawalPercent}% Withdrawal Quota Unlocked
-                  </span>
-                </div>
                 <h3 className="text-lg sm:text-xl font-black text-white">
                   Tier Ascent Status
                 </h3>
