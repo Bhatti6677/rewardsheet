@@ -39,6 +39,8 @@ export const AdminUserDetailPage: React.FC = () => {
   const [editName, setEditName] = useState('');
   const [editPhone, setEditPhone] = useState('');
   const [editStatus, setEditStatus] = useState<'ACTIVE' | 'SUSPENDED'>('ACTIVE');
+  const [editWithdrawalLocked, setEditWithdrawalLocked] = useState(false);
+  const [editWithdrawalLockReason, setEditWithdrawalLockReason] = useState('');
   const [editReason, setEditReason] = useState('');
   const [editLoading, setEditLoading] = useState(false);
 
@@ -71,6 +73,20 @@ export const AdminUserDetailPage: React.FC = () => {
     }
     if (editStatus && editStatus !== userData.accountStatus) {
       changedFields.accountStatus = editStatus;
+    }
+    if (editWithdrawalLocked !== Boolean(userData.isWithdrawalLocked)) {
+      changedFields.isWithdrawalLocked = editWithdrawalLocked;
+      if (editWithdrawalLocked) {
+        if (!editWithdrawalLockReason.trim()) {
+          setActionMessage({ type: 'error', text: 'You must provide a reason when locking withdrawals.' });
+          return;
+        }
+        changedFields.withdrawalLockReason = editWithdrawalLockReason.trim();
+      } else {
+        changedFields.withdrawalLockReason = null;
+      }
+    } else if (editWithdrawalLocked && editWithdrawalLockReason.trim() !== (userData.withdrawalLockReason || '')) {
+      changedFields.withdrawalLockReason = editWithdrawalLockReason.trim();
     }
     if (editReason.trim()) {
       changedFields.reason = editReason.trim();
@@ -227,15 +243,15 @@ export const AdminUserDetailPage: React.FC = () => {
               setLockWithdrawalReason(userData.withdrawalLockReason || '');
               setWithdrawalLockModalOpen(true);
             }}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm active:scale-95 ${
+            className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm active:scale-95 ${
               userData.isWithdrawalLocked
-                ? 'bg-rose-600 hover:bg-rose-700 text-white'
-                : 'bg-slate-700 hover:bg-slate-800 text-white'
+                ? 'bg-rose-600 hover:bg-rose-700 text-white shadow-rose-200'
+                : 'bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300'
             }`}
-            title="Manage user withdrawal lock status and custom reason"
+            title="Block or Unblock Withdrawal for this user"
           >
-            {userData.isWithdrawalLocked ? <Lock className="w-3.5 h-3.5" /> : <Unlock className="w-3.5 h-3.5" />}
-            <span>{userData.isWithdrawalLocked ? 'Withdrawals Locked' : 'Lock Withdrawals'}</span>
+            <Lock className="w-3.5 h-3.5" />
+            <span>{userData.isWithdrawalLocked ? 'Withdrawals Blocked (Manage)' : 'Block User Withdrawal'}</span>
           </button>
           <button
             type="button"
@@ -243,6 +259,8 @@ export const AdminUserDetailPage: React.FC = () => {
               setEditName(userData.name);
               setEditPhone(userData.phone);
               setEditStatus(userData.accountStatus || 'ACTIVE');
+              setEditWithdrawalLocked(Boolean(userData.isWithdrawalLocked));
+              setEditWithdrawalLockReason(userData.withdrawalLockReason || '');
               setEditReason('');
               setEditModalOpen(true);
             }}
@@ -387,7 +405,55 @@ export const AdminUserDetailPage: React.FC = () => {
 
       {/* Tab Contents */}
       {activeTab === 'overview' && (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="space-y-4">
+          {/* Withdrawal Access Control Banner */}
+          <div className={`p-4 rounded-2xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs ${
+            userData.isWithdrawalLocked
+              ? 'bg-rose-50/95 border-rose-200 text-rose-950'
+              : 'bg-white border-[#D9E4F2] text-[#111827]'
+          }`}>
+            <div className="flex items-start sm:items-center gap-3">
+              <div className={`p-2.5 rounded-xl flex-shrink-0 ${
+                userData.isWithdrawalLocked ? 'bg-rose-200 text-rose-700' : 'bg-blue-50 text-[#2563EB]'
+              }`}>
+                <Lock className="w-5 h-5" />
+              </div>
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-xs font-bold">Withdrawal Access Control</h3>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                    userData.isWithdrawalLocked
+                      ? 'bg-rose-600 text-white'
+                      : 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                  }`}>
+                    {userData.isWithdrawalLocked ? 'WITHDRAWALS BLOCKED' : 'WITHDRAWALS ALLOWED'}
+                  </span>
+                </div>
+                <p className="text-xs text-[#4B5563]">
+                  {userData.isWithdrawalLocked
+                    ? `Withdrawal requests blocked. Reason displayed to user: "${userData.withdrawalLockReason || 'No reason specified'}"`
+                    : 'This member currently has full permission to submit withdrawal requests from their wallet.'}
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setLockWithdrawalReason(userData.withdrawalLockReason || '');
+                setWithdrawalLockModalOpen(true);
+              }}
+              className={`self-start sm:self-center px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer ${
+                userData.isWithdrawalLocked
+                  ? 'bg-rose-600 hover:bg-rose-700 text-white'
+                  : 'bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300'
+              }`}
+            >
+              <Lock className="w-3.5 h-3.5" />
+              <span>{userData.isWithdrawalLocked ? 'Manage / Unblock Withdrawal' : 'Block Withdrawal for User'}</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="admin-card p-4 space-y-1">
             <span className="text-[11px] font-semibold text-[#6B7280] block">Joined Date</span>
             <span className="text-sm font-bold text-[#111827]">
@@ -429,6 +495,7 @@ export const AdminUserDetailPage: React.FC = () => {
             </button>
           </div>
         </div>
+      </div>
       )}
 
       {activeTab === 'tasks' && (
@@ -622,6 +689,53 @@ export const AdminUserDetailPage: React.FC = () => {
       {/* Withdrawals Tab */}
       {activeTab === 'withdrawals' && (
         <div className="space-y-4">
+          {/* Dedicated Withdrawal Access Control Panel */}
+          <div className={`p-4 rounded-2xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs ${
+            userData.isWithdrawalLocked
+              ? 'bg-rose-50/95 border-rose-200 text-rose-950'
+              : 'bg-white border-[#D9E4F2] text-[#111827]'
+          }`}>
+            <div className="flex items-start sm:items-center gap-3">
+              <div className={`p-2.5 rounded-xl flex-shrink-0 ${
+                userData.isWithdrawalLocked ? 'bg-rose-200 text-rose-700' : 'bg-blue-50 text-[#2563EB]'
+              }`}>
+                <Lock className="w-5 h-5" />
+              </div>
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-xs font-bold">Withdrawal Access Control</h3>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                    userData.isWithdrawalLocked
+                      ? 'bg-rose-600 text-white'
+                      : 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                  }`}>
+                    {userData.isWithdrawalLocked ? 'WITHDRAWALS BLOCKED' : 'WITHDRAWALS ALLOWED'}
+                  </span>
+                </div>
+                <p className="text-xs text-[#4B5563]">
+                  {userData.isWithdrawalLocked
+                    ? `Withdrawal requests blocked. Reason displayed to user: "${userData.withdrawalLockReason || 'No reason specified'}"`
+                    : 'This member currently has full permission to submit withdrawal requests from their wallet.'}
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setLockWithdrawalReason(userData.withdrawalLockReason || '');
+                setWithdrawalLockModalOpen(true);
+              }}
+              className={`self-start sm:self-center px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer ${
+                userData.isWithdrawalLocked
+                  ? 'bg-rose-600 hover:bg-rose-700 text-white'
+                  : 'bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300'
+              }`}
+            >
+              <Lock className="w-3.5 h-3.5" />
+              <span>{userData.isWithdrawalLocked ? 'Manage / Unblock Withdrawal' : 'Block Withdrawal for User'}</span>
+            </button>
+          </div>
+
           {/* Quick Summary Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="admin-card p-4">
@@ -1062,6 +1176,51 @@ export const AdminUserDetailPage: React.FC = () => {
                   <option value="ACTIVE">ACTIVE</option>
                   <option value="SUSPENDED">SUSPENDED</option>
                 </select>
+              </div>
+
+              {/* Withdrawal Permission Setting */}
+              <div className="pt-2 border-t border-[#E2E8F0] space-y-2">
+                <div>
+                  <label className="block font-semibold text-[#374151] mb-1 flex items-center justify-between">
+                    <span>Withdrawal Permission *</span>
+                    {editWithdrawalLocked ? (
+                      <span className="text-[10px] font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded border border-rose-300">
+                        Withdrawals BLOCKED
+                      </span>
+                    ) : (
+                      <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-300">
+                        Withdrawals ALLOWED
+                      </span>
+                    )}
+                  </label>
+                  <select
+                    value={editWithdrawalLocked ? 'LOCKED' : 'ACTIVE'}
+                    onChange={(e) => setEditWithdrawalLocked(e.target.value === 'LOCKED')}
+                    className="w-full bg-white border border-[#D9E4F2] focus:border-[#2563EB] rounded-lg p-2.5 font-medium text-[#111827] focus:outline-none"
+                  >
+                    <option value="ACTIVE">ALLOWED (User Can Withdraw Funds)</option>
+                    <option value="LOCKED">BLOCKED (Lock & Block User Withdrawals)</option>
+                  </select>
+                </div>
+
+                {editWithdrawalLocked && (
+                  <div>
+                    <label className="block font-semibold text-[#374151] mb-1">
+                      Reason for Blocking Withdrawal (Visible to User) <span className="text-rose-600 font-bold">*</span>
+                    </label>
+                    <textarea
+                      rows={2}
+                      required
+                      placeholder="e.g. Identity verification pending. Please contact customer support."
+                      value={editWithdrawalLockReason}
+                      onChange={(e) => setEditWithdrawalLockReason(e.target.value)}
+                      className="w-full bg-white border border-[#D9E4F2] focus:border-[#2563EB] rounded-lg p-2.5 text-xs text-[#111827] focus:outline-none resize-none leading-relaxed"
+                    />
+                    <p className="text-[10.5px] text-[#6B7280] mt-0.5">
+                      ⚠️ This explanation will be displayed to the user when they view their withdrawal screen.
+                    </p>
+                  </div>
+                )}
               </div>
 
               <div>

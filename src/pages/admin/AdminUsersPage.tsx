@@ -49,7 +49,7 @@ const TABLE_COLUMNS: ColumnMeta[] = [
   { key: 'creditPoints', label: 'Credit Points', defaultWidth: 85, minWidth: 60, maxWidth: 160, align: 'left' },
   { key: 'walletBalance', label: 'Wallet Balance', defaultWidth: 95, minWidth: 70, maxWidth: 180, align: 'left' },
   { key: 'status', label: 'Status', defaultWidth: 85, minWidth: 55, maxWidth: 160, align: 'left' },
-  { key: 'actions', label: 'Actions', defaultWidth: 210, minWidth: 140, maxWidth: 360, align: 'right' },
+  { key: 'actions', label: 'Actions', defaultWidth: 260, minWidth: 180, maxWidth: 420, align: 'right' },
 ];
 
 const DEFAULT_WIDTHS: Record<ColumnKey, number> = {
@@ -59,7 +59,7 @@ const DEFAULT_WIDTHS: Record<ColumnKey, number> = {
   creditPoints: 85,
   walletBalance: 95,
   status: 85,
-  actions: 210,
+  actions: 260,
 };
 
 export const AdminUsersPage: React.FC = () => {
@@ -96,6 +96,8 @@ export const AdminUsersPage: React.FC = () => {
   const [editName, setEditName] = useState('');
   const [editPhone, setEditPhone] = useState('');
   const [editStatus, setEditStatus] = useState<'ACTIVE' | 'SUSPENDED'>('ACTIVE');
+  const [editWithdrawalLocked, setEditWithdrawalLocked] = useState(false);
+  const [editWithdrawalLockReason, setEditWithdrawalLockReason] = useState('');
   const [editReason, setEditReason] = useState('');
   const [editLoading, setEditLoading] = useState(false);
 
@@ -198,6 +200,20 @@ export const AdminUsersPage: React.FC = () => {
     }
     if (editStatus && editStatus !== editModalUser.accountStatus) {
       changedFields.accountStatus = editStatus;
+    }
+    if (editWithdrawalLocked !== Boolean(editModalUser.isWithdrawalLocked)) {
+      changedFields.isWithdrawalLocked = editWithdrawalLocked;
+      if (editWithdrawalLocked) {
+        if (!editWithdrawalLockReason.trim()) {
+          setMessage({ type: 'error', text: 'You must provide a reason when locking withdrawals.' });
+          return;
+        }
+        changedFields.withdrawalLockReason = editWithdrawalLockReason.trim();
+      } else {
+        changedFields.withdrawalLockReason = null;
+      }
+    } else if (editWithdrawalLocked && editWithdrawalLockReason.trim() !== (editModalUser.withdrawalLockReason || '')) {
+      changedFields.withdrawalLockReason = editWithdrawalLockReason.trim();
     }
     if (editReason.trim()) {
       changedFields.reason = editReason.trim();
@@ -829,6 +845,8 @@ export const AdminUsersPage: React.FC = () => {
                                 setEditName(u.name);
                                 setEditPhone(u.phone);
                                 setEditStatus(u.accountStatus || 'ACTIVE');
+                                setEditWithdrawalLocked(Boolean(u.isWithdrawalLocked));
+                                setEditWithdrawalLockReason(u.withdrawalLockReason || '');
                                 setEditReason('');
                               }}
                               className="p-1 rounded hover:bg-blue-50 text-[#4B5563] hover:text-[#2563EB]"
@@ -864,22 +882,19 @@ export const AdminUsersPage: React.FC = () => {
                                 setWithdrawalLockModalUser(u);
                                 setLockWithdrawalReason(u.withdrawalLockReason || '');
                               }}
-                              className={`p-1 rounded transition-colors ${
+                              className={`px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1 transition-all ${
                                 u.isWithdrawalLocked
-                                  ? 'bg-rose-50 text-rose-600 hover:bg-rose-100'
-                                  : 'hover:bg-slate-100 text-[#4B5563] hover:text-rose-600'
+                                  ? 'bg-rose-100 text-rose-700 hover:bg-rose-200 border border-rose-300 shadow-xs'
+                                  : 'bg-slate-100 text-[#374151] hover:bg-rose-50 hover:text-rose-700 border border-slate-200'
                               }`}
                               title={
                                 u.isWithdrawalLocked
-                                  ? `Withdrawals LOCKED (${u.withdrawalLockReason || 'No reason specified'}) - Click to manage`
-                                  : `Lock Withdrawals for ${u.name}`
+                                  ? `Withdrawals LOCKED (${u.withdrawalLockReason || 'No reason specified'}) - Click to manage / unlock`
+                                  : `Block / Lock Withdrawals for ${u.name}`
                               }
                             >
-                              {u.isWithdrawalLocked ? (
-                                <Lock className="w-3.5 h-3.5 text-rose-600" />
-                              ) : (
-                                <Unlock className="w-3.5 h-3.5" />
-                              )}
+                              <Lock className={`w-3 h-3 ${u.isWithdrawalLocked ? 'text-rose-600' : 'text-slate-500'}`} />
+                              <span>{u.isWithdrawalLocked ? 'WD Locked' : 'Block WD'}</span>
                             </button>
                             <button
                               onClick={() => {
@@ -1250,6 +1265,51 @@ export const AdminUsersPage: React.FC = () => {
                   <option value="ACTIVE">ACTIVE</option>
                   <option value="SUSPENDED">SUSPENDED</option>
                 </select>
+              </div>
+
+              {/* Withdrawal Permission Setting */}
+              <div className="pt-2 border-t border-[#E2E8F0] space-y-2">
+                <div>
+                  <label className="block font-semibold text-[#374151] mb-1 flex items-center justify-between">
+                    <span>Withdrawal Permission *</span>
+                    {editWithdrawalLocked ? (
+                      <span className="text-[10px] font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded border border-rose-300">
+                        Withdrawals BLOCKED
+                      </span>
+                    ) : (
+                      <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-300">
+                        Withdrawals ALLOWED
+                      </span>
+                    )}
+                  </label>
+                  <select
+                    value={editWithdrawalLocked ? 'LOCKED' : 'ACTIVE'}
+                    onChange={(e) => setEditWithdrawalLocked(e.target.value === 'LOCKED')}
+                    className="w-full bg-white border border-[#D9E4F2] focus:border-[#2563EB] rounded-lg p-2 font-medium text-[#111827] focus:outline-none"
+                  >
+                    <option value="ACTIVE">ALLOWED (User Can Withdraw Funds)</option>
+                    <option value="LOCKED">BLOCKED (Lock & Block User Withdrawals)</option>
+                  </select>
+                </div>
+
+                {editWithdrawalLocked && (
+                  <div>
+                    <label className="block font-semibold text-[#374151] mb-1">
+                      Reason for Blocking Withdrawal (Visible to User) <span className="text-rose-600 font-bold">*</span>
+                    </label>
+                    <textarea
+                      rows={2}
+                      required
+                      placeholder="e.g. Identity verification pending. Please contact customer support."
+                      value={editWithdrawalLockReason}
+                      onChange={(e) => setEditWithdrawalLockReason(e.target.value)}
+                      className="w-full bg-white border border-[#D9E4F2] focus:border-[#2563EB] rounded-lg p-2 text-xs text-[#111827] focus:outline-none resize-none leading-relaxed"
+                    />
+                    <p className="text-[10.5px] text-[#6B7280] mt-0.5">
+                      ⚠️ This explanation will be displayed to the user when they view their withdrawal screen.
+                    </p>
+                  </div>
+                )}
               </div>
 
               <div>
