@@ -60,9 +60,6 @@ export const WalletPage: React.FC = () => {
           <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-2.5">
             <Wallet className="w-7 h-7 text-[#FFD45A]" /> Wallet
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Manage your wallet balance, deposits, and withdrawal payouts.
-          </p>
         </div>
 
         <div className="flex items-center gap-2.5">
@@ -93,9 +90,6 @@ export const WalletPage: React.FC = () => {
                 PKR {(wallet?.availableBalance || 0).toLocaleString()}
               </span>
             </div>
-            <p className="text-xs text-slate-400 mt-2">
-              Ready for withdrawal or platform activities.
-            </p>
           </div>
 
           <div className="flex items-center gap-3 flex-wrap sm:flex-nowrap">
