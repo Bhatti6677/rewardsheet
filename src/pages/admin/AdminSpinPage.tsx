@@ -198,16 +198,7 @@ export const AdminSpinPage: React.FC = () => {
           Search user by name, phone, or milestone reason.
           ======================================================== */}
       <div className="admin-card p-6 space-y-4 border-2 border-[#2563EB]/40 bg-gradient-to-r from-blue-50/40 via-white to-amber-50/30">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <h2 className="text-sm font-bold text-[#111827] flex items-center gap-2">
-              <Crown className="w-4 h-4 text-[#2563EB]" /> Level Completion Milestone Spins (10th Task • Awaiting Prize Decision)
-            </h2>
-            <p className="text-xs text-[#6B7280] mt-0.5">
-              Clients who completed the 10th task of a level (Level Completion). Select what prize (Cash PKR or Physical Product) they will win upon spinning.
-            </p>
-          </div>
-
+        <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-3">
           <div className="flex items-center gap-2.5 w-full sm:w-auto">
             {/* Live Search Option for Milestone Users */}
             <div className="relative w-full sm:w-64">
