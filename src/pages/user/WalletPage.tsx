@@ -7,7 +7,6 @@ import {
   Crown,
   Clock,
   TrendingUp,
-  Receipt,
   CheckCircle2,
   Lock,
   Zap,
@@ -145,10 +144,6 @@ export const WalletPage: React.FC = () => {
 
       {/* Transaction History Table */}
       <div className="royal-card p-6 rounded-3xl space-y-4">
-        <h2 className="text-base font-bold text-white flex items-center gap-2">
-          <Receipt className="w-4 h-4 text-[#2478FF]" /> Immutable Financial Ledger
-        </h2>
-
         {loading && transactions.length === 0 ? (
           <div className="py-12 text-center text-xs text-slate-400">Loading ledger records...</div>
         ) : transactions.length > 0 ? (
