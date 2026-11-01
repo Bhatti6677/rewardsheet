@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  User,
   Phone,
   Lock,
   Crown,
@@ -52,15 +51,6 @@ export const ProfilePage: React.FC = () => {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-2.5">
-          <User className="w-7 h-7 text-[#FFD45A]" /> Member Profile & Security
-        </h1>
-        <p className="text-xs text-slate-300 mt-1">
-          Review your account credentials, membership details, and security preferences.
-        </p>
-      </div>
-
       {success && (
         <div className="p-4 bg-emerald-500/15 border border-emerald-500/40 rounded-2xl text-emerald-300 text-xs flex items-center gap-2.5">
           <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
