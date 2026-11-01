@@ -46,9 +46,6 @@ export const WithdrawalsPage: React.FC = () => {
         setWithdrawals(wRes.withdrawals || []);
         if (wRes.withdrawalQuota) {
           setWithdrawalQuota(wRes.withdrawalQuota);
-          if (wRes.withdrawalQuota.isUnrestricted && !customAmount) {
-            setCustomAmount(wRes.withdrawalQuota.availableBalance?.toString() || '');
-          }
         }
       })
       .catch((err) => console.error(err))
@@ -58,13 +55,6 @@ export const WithdrawalsPage: React.FC = () => {
   useEffect(() => {
     loadData();
   }, []);
-
-  // Sync custom amount if unrestricted
-  useEffect(() => {
-    if (isUnrestricted && !customAmount && availableBalance > 0) {
-      setCustomAmount(availableBalance.toString());
-    }
-  }, [isUnrestricted, availableBalance]);
 
   // Realtime Live Update Listener (Zero Reload Strategy)
   useEffect(() => {
@@ -80,12 +70,6 @@ export const WithdrawalsPage: React.FC = () => {
       window.removeEventListener('royal_live_update', handleLiveEvent);
     };
   }, []);
-
-  const handlePercentageSelect = (pct: number) => {
-    if (availableBalance <= 0) return;
-    const computed = Math.max(1, Math.round(availableBalance * pct));
-    setCustomAmount(computed.toString());
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -297,30 +281,12 @@ export const WithdrawalsPage: React.FC = () => {
                       required
                       value={customAmount}
                       onChange={(e) => setCustomAmount(e.target.value)}
-                      placeholder="Enter amount to withdraw"
+                      placeholder="Enter withdrawal amount according to instructions"
                       className="w-full bg-[#020B20] border border-[#214B91] focus:border-[#2478FF] rounded-xl pl-14 pr-4 py-2.5 text-base font-black text-white focus:outline-none"
                     />
                   </div>
-                  {/* Quick percentage pills */}
-                  <div className="flex items-center gap-2">
-                    {[
-                      { label: '25%', pct: 0.25 },
-                      { label: '50%', pct: 0.5 },
-                      { label: '75%', pct: 0.75 },
-                      { label: '100% (Max)', pct: 1.0 },
-                    ].map((btn) => (
-                      <button
-                        key={btn.label}
-                        type="button"
-                        onClick={() => handlePercentageSelect(btn.pct)}
-                        className="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-[#061633] border border-[#173C73] text-slate-300 hover:text-white hover:border-[#3978FF]/60 transition-all"
-                      >
-                        {btn.label}
-                      </button>
-                    ))}
-                  </div>
                   <p className="text-[11px] text-slate-400 mt-1">
-                    Enter any amount between PKR 1 and PKR {availableBalance.toLocaleString()}. Level 3 allows zero-restriction withdrawals.
+                    Enter the amount in PKR according to instructions (available balance: PKR {availableBalance.toLocaleString()}).
                   </p>
                 </div>
               ) : (
@@ -390,7 +356,7 @@ export const WithdrawalsPage: React.FC = () => {
                 <span className="w-5 h-5 border-2 border-slate-900 border-t-transparent rounded-full animate-spin" />
               ) : isUnrestricted ? (
                 <>
-                  <Send className="w-4 h-4" /> Withdraw Amount (PKR {parseFloat(customAmount || '0').toLocaleString()})
+                  <Send className="w-4 h-4" /> Withdraw Amount {customAmount && parseFloat(customAmount) > 0 ? `(PKR ${parseFloat(customAmount).toLocaleString()})` : ''}
                 </>
               ) : stage === 'LEVEL_1' ? (
                 <>
