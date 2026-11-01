@@ -17,31 +17,24 @@ import { useAuth } from '../../context/AuthContext';
 export const WalletPage: React.FC = () => {
   const { wallet: authWallet, updateWallet } = useAuth();
   const cachedWallet = api.getCachedData<any>('/wallet')?.wallet || authWallet;
-  const cachedTx = api.getCachedData<any>('/wallet/transactions?page=1&limit=15');
   const [wallet, setWallet] = useState<any>(cachedWallet);
-  const [transactions, setTransactions] = useState<any[]>(cachedTx?.transactions || []);
-  const [loading, setLoading] = useState(!cachedWallet && !cachedTx);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(cachedTx?.pagination?.totalPages || 1);
+  const [loading, setLoading] = useState(!cachedWallet);
 
-  const loadData = (p = 1) => {
-    if (!wallet && transactions.length === 0) setLoading(true);
-    Promise.all([api.getWallet(), api.getTransactions(p, 15)])
-      .then(([walletRes, txRes]) => {
+  const loadData = () => {
+    if (!wallet) setLoading(true);
+    api.getWallet()
+      .then((walletRes) => {
         setWallet(walletRes.wallet);
         if (walletRes?.wallet) {
           updateWallet(walletRes.wallet);
         }
-        setTransactions(txRes.transactions || []);
-        setTotalPages(txRes.pagination?.totalPages || 1);
-        setPage(p);
       })
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
   };
 
   useEffect(() => {
-    loadData(1);
+    loadData();
   }, []);
 
   // Realtime Live Update Listener (Zero Reload Strategy)
@@ -55,7 +48,7 @@ export const WalletPage: React.FC = () => {
       }
       if (type === 'wallet' || type === 'all' || type === 'refresh') {
         api.invalidateCache('/wallet');
-        loadData(page);
+        loadData();
       }
     };
 
@@ -63,7 +56,7 @@ export const WalletPage: React.FC = () => {
     return () => {
       window.removeEventListener('royal_live_update', handleLiveEvent);
     };
-  }, [page]);
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -71,7 +64,7 @@ export const WalletPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-2.5">
-            <Wallet className="w-7 h-7 text-[#FFD45A]" /> Wallet & Financial Ledger
+            <Wallet className="w-7 h-7 text-[#FFD45A]" /> Wallet
           </h1>
         </div>
 
@@ -140,91 +133,6 @@ export const WalletPage: React.FC = () => {
           </span>
           <span className="text-[9px] text-slate-500">VIP task fees</span>
         </div>
-      </div>
-
-      {/* Transaction History Table */}
-      <div className="royal-card p-6 rounded-3xl space-y-4">
-        {loading && transactions.length === 0 ? (
-          <div className="py-12 text-center text-xs text-slate-400">Loading ledger records...</div>
-        ) : transactions.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="border-b border-[#214B91]/50 text-slate-400 text-[11px] uppercase tracking-wider font-semibold">
-                  <th className="pb-3 px-3">Date</th>
-                  <th className="pb-3 px-3">Type</th>
-                  <th className="pb-3 px-3">Description</th>
-                  <th className="pb-3 px-3 text-right">Amount</th>
-                  <th className="pb-3 px-3 text-center">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#214B91]/30">
-                {transactions.map((tx: any) => {
-                  const isPositive = tx.amount > 0;
-                  return (
-                    <tr key={tx.id} className="hover:bg-white/5 transition-colors">
-                      <td className="py-3 px-3 text-slate-400 whitespace-nowrap">
-                        {new Date(tx.createdAt).toLocaleDateString()} {new Date(tx.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </td>
-                      <td className="py-3 px-3">
-                        <span className="bg-[#1459E8]/20 border border-[#214B91] text-[#22D3EE] font-semibold px-2 py-0.5 rounded text-[10px]">
-                          {tx.transactionType.replace('_', ' ')}
-                        </span>
-                      </td>
-                      <td className="py-3 px-3 text-slate-200">
-                        {tx.reason}
-                        {tx.notes && <span className="block text-[10px] text-slate-400 mt-0.5">{tx.notes}</span>}
-                      </td>
-                      <td className="py-3 px-3 text-right font-bold whitespace-nowrap">
-                        <span className={isPositive ? 'text-emerald-400' : 'text-slate-300'}>
-                          {isPositive ? '+' : ''}PKR {Math.abs(tx.amount).toLocaleString()}
-                        </span>
-                      </td>
-                      <td className="py-3 px-3 text-center">
-                        <span
-                          className={`font-semibold text-[10px] px-2 py-0.5 rounded-full ${
-                            tx.status === 'COMPLETED'
-                              ? 'bg-emerald-500/10 text-emerald-400'
-                              : 'bg-blue-500/10 text-blue-400'
-                          }`}
-                        >
-                          {tx.status}
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <div className="text-center py-12 text-xs text-slate-400">
-            No financial transactions recorded on this account yet.
-          </div>
-        )}
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-between pt-4 border-t border-[#214B91]/40 text-xs">
-            <button
-              onClick={() => loadData(Math.max(1, page - 1))}
-              disabled={page <= 1}
-              className="px-3 py-1.5 rounded-lg bg-[#020B20] border border-[#214B91] text-slate-300 disabled:opacity-40"
-            >
-              Previous
-            </button>
-            <span className="text-slate-400">
-              Page {page} of {totalPages}
-            </span>
-            <button
-              onClick={() => loadData(Math.min(totalPages, page + 1))}
-              disabled={page >= totalPages}
-              className="px-3 py-1.5 rounded-lg bg-[#020B20] border border-[#214B91] text-slate-300 disabled:opacity-40"
-            >
-              Next
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );
