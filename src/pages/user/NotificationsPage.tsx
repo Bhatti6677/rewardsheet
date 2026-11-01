@@ -13,6 +13,40 @@ import {
 } from 'lucide-react';
 import { api } from '../../api/client';
 
+const getReadAnnouncements = (): string[] => {
+  try {
+    return JSON.parse(localStorage.getItem('royal_read_announcements') || '[]');
+  } catch {
+    return [];
+  }
+};
+
+const addReadAnnouncement = (id: string) => {
+  try {
+    const current = getReadAnnouncements();
+    if (!current.includes(id)) {
+      current.push(id);
+      localStorage.setItem('royal_read_announcements', JSON.stringify(current));
+    }
+  } catch {}
+};
+
+const addReadAnnouncements = (ids: string[]) => {
+  try {
+    const current = getReadAnnouncements();
+    let changed = false;
+    for (const id of ids) {
+      if (!current.includes(id)) {
+        current.push(id);
+        changed = true;
+      }
+    }
+    if (changed) {
+      localStorage.setItem('royal_read_announcements', JSON.stringify(current));
+    }
+  } catch {}
+};
+
 export const NotificationsPage: React.FC = () => {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -20,14 +54,38 @@ export const NotificationsPage: React.FC = () => {
 
   const loadNotifications = () => {
     setLoading(true);
-    api.getNotifications()
-      .then((res) => setNotifications(res.notifications || []))
+    api.getNotifications({ bypassCache: true })
+      .then((res) => {
+        const rawNotifs: any[] = res.notifications || [];
+        const readAnnounce = getReadAnnouncements();
+        const normalized = rawNotifs.map((n) => {
+          if (n.isAnnouncement || n.id?.startsWith('announcement_')) {
+            return { ...n, isRead: n.isRead || readAnnounce.includes(n.id) };
+          }
+          return n;
+        });
+        setNotifications(normalized);
+      })
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
   };
 
   useEffect(() => {
     loadNotifications();
+
+    // Automatically mark notifications as read on view so unread badge clears
+    const markVisitedAsRead = async () => {
+      try {
+        await api.markAllNotificationsRead();
+        api.invalidateCache('/notifications');
+        window.dispatchEvent(
+          new CustomEvent('royal_live_update', {
+            detail: { type: 'notification', unreadCount: 0 },
+          })
+        );
+      } catch {}
+    };
+    markVisitedAsRead();
 
     const handleLiveEvent = (e: any) => {
       if (e.detail?.type === 'notification' || e.detail?.type === 'refresh') {
@@ -40,10 +98,22 @@ export const NotificationsPage: React.FC = () => {
 
   const handleMarkAsRead = async (id: string) => {
     try {
-      await api.markNotificationRead(id);
-      setNotifications((prev) =>
-        prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
-      );
+      if (id.startsWith('announcement_')) {
+        addReadAnnouncement(id);
+      } else {
+        await api.markNotificationRead(id);
+      }
+      api.invalidateCache('/notifications');
+      setNotifications((prev) => {
+        const updated = prev.map((n) => (n.id === id ? { ...n, isRead: true } : n));
+        const newUnread = updated.filter((n) => !n.isRead && isAllowedNotification(n)).length;
+        window.dispatchEvent(
+          new CustomEvent('royal_live_update', {
+            detail: { type: 'notification', unreadCount: newUnread },
+          })
+        );
+        return updated;
+      });
     } catch (err) {
       console.error(err);
     }
@@ -51,8 +121,18 @@ export const NotificationsPage: React.FC = () => {
 
   const handleMarkAllRead = async () => {
     try {
+      const announceIds = notifications
+        .filter((n) => n.isAnnouncement || n.id?.startsWith('announcement_'))
+        .map((n) => n.id);
+      addReadAnnouncements(announceIds);
       await api.markAllNotificationsRead();
+      api.invalidateCache('/notifications');
       setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+      window.dispatchEvent(
+        new CustomEvent('royal_live_update', {
+          detail: { type: 'notification', unreadCount: 0 },
+        })
+      );
     } catch (err) {
       console.error(err);
     }

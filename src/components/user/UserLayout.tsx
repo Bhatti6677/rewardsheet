@@ -83,10 +83,30 @@ export const UserLayout: React.FC = () => {
   };
 
   useEffect(() => {
-    // Fetch notifications unread count on mount and listen to live events
-    api.getNotifications()
-      .then((res) => setUnreadCount(res.unreadCount || 0))
-      .catch(() => {});
+    const fetchUnread = () => {
+      if (location.pathname === '/app/notifications') {
+        setUnreadCount(0);
+        return;
+      }
+      api.getNotifications({ bypassCache: true })
+        .then((res) => {
+          const rawNotifs: any[] = res.notifications || [];
+          let readAnnounce: string[] = [];
+          try {
+            readAnnounce = JSON.parse(localStorage.getItem('royal_read_announcements') || '[]');
+          } catch {}
+          const unread = rawNotifs.filter((n: any) => {
+            if (n.isAnnouncement || n.id?.startsWith('announcement_')) {
+              return !readAnnounce.includes(n.id) && !n.isRead;
+            }
+            return !n.isRead;
+          }).length;
+          setUnreadCount(unread);
+        })
+        .catch(() => {});
+    };
+
+    fetchUnread();
 
     api.getAnnouncements()
       .then((res) => {
@@ -97,15 +117,15 @@ export const UserLayout: React.FC = () => {
       .catch(() => {});
 
     const handleLiveEvent = (e: any) => {
-      if (e.detail?.type === 'notification' || e.detail?.type === 'refresh') {
-        api.getNotifications()
-          .then((res) => setUnreadCount(res.unreadCount || 0))
-          .catch(() => {});
+      if (e.detail?.unreadCount !== undefined) {
+        setUnreadCount(e.detail.unreadCount);
+      } else if (e.detail?.type === 'notification' || e.detail?.type === 'refresh') {
+        fetchUnread();
       }
     };
     window.addEventListener('royal_live_update', handleLiveEvent);
     return () => window.removeEventListener('royal_live_update', handleLiveEvent);
-  }, []);
+  }, [location.pathname]);
 
   const navItems = [
     { label: 'Dashboard', path: '/app', icon: Home },
@@ -114,7 +134,7 @@ export const UserLayout: React.FC = () => {
     { label: 'Wallet', path: '/app/wallet', icon: Wallet },
     { label: 'Deposit', path: '/app/deposits', icon: ArrowDownLeft },
     { label: 'Withdraw', path: '/app/withdrawals', icon: ArrowUpRight },
-    { label: 'Notifications', path: '/app/notifications', icon: Bell, badgeCount: unreadCount },
+    { label: 'Notifications', path: '/app/notifications', icon: Bell, badgeCount: location.pathname === '/app/notifications' ? 0 : unreadCount },
     { label: 'Profile', path: '/app/profile', icon: UserIcon },
   ];
 
@@ -203,11 +223,12 @@ export const UserLayout: React.FC = () => {
             {/* Notification Bell */}
             <Link
               to="/app/notifications"
+              onClick={() => setUnreadCount(0)}
               className="relative p-1.5 rounded-lg bg-[#061633] border border-[#214B91]/50 text-slate-300 hover:text-white hover:border-[#2478FF] transition-all"
               title="Notifications"
             >
               <Bell className="w-4 h-4" />
-              {unreadCount > 0 && (
+              {unreadCount > 0 && location.pathname !== '/app/notifications' && (
                 <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#EF4444] text-white text-[9px] font-bold rounded-full flex items-center justify-center border-2 border-[#020B20] animate-bounce">
                   {unreadCount > 9 ? '9+' : unreadCount}
                 </span>
@@ -277,7 +298,12 @@ export const UserLayout: React.FC = () => {
                 <Link
                   key={item.path}
                   to={item.path}
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    if (item.path === '/app/notifications') {
+                      setUnreadCount(0);
+                    }
+                  }}
                   className="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 border border-transparent hover:border-[#214B91]/50 text-slate-200 transition-all active:scale-[0.98]"
                 >
                   <div className="flex items-center gap-3">
