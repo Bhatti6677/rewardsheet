@@ -16,6 +16,8 @@ import {
   CheckCircle2,
   AlertCircle,
   ExternalLink,
+  Lock,
+  Unlock,
 } from 'lucide-react';
 import { api } from '../../api/client';
 
@@ -39,6 +41,11 @@ export const AdminUserDetailPage: React.FC = () => {
   const [editStatus, setEditStatus] = useState<'ACTIVE' | 'SUSPENDED'>('ACTIVE');
   const [editReason, setEditReason] = useState('');
   const [editLoading, setEditLoading] = useState(false);
+
+  // Withdrawal Lock Modal state
+  const [withdrawalLockModalOpen, setWithdrawalLockModalOpen] = useState(false);
+  const [lockWithdrawalReason, setLockWithdrawalReason] = useState('');
+  const [lockWithdrawalLoading, setLockWithdrawalLoading] = useState(false);
 
   const [actionMessage, setActionMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
@@ -148,6 +155,37 @@ export const AdminUserDetailPage: React.FC = () => {
     }
   };
 
+  const handleToggleWithdrawalLock = async (targetLocked: boolean, reason?: string) => {
+    if (targetLocked && (!reason || !reason.trim())) {
+      setActionMessage({ type: 'error', text: 'You must provide a reason to lock withdrawals for this user.' });
+      return;
+    }
+    if (!userData) return;
+
+    setLockWithdrawalLoading(true);
+    setActionMessage(null);
+    try {
+      await api.updateUserWithdrawalLock(userData.id, targetLocked, reason?.trim());
+      setUserData((prev: any) => ({
+        ...prev,
+        isWithdrawalLocked: targetLocked,
+        withdrawalLockReason: targetLocked ? reason?.trim() : null,
+      }));
+      setActionMessage({
+        type: 'success',
+        text: targetLocked
+          ? `Withdrawals locked for ${userData.name}. Reason: ${reason}`
+          : `Withdrawals unlocked for ${userData.name}.`,
+      });
+      setWithdrawalLockModalOpen(false);
+      setLockWithdrawalReason('');
+    } catch (err: any) {
+      setActionMessage({ type: 'error', text: err.message || 'Failed to update withdrawal lock status.' });
+    } finally {
+      setLockWithdrawalLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -183,6 +221,22 @@ export const AdminUserDetailPage: React.FC = () => {
           <ArrowLeft className="w-4 h-4" /> Back to Members
         </Link>
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              setLockWithdrawalReason(userData.withdrawalLockReason || '');
+              setWithdrawalLockModalOpen(true);
+            }}
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm active:scale-95 ${
+              userData.isWithdrawalLocked
+                ? 'bg-rose-600 hover:bg-rose-700 text-white'
+                : 'bg-slate-700 hover:bg-slate-800 text-white'
+            }`}
+            title="Manage user withdrawal lock status and custom reason"
+          >
+            {userData.isWithdrawalLocked ? <Lock className="w-3.5 h-3.5" /> : <Unlock className="w-3.5 h-3.5" />}
+            <span>{userData.isWithdrawalLocked ? 'Withdrawals Locked' : 'Lock Withdrawals'}</span>
+          </button>
           <button
             type="button"
             onClick={() => {
@@ -250,11 +304,29 @@ export const AdminUserDetailPage: React.FC = () => {
               >
                 {userData.accountStatus}
               </span>
+              {userData.isWithdrawalLocked && (
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 border border-rose-300 flex items-center gap-1">
+                  <Lock className="w-3 h-3 text-rose-600" /> Withdrawals Locked
+                </span>
+              )}
             </div>
             <h1 className="text-xl font-bold text-[#111827]">{userData.name}</h1>
             <p className="text-xs text-[#6B7280] font-mono mt-0.5">
               Phone: {userData.phone}
             </p>
+
+            {userData.isWithdrawalLocked && (
+              <div className="mt-3 p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-900 flex items-start gap-2.5 max-w-xl">
+                <Lock className="w-4 h-4 text-rose-600 mt-0.5 flex-shrink-0" />
+                <div className="space-y-0.5">
+                  <p className="font-bold text-rose-950">Withdrawals are currently LOCKED for this user</p>
+                  <p className="text-rose-800 leading-relaxed">
+                    <span className="font-semibold">Reason displayed to member: </span>
+                    {userData.withdrawalLockReason || 'No specific reason provided.'}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="flex items-center gap-3 flex-wrap sm:flex-nowrap">
@@ -1021,6 +1093,131 @@ export const AdminUserDetailPage: React.FC = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Withdrawal Lock Modal */}
+      {withdrawalLockModalOpen && userData && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-150">
+          <div className="bg-white rounded-2xl max-w-md w-full border border-[#D9E4F2] shadow-xl p-6 space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#E2E8F0]">
+              <div className="flex items-center gap-2">
+                <div className={`p-2 rounded-xl ${userData.isWithdrawalLocked ? 'bg-rose-100 text-rose-700' : 'bg-blue-100 text-[#2563EB]'}`}>
+                  <Lock className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-sm text-[#111827]">
+                    Manage Withdrawal Access
+                  </h3>
+                  <p className="text-xs text-[#6B7280]">
+                    Member: {userData.name} ({userData.phone})
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setWithdrawalLockModalOpen(false)}
+                className="text-[#9CA3AF] hover:text-[#111827] p-1 rounded hover:bg-slate-100"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Current Status Badge */}
+            <div
+              className={`p-3 rounded-xl border text-xs flex items-start gap-2.5 ${
+                userData.isWithdrawalLocked
+                  ? 'bg-rose-50 border-rose-200 text-rose-900'
+                  : 'bg-emerald-50 border-emerald-200 text-emerald-900'
+              }`}
+            >
+              {userData.isWithdrawalLocked ? (
+                <Lock className="w-4 h-4 text-rose-600 mt-0.5 flex-shrink-0" />
+              ) : (
+                <Unlock className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0" />
+              )}
+              <div className="space-y-0.5">
+                <p className="font-bold">
+                  {userData.isWithdrawalLocked
+                    ? 'Withdrawals are currently LOCKED for this user'
+                    : 'Withdrawals are currently UNLOCKED (Active)'}
+                </p>
+                {userData.isWithdrawalLocked && userData.withdrawalLockReason && (
+                  <p className="text-[11px] text-rose-700">
+                    <span className="font-semibold">Current reason:</span> {userData.withdrawalLockReason}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              <div>
+                <label className="block font-semibold text-[#374151] mb-1.5">
+                  Reason for Lock / Notice for Member <span className="text-rose-600 font-bold">*</span>
+                </label>
+                <textarea
+                  rows={3}
+                  placeholder="e.g. Identity verification pending. Please contact official customer support with your deposit receipts."
+                  value={lockWithdrawalReason}
+                  onChange={(e) => setLockWithdrawalReason(e.target.value)}
+                  className="w-full bg-white border border-[#D9E4F2] focus:border-[#2563EB] rounded-lg p-2.5 text-xs text-[#111827] focus:outline-none resize-none leading-relaxed"
+                />
+                <p className="text-[11px] text-[#6B7280] mt-1">
+                  ⚠️ This reason will appear directly on the member's withdrawal screen in their dashboard.
+                </p>
+              </div>
+
+              <div className="pt-2 flex items-center justify-between gap-2">
+                <button
+                  type="button"
+                  onClick={() => setWithdrawalLockModalOpen(false)}
+                  disabled={lockWithdrawalLoading}
+                  className="px-4 py-2 border border-[#D9E4F2] rounded-lg text-[#4B5563] font-semibold hover:bg-slate-50 transition-colors"
+                >
+                  Cancel
+                </button>
+
+                <div className="flex items-center gap-2">
+                  {userData.isWithdrawalLocked ? (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleToggleWithdrawalLock(false)
+                        }
+                        disabled={lockWithdrawalLoading}
+                        className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg transition-colors flex items-center gap-1.5 shadow-xs"
+                      >
+                        <Unlock className="w-3.5 h-3.5" />
+                        <span>{lockWithdrawalLoading ? 'Processing...' : 'Unlock Withdrawals'}</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleToggleWithdrawalLock(true, lockWithdrawalReason)
+                        }
+                        disabled={lockWithdrawalLoading || !lockWithdrawalReason.trim()}
+                        className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-xs"
+                      >
+                        {lockWithdrawalLoading ? 'Saving...' : 'Update Reason'}
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleToggleWithdrawalLock(true, lockWithdrawalReason)
+                      }
+                      disabled={lockWithdrawalLoading || !lockWithdrawalReason.trim()}
+                      className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed shadow-xs"
+                    >
+                      <Lock className="w-3.5 h-3.5" />
+                      <span>{lockWithdrawalLoading ? 'Locking...' : 'Lock Withdrawals'}</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

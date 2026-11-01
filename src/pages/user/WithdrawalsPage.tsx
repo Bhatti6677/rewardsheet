@@ -31,8 +31,13 @@ export const WithdrawalsPage: React.FC = () => {
 
   const availableBalance = wallet?.availableBalance || 0;
   const isLocked = Boolean(withdrawalQuota?.isLocked);
-  const isUnrestricted = Boolean(withdrawalQuota?.isUnrestricted);
   const stage = withdrawalQuota?.stage || (isLocked ? 'LOCKED_BEFORE_L1' : 'LEVEL_1');
+  const isAdminLocked = Boolean(
+    withdrawalQuota?.isAdminLocked ||
+    withdrawalQuota?.lockReason === 'ADMIN_LOCKED' ||
+    stage === 'ADMIN_LOCKED'
+  );
+  const isUnrestricted = Boolean(withdrawalQuota?.isUnrestricted);
 
   const exactAvailable = isLocked
     ? 0
@@ -163,7 +168,11 @@ export const WithdrawalsPage: React.FC = () => {
           </span>
 
           <div className="flex flex-wrap items-center gap-2 mt-2">
-            {isLocked ? (
+            {isAdminLocked ? (
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-rose-300 bg-rose-500/20 border border-rose-500/40 px-3 py-1 rounded-full shadow-xs">
+                <Lock className="w-3.5 h-3.5 text-rose-400" /> Withdrawals Locked by Admin
+              </span>
+            ) : isLocked ? (
               <span className="inline-flex items-center gap-1.5 text-xs font-bold text-red-400 bg-red-500/15 border border-red-500/30 px-3 py-1 rounded-full">
                 <Lock className="w-3.5 h-3.5" /> Withdrawal Locked
               </span>
@@ -187,44 +196,91 @@ export const WithdrawalsPage: React.FC = () => {
           </div>
 
           <p className="text-[11px] text-[#A6C4FF] mt-2 leading-relaxed">
-            💡 {withdrawalQuota?.withdrawalNotice || 'Complete Level 1 to unlock the withdrawal panel for the withdrawal'}
+            💡 {withdrawalQuota?.withdrawalNotice || (isAdminLocked ? 'Withdrawals are currently locked by administration.' : 'Complete Level 1 to unlock the withdrawal panel for the withdrawal')}
           </p>
         </div>
 
         {isLocked && (
-          <Link
-            to="/app/tasks"
-            className="self-start sm:self-center px-4 py-2 rounded-xl bg-gradient-to-r from-[#1459E8] to-[#2478FF] hover:from-[#2478FF] hover:to-[#1459E8] text-white font-bold text-xs flex items-center gap-2 shadow-md transition-all"
-          >
-            <span>Complete Tasks</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
+          isAdminLocked ? (
+            <Link
+              to="/app/profile"
+              className="self-start sm:self-center px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs flex items-center gap-2 border border-slate-700 shadow-md transition-all"
+            >
+              <span>View Profile</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          ) : (
+            <Link
+              to="/app/tasks"
+              className="self-start sm:self-center px-4 py-2 rounded-xl bg-gradient-to-r from-[#1459E8] to-[#2478FF] hover:from-[#2478FF] hover:to-[#1459E8] text-white font-bold text-xs flex items-center gap-2 shadow-md transition-all"
+            >
+              <span>Complete Tasks</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          )
         )}
       </div>
 
       {/* Main Withdrawal Panel */}
       {isLocked ? (
-        <div className="royal-card p-8 rounded-3xl text-center space-y-4 border border-red-500/20 bg-[#071936]/80">
-          <div className="w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center justify-center mx-auto text-red-400">
-            <Lock className="w-7 h-7" />
+        isAdminLocked ? (
+          <div className="royal-card p-8 rounded-3xl text-center space-y-4 border border-rose-500/30 bg-[#071936]/90 shadow-xl">
+            <div className="w-16 h-16 rounded-2xl bg-rose-500/15 border border-rose-500/40 flex items-center justify-center mx-auto text-rose-400 shadow-inner">
+              <Lock className="w-8 h-8" />
+            </div>
+            <div className="max-w-md mx-auto space-y-3">
+              <h3 className="text-lg font-bold text-white tracking-wide">Withdrawal Panel is Locked</h3>
+              <div className="p-4 rounded-2xl bg-rose-950/40 border border-rose-500/30 text-left space-y-1.5">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-rose-400 flex items-center gap-1.5">
+                  <AlertCircle className="w-3.5 h-3.5" /> Reason Provided by Administration
+                </span>
+                <p className="text-xs text-rose-100 font-medium leading-relaxed whitespace-pre-wrap">
+                  {withdrawalQuota?.adminLockReason || withdrawalQuota?.withdrawalNotice || 'Withdrawal access has been locked by administration for your account.'}
+                </p>
+              </div>
+              <p className="text-[11px] text-slate-400">
+                If you have completed the required steps or believe this is in error, please contact customer support.
+              </p>
+            </div>
+            <div className="pt-2 flex items-center justify-center gap-3">
+              <Link
+                to="/app/profile"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 shadow transition-all"
+              >
+                <span>View Profile</span>
+              </Link>
+              <Link
+                to="/app/tasks"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#1459E8] hover:bg-[#2478FF] text-white font-bold text-xs shadow-lg transition-all"
+              >
+                <span>Go to Task Panel</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
           </div>
-          <div className="max-w-md mx-auto space-y-2">
-            <h3 className="text-base font-bold text-white">Withdrawal Panel is Locked</h3>
-            <p className="text-xs text-slate-300 leading-relaxed">
-              {withdrawalQuota?.withdrawalNotice ||
-                'Complete the current level tasks to unlock the withdrawal panel and withdraw your earnings.'}
-            </p>
+        ) : (
+          <div className="royal-card p-8 rounded-3xl text-center space-y-4 border border-red-500/20 bg-[#071936]/80">
+            <div className="w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center justify-center mx-auto text-red-400">
+              <Lock className="w-7 h-7" />
+            </div>
+            <div className="max-w-md mx-auto space-y-2">
+              <h3 className="text-base font-bold text-white">Withdrawal Panel is Locked</h3>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                {withdrawalQuota?.withdrawalNotice ||
+                  'Complete the current level tasks to unlock the withdrawal panel and withdraw your earnings.'}
+              </p>
+            </div>
+            <div className="pt-2">
+              <Link
+                to="/app/tasks"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#1459E8] hover:bg-[#2478FF] text-white font-bold text-xs shadow-lg transition-all"
+              >
+                <span>Go to Task Panel</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
           </div>
-          <div className="pt-2">
-            <Link
-              to="/app/tasks"
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#1459E8] hover:bg-[#2478FF] text-white font-bold text-xs shadow-lg transition-all"
-            >
-              <span>Go to Task Panel</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-        </div>
+        )
       ) : (
         <div className="royal-card p-6 sm:p-8 rounded-3xl space-y-4">
           <div className="flex items-center justify-between pb-2 border-b border-[#214B91]/40">

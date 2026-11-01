@@ -347,6 +347,8 @@ export const api = {
     request(`/admin/users/${userId}`, { method: 'PATCH', body: JSON.stringify(data) }, true),
   updateUserStatus: (userId: string, status: string, reason?: string) =>
     request(`/admin/users/${userId}/status`, { method: 'PUT', body: JSON.stringify({ status, reason }) }, true),
+  updateUserWithdrawalLock: (userId: string, isLocked: boolean, reason?: string) =>
+    request(`/admin/users/${userId}/withdrawal-lock`, { method: 'PUT', body: JSON.stringify({ isLocked, reason }) }, true),
   resetUserPassword: (userId: string, payload: any) =>
     request(`/admin/users/${userId}/reset-password`, { method: 'POST', body: JSON.stringify(payload) }, true),
   adjustUserBalance: (userId: string, payload: any) =>
