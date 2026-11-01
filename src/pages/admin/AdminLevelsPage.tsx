@@ -118,15 +118,8 @@ export const AdminLevelsPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-[#111827]">Level Management</h1>
-          <p className="text-xs text-[#6B7280] mt-0.5">
-            Configure the 10 standard levels, descriptions, and level-specific withdrawal requirement notices.
-          </p>
-        </div>
-
-        {/* View Tabs */}
+      {/* View Tabs */}
+      <div className="flex items-center justify-start">
         <div className="flex items-center bg-[#F1F5F9] p-1 rounded-xl self-start sm:self-auto border border-[#E2E8F0]">
           <button
             onClick={() => setActiveTab('levels')}

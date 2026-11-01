@@ -99,14 +99,6 @@ export const AdminTasksPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Title */}
-      <div>
-        <h1 className="text-xl sm:text-2xl font-bold text-[#111827]">Task Management</h1>
-        <p className="text-xs text-[#6B7280] mt-0.5">
-          Configure task titles, descriptions, rewards in PKR, free vs paid status, and verification settings.
-        </p>
-      </div>
-
       {message && (
         <div
           className={`p-3.5 rounded-lg border text-xs flex items-center justify-between ${

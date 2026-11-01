@@ -178,14 +178,6 @@ export const AdminSpinPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Title */}
-      <div>
-        <h1 className="text-xl sm:text-2xl font-bold text-[#111827]">Spin Wheel & Prize Management</h1>
-        <p className="text-xs text-[#6B7280] mt-0.5">
-          Assign specific prizes and spin counts to individual members. Wheel results are strictly validated on the backend.
-        </p>
-      </div>
-
       {message && (
         <div
           className={`p-3.5 rounded-lg border text-xs flex items-center justify-between ${
