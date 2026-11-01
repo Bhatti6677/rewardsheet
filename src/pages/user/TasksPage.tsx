@@ -144,6 +144,19 @@ export const TasksPage: React.FC = () => {
     return lastUnlocked ? lastUnlocked.levelNumber : 1;
   }, [levels]);
 
+  // Compute if User has reached Level 4 or above
+  const isUserAtLevel4OrAbove = useMemo(() => {
+    if (currentLevelData?.isLevel4Reached) return true;
+    if (!levels || levels.length === 0) return false;
+    const lvl3 = levels.find((l) => l.levelNumber === 3);
+    const lvl4 = levels.find((l) => l.levelNumber === 4);
+    return Boolean(
+      (lvl3 && lvl3.isCompleted) ||
+      (lvl4 && (lvl4.isUnlocked || (lvl4.approvedTaskCount || 0) > 0)) ||
+      userCurrentLevelNumber >= 4
+    );
+  }, [levels, currentLevelData, userCurrentLevelNumber]);
+
   const { level, tasks = [], isLevelUnlocked } = currentLevelData || {};
   const selectedLevelSummary = levels.find((l) => l.levelNumber === activeLevelNumber);
   const isSelectedLevelLocked = selectedLevelSummary
@@ -409,6 +422,7 @@ export const TasksPage: React.FC = () => {
             const isCompleted =
               lvl.levelNumber === 4 ? lvlApproved >= 1 : lvlApproved >= lvlTotal;
             const isLocked = !lvl.isUnlocked && !isCompleted;
+            const isPreviewOnly = isLocked && lvl.levelNumber >= 4 && isUserAtLevel4OrAbove;
 
             return (
               <button
@@ -420,6 +434,8 @@ export const TasksPage: React.FC = () => {
                     ? 'bg-gradient-to-r from-[#1459E8] to-[#1264F5] text-white shadow-md ring-2 ring-[#FFD45A]/70 scale-[1.02]'
                     : isCompleted
                     ? 'bg-[#06242B] text-emerald-400 border border-emerald-500/30 hover:bg-[#08333D]'
+                    : isPreviewOnly
+                    ? 'bg-[#061838] text-sky-300 border border-sky-500/30 hover:bg-[#09224E]'
                     : isLocked
                     ? 'bg-[#030E22]/60 text-slate-500 border border-[#102447]/60 hover:bg-[#051530]'
                     : 'bg-[#071D42] text-amber-300 border border-amber-500/30 hover:bg-[#0A275A]'
@@ -428,6 +444,8 @@ export const TasksPage: React.FC = () => {
                 <div className="flex items-center gap-1 text-[11px] sm:text-xs">
                   {isCompleted ? (
                     <Check className="w-3.5 h-3.5 text-emerald-400" />
+                  ) : isPreviewOnly ? (
+                    <Sparkles className="w-3.5 h-3.5 text-sky-400" />
                   ) : isLocked ? (
                     <Lock className="w-3.5 h-3.5 text-slate-500" />
                   ) : (
@@ -441,12 +459,14 @@ export const TasksPage: React.FC = () => {
                       ? 'text-[#FFD45A]'
                       : isCompleted
                       ? 'text-emerald-400/80'
+                      : isPreviewOnly
+                      ? 'text-sky-300/80'
                       : isLocked
                       ? 'text-slate-500'
                       : 'text-amber-400/80'
                   }`}
                 >
-                  {isCompleted ? 'Completed' : isLocked ? 'Locked' : 'Processing'}
+                  {isCompleted ? 'Completed' : isPreviewOnly ? 'View Tasks' : isLocked ? 'Locked' : 'Processing'}
                 </span>
               </button>
             );
@@ -477,6 +497,8 @@ export const TasksPage: React.FC = () => {
                   className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md ${
                     isSelectedLevelCompleted
                       ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-400/40'
+                      : isSelectedLevelLocked && activeLevelNumber >= 4 && isUserAtLevel4OrAbove
+                      ? 'bg-sky-500/15 text-sky-300 border border-sky-400/30'
                       : isSelectedLevelLocked
                       ? 'bg-slate-800 text-slate-400 border border-slate-700'
                       : 'bg-amber-500/20 text-amber-400 border border-amber-400/40'
@@ -484,6 +506,8 @@ export const TasksPage: React.FC = () => {
                 >
                   {isSelectedLevelCompleted
                     ? 'Completed'
+                    : isSelectedLevelLocked && activeLevelNumber >= 4 && isUserAtLevel4OrAbove
+                    ? 'Tasks Visible'
                     : isSelectedLevelLocked
                     ? 'Locked'
                     : 'Processing'}
@@ -535,18 +559,22 @@ export const TasksPage: React.FC = () => {
 
         {/* Notice if locked */}
         {isSelectedLevelLocked && (
-          <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center justify-between gap-3 text-xs">
-            <span className="text-red-300">
-              {activeLevelNumber === 5
+          <div className="p-3.5 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-between gap-3 text-xs">
+            <span className="text-slate-200">
+              {activeLevelNumber >= 4 && isUserAtLevel4OrAbove
+                ? `You have reached Level 4! All assignments for Level ${activeLevelNumber} are visible below. Complete preceding tasks to execute.`
+                : activeLevelNumber === 5
                 ? 'Complete any one task in Level 4 to unlock Level 5.'
                 : `Complete all tasks in Level ${activeLevelNumber - 1} to unlock this tier.`}
             </span>
-            <button
-              onClick={() => handleSelectLevel(userCurrentLevelNumber)}
-              className="text-[#FFD45A] font-bold hover:underline flex-shrink-0 cursor-pointer"
-            >
-              Switch to Active Lvl {userCurrentLevelNumber} →
-            </button>
+            {userCurrentLevelNumber !== activeLevelNumber && (
+              <button
+                onClick={() => handleSelectLevel(userCurrentLevelNumber)}
+                className="text-[#FFD45A] font-bold hover:underline flex-shrink-0 cursor-pointer"
+              >
+                Active Lvl {userCurrentLevelNumber} →
+              </button>
+            )}
           </div>
         )}
 
@@ -663,9 +691,10 @@ export const TasksPage: React.FC = () => {
                 !isSelectedLevelLocked &&
                 task.userStatus === 'REJECTED';
 
-              // In Levels 1 to 3 (or before Level 4 is reached): if a task is locked, do not show its task name, prize, or allow opening it!
+              // In Levels 1 to 3: if a task is locked, do not show its task name, prize, or allow opening it until reached!
+              // For Levels 4 to 10: If user has reached Level 4, tasks, descriptions, and prizes are NEVER hidden!
               const isHiddenLockedTask =
-                isTaskLocked && (activeLevelNumber <= 3 || isSelectedLevelLocked);
+                isTaskLocked && (activeLevelNumber <= 3 || !isUserAtLevel4OrAbove);
 
               return (
                 <div
@@ -719,9 +748,13 @@ export const TasksPage: React.FC = () => {
                             {cleanTaskTitle(task.title)}
                           </h4>
 
-                          {isPrepaid && (
+                          {isPrepaid ? (
                             <span className="inline-flex text-[9px] font-black uppercase tracking-wider text-amber-300 bg-amber-500/20 border border-amber-400/30 px-1.5 py-0.5 rounded flex-shrink-0">
                               Price: PKR {unlockFee.toLocaleString()}
+                            </span>
+                          ) : (
+                            <span className="inline-flex text-[9px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-1.5 py-0.5 rounded flex-shrink-0">
+                              Free Task
                             </span>
                           )}
                         </>
@@ -757,10 +790,10 @@ export const TasksPage: React.FC = () => {
                             e.stopPropagation();
                             navigate(`/app/tasks/${task.id}`);
                           }}
-                          className="px-2.5 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/60 text-slate-300 text-xs font-semibold flex items-center gap-1 cursor-pointer transition-all"
+                          className="px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-200 hover:text-white text-xs font-semibold flex items-center gap-1 cursor-pointer transition-all"
                         >
-                          <Lock className="w-3 h-3 text-amber-400" />
-                          <span className="hidden sm:inline">View</span>
+                          <span>View</span>
+                          <ArrowRight className="w-3 h-3 text-slate-400" />
                         </button>
                       ) : (
                         <button

@@ -289,23 +289,30 @@ export const TaskDetailPage: React.FC = () => {
           )}
         </div>
 
-        {/* Simple Inline Rewards Strip (No boxes) - Hidden when task is locked in Levels 1-3 or locked level */}
-        {!(isLocked && ((level?.levelNumber || 1) <= 3 || !taskData?.isLevelUnlocked)) && (
+        {/* Simple Inline Rewards Strip (No boxes) - Visible for Levels 4-10 or unlocked levels */}
+        {!(isLocked && (level?.levelNumber || 1) <= 3 && !taskData?.isLevelUnlocked) && (
           <div className="flex items-center gap-5 sm:gap-8 flex-wrap pt-1 pb-1">
-            {task?.isPaid && (
+            {task?.isPaid ? (
               <div>
                 <span className="text-[10px] text-slate-400 uppercase font-semibold block tracking-wider">Prepaid Price</span>
                 <span className="text-sm sm:text-base font-black text-[#FFD45A]">
                   PKR {unlockFee.toLocaleString()}
                 </span>
               </div>
+            ) : (
+              <div>
+                <span className="text-[10px] text-emerald-400 uppercase font-semibold block tracking-wider">Task Type</span>
+                <span className="text-xs sm:text-sm font-black text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-md inline-block">
+                  Free Task
+                </span>
+              </div>
             )}
             <div>
               <span className="text-[10px] text-slate-400 uppercase font-semibold block tracking-wider">
-                {task?.isPaid ? 'Commission (40%)' : 'Reward'}
+                {task?.isPaid ? 'Commission (40%)' : 'Reward / Prize'}
               </span>
               <span className="text-sm sm:text-base font-black text-[#10D6A0]">
-                {task?.rewardAmount > 0 ? `PKR ${task?.rewardAmount?.toLocaleString()}` : 'TBD'}
+                {task?.rewardAmount > 0 ? `PKR ${task?.rewardAmount?.toLocaleString()}` : 'Free Task'}
               </span>
             </div>
           </div>
@@ -320,20 +327,24 @@ export const TaskDetailPage: React.FC = () => {
               </div>
               <div className="space-y-1 max-w-md mx-auto">
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold mb-1">
-                  <span>{((level?.levelNumber || 1) <= 3 || !taskData?.isLevelUnlocked) ? 'Task Locked' : 'Preview Mode'}</span>
+                  <span>{(level?.levelNumber || 1) >= 4 ? 'Level Preview Mode' : 'Task Locked'}</span>
                 </div>
-                <h3 className="text-base font-bold text-white">This Task is Locked</h3>
+                <h3 className="text-base font-bold text-white">
+                  {(level?.levelNumber || 1) >= 4 ? `Level ${level?.levelNumber || ''} Assignment Preview` : 'This Task is Locked'}
+                </h3>
                 <p className="text-xs text-slate-300 leading-relaxed">
-                  {task?.lockMessage || `Task #${task?.taskNumber || ''} is locked. Complete the current task first to unlock this task.`}
+                  {(level?.levelNumber || 1) >= 4
+                    ? `Task prize and assignment details are visible above. Advance through your active level requirements to submit this task.`
+                    : (task?.lockMessage || `Task #${task?.taskNumber || ''} is locked. Complete the current task first to unlock this task.`)}
                 </p>
               </div>
               <div className="pt-1">
                 <Link
-                  to="/app/tasks"
+                  to={`/app/tasks?level=${level?.levelNumber || 1}`}
                   className="inline-flex items-center gap-1.5 bg-[#1264F5] hover:bg-[#168BFF] text-white text-xs font-semibold px-4 py-2 rounded-lg shadow transition-all"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
-                  <span>Back to Tasks & Levels</span>
+                  <span>Back to Level {level?.levelNumber || 1}</span>
                 </Link>
               </div>
             </div>
