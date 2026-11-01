@@ -2,18 +2,49 @@ const rawApiUrl = import.meta.env.VITE_API_URL;
 const DEFAULT_PROD_URL = 'https://streetearn-backend.vercel.app/api';
 
 function resolveApiBase(): string {
-  if (rawApiUrl && !rawApiUrl.includes('<')) {
-    return rawApiUrl.replace(/\/$/, '');
+  // If running in browser:
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+    const port = window.location.port;
+    const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
+    const isBackendDomain = hostname.includes('backend') || hostname.includes('api');
+    const isAdminPath =
+      window.location.pathname.startsWith('/admin') ||
+      window.location.pathname.startsWith('/adminpanal');
+
+    // 1. Deployed / Production environment (NOT localhost)
+    if (!isLocalhost) {
+      // If we are directly on the backend domain or inside the Admin SPA, relative /api is always same-origin and 100% reliable
+      if (isBackendDomain || isAdminPath) {
+        return '/api';
+      }
+      // If VITE_API_URL is configured and NOT localhost, use it
+      if (
+        rawApiUrl &&
+        !rawApiUrl.includes('localhost') &&
+        !rawApiUrl.includes('127.0.0.1') &&
+        !rawApiUrl.includes('<') &&
+        rawApiUrl !== '/api'
+      ) {
+        return rawApiUrl.replace(/\/$/, '');
+      }
+      // If hosted on separate frontend domain (e.g. rewardsheet.vercel.app), use production backend URL
+      return DEFAULT_PROD_URL;
+    }
+
+    // 2. Localhost environment
+    if (port === '5050') {
+      return '/api';
+    }
+    if (rawApiUrl && !rawApiUrl.includes('<')) {
+      return rawApiUrl.replace(/\/$/, '');
+    }
+    return 'http://localhost:5050/api';
   }
-  // When running inside the Admin SPA served directly by the backend, always use same-origin relative /api
-  if (typeof window !== 'undefined' && (window.location.pathname.startsWith('/admin') || window.location.pathname.startsWith('/adminpanal'))) {
-    return '/api';
-  }
+
+  // SSR or non-browser fallback:
   if (import.meta.env.PROD) {
     return DEFAULT_PROD_URL;
-  }
-  if (typeof window !== 'undefined' && window.location.hostname && window.location.hostname !== 'localhost') {
-    return `${window.location.protocol}//${window.location.hostname}:5050/api`;
   }
   return 'http://localhost:5050/api';
 }
