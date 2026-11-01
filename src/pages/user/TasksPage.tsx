@@ -537,7 +537,9 @@ export const TasksPage: React.FC = () => {
         {isSelectedLevelLocked && (
           <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center justify-between gap-3 text-xs">
             <span className="text-red-300">
-              Complete all tasks in Level {activeLevelNumber - 1} to unlock this tier.
+              {activeLevelNumber === 5
+                ? 'Complete any one task in Level 4 to unlock Level 5.'
+                : `Complete all tasks in Level ${activeLevelNumber - 1} to unlock this tier.`}
             </span>
             <button
               onClick={() => handleSelectLevel(userCurrentLevelNumber)}
@@ -548,12 +550,28 @@ export const TasksPage: React.FC = () => {
           </div>
         )}
 
-        {/* Notice for Level 5 requiring Level 4 Task 1 */}
+        {/* Notice for Level 4 if user completed their 1 task */}
+        {activeLevelNumber === 4 && (selectedLevelSummary?.approvedTaskCount ?? 0) >= 1 && (
+          <div className="p-3.5 rounded-xl bg-gradient-to-r from-emerald-500/15 via-[#07242B] to-emerald-500/15 border border-emerald-400/40 flex items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2.5 text-emerald-300">
+              <Sparkles className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+              <span>You have completed your Level 4 task! The remaining Level 4 tasks are closed. Level 5 tasks are now unlocked.</span>
+            </div>
+            <button
+              onClick={() => handleSelectLevel(5)}
+              className="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex-shrink-0 cursor-pointer transition-all shadow-sm"
+            >
+              Go to Level 5 →
+            </button>
+          </div>
+        )}
+
+        {/* Notice for Level 5 requiring Level 4 Task */}
         {activeLevelNumber === 5 && !isSelectedLevelLocked && tasks && tasks.length > 0 && tasks[0]?.userStatus === 'LOCKED' && (
           <div className="p-3.5 rounded-xl bg-gradient-to-r from-amber-500/15 via-[#071F42] to-amber-500/15 border border-amber-400/40 flex items-center justify-between gap-3 text-xs">
             <div className="flex items-center gap-2.5 text-amber-300">
               <Sparkles className="w-4 h-4 text-amber-400 flex-shrink-0" />
-              <span>{tasks[0]?.lockMessage || 'Complete at least one Level 4 prepaid task to unlock Level 5 task participation.'}</span>
+              <span>{tasks[0]?.lockMessage || 'Complete any one Level 4 prepaid task to unlock Level 5 task participation.'}</span>
             </div>
             <button
               onClick={() => handleSelectLevel(4)}
