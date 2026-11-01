@@ -326,25 +326,6 @@ export const SpinPage: React.FC = () => {
         </div>
       )}
 
-      {/* Milestone Spin Under Review Banner */}
-      {pendingMilestone && (
-        <div className="p-4 bg-gradient-to-r from-[#FFD45A]/15 via-[#0B2248] to-[#1264F5]/20 border border-[#FFD45A]/50 rounded-2xl text-slate-200 text-xs max-w-3xl mx-auto shadow-lg backdrop-blur-md">
-          <div className="space-y-0.5">
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-[#FFD45A] uppercase tracking-wider text-[11px]">
-                Milestone Free Spin Under Review
-              </span>
-              <span className="bg-[#FFD45A]/20 text-[#FFD45A] text-[10px] font-bold px-2 py-0.5 rounded-full">
-                Task Milestone
-              </span>
-            </div>
-            <p className="text-slate-300 leading-relaxed">
-              You completed a milestone assignment! Administration is currently preparing your exclusive prize allocation. Once approved, your wheel spin unlocks automatically in real time without reloading!
-            </p>
-          </div>
-        </div>
-      )}
-
       {error && (
         <div className="p-4 bg-red-500/15 border border-red-500/50 rounded-2xl text-red-300 text-sm flex items-center gap-3 max-w-xl mx-auto shadow-lg backdrop-blur-md">
           <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
