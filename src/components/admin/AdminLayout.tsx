@@ -23,7 +23,6 @@ import {
   ChevronRight,
   Bell,
   Ticket,
-  IdCard,
 } from 'lucide-react';
 import { api } from '../../api/client';
 import { useAdminAuth } from '../../context/AdminAuthContext';
@@ -33,10 +32,6 @@ const PAGE_TITLES: Record<string, { title: string; subtitle: string }> = {
   '/adminpanal/users': {
     title: 'Member Management',
     subtitle: 'View member accounts, reset passwords with audit logging, and perform balance adjustments.',
-  },
-  '/adminpanal/identity-verifications': {
-    title: 'Identity Verification Desk',
-    subtitle: 'Review government ID cards, verify CNIC details, and authenticate member identities.',
   },
   '/adminpanal/dashboard': {
     title: 'Administrative Overview',
@@ -205,16 +200,12 @@ export const AdminLayout: React.FC = () => {
     if (path === '/adminpanal/withdrawals') {
       return notificationCounts.withdrawals;
     }
-    if (path === '/adminpanal/identity-verifications') {
-      return (notificationCounts as any).identities || 0;
-    }
     return 0;
   };
 
   const menuItems = [
     { label: 'Dashboard', path: '/adminpanal/dashboard', icon: LayoutDashboard },
     { label: 'Users', path: '/adminpanal/users', icon: Users },
-    { label: 'Identity Verification', path: '/adminpanal/identity-verifications', icon: IdCard },
     { label: 'Levels', path: '/adminpanal/levels', icon: Layers },
     { label: 'Tasks', path: '/adminpanal/tasks', icon: CheckSquare },
     { label: 'Submissions', path: '/adminpanal/submissions', icon: FileCheck2 },

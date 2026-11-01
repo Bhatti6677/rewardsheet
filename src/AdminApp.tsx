@@ -21,7 +21,6 @@ import { AdminAnnouncementsPage } from './pages/admin/AdminAnnouncementsPage';
 import { AdminReportsPage } from './pages/admin/AdminReportsPage';
 import { AdminSettingsPage } from './pages/admin/AdminSettingsPage';
 import { AdminActivityLogsPage } from './pages/admin/AdminActivityLogsPage';
-import { AdminIdentityVerificationsPage } from './pages/admin/AdminIdentityVerificationsPage';
 
 const ProtectedAdminRoute: React.FC = () => {
   const { admin, loading: isLoading } = useAdminAuth();
@@ -54,7 +53,6 @@ export const AdminApp: React.FC = () => {
         <Route path="dashboard" element={<AdminDashboardPage />} />
         <Route path="users" element={<AdminUsersPage />} />
         <Route path="users/:userId" element={<AdminUserDetailPage />} />
-        <Route path="identity-verifications" element={<AdminIdentityVerificationsPage />} />
         <Route path="levels" element={<AdminLevelsPage />} />
         <Route path="tasks" element={<AdminTasksPage />} />
         <Route path="submissions" element={<AdminSubmissionsPage />} />

@@ -320,11 +320,6 @@ export const api = {
   markNotificationRead: (id: string) => request(`/notifications/${id}/read`, { method: 'PUT' }),
   markAllNotificationsRead: () => request('/notifications/read-all', { method: 'PUT' }),
 
-  // Identity Verification
-  getUserIdentity: (opts?: RequestOptions) => request('/user/identity', opts),
-  submitUserIdentity: (payload: { idFrontImage: string; idBackImage: string }) =>
-    request('/user/identity', { method: 'POST', body: JSON.stringify(payload) }),
-
   // ----------------------------------------------------
   // ADMIN API
   // ----------------------------------------------------
@@ -454,24 +449,4 @@ export const api = {
   // Admin Reports & Audit
   getAdminReports: () => request('/admin/reports', {}, true),
   getAdminActivityLogs: (page = 1, limit = 30) => request(`/admin/activity-logs?page=${page}&limit=${limit}`, {}, true),
-
-  // Admin Identity Verification
-  getAdminIdentityVerifications: (params?: { status?: string; search?: string; page?: number; limit?: number }) => {
-    const q = new URLSearchParams();
-    if (params?.status) q.append('status', params.status);
-    if (params?.search) q.append('search', params.search);
-    if (params?.page) q.append('page', params.page.toString());
-    if (params?.limit) q.append('limit', params.limit.toString());
-    return request(`/admin/identity-verifications?${q.toString()}`, {}, true);
-  },
-  getAdminIdentityVerification: (id: string) => request(`/admin/identity-verifications/${id}`, {}, true),
-  reviewIdentityVerification: (id: string, payload: {
-    action: 'APPROVE' | 'REJECT';
-    cnicNumber?: string;
-    fullName?: string;
-    gender?: string;
-    dateOfBirth?: string;
-    reviewNotes?: string;
-    rejectionReason?: string;
-  }) => request(`/admin/identity-verifications/${id}/review`, { method: 'PUT', body: JSON.stringify(payload) }, true),
 };
