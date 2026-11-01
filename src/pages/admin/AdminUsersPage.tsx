@@ -36,6 +36,7 @@ type ColumnKey = (typeof COLUMN_KEYS)[number];
 interface ColumnMeta {
   key: ColumnKey;
   label: string;
+  title?: string;
   defaultWidth: number;
   minWidth: number;
   maxWidth: number;
@@ -46,8 +47,8 @@ const TABLE_COLUMNS: ColumnMeta[] = [
   { key: 'name', label: 'Member Name', defaultWidth: 175, minWidth: 100, maxWidth: 400, align: 'left' },
   { key: 'phone', label: 'Phone', defaultWidth: 110, minWidth: 75, maxWidth: 220, align: 'left' },
   { key: 'levelRow', label: 'Level / Row', defaultWidth: 110, minWidth: 80, maxWidth: 200, align: 'left' },
-  { key: 'creditPoints', label: 'Credit Points', defaultWidth: 85, minWidth: 60, maxWidth: 160, align: 'left' },
-  { key: 'walletBalance', label: 'Wallet Balance', defaultWidth: 95, minWidth: 70, maxWidth: 180, align: 'left' },
+  { key: 'creditPoints', label: 'Credit Points', title: 'CP', defaultWidth: 85, minWidth: 60, maxWidth: 160, align: 'left' },
+  { key: 'walletBalance', label: 'Wallet Balance', title: 'PKR', defaultWidth: 95, minWidth: 70, maxWidth: 180, align: 'left' },
   { key: 'status', label: 'Status', defaultWidth: 85, minWidth: 55, maxWidth: 160, align: 'left' },
   { key: 'actions', label: 'Actions', defaultWidth: 210, minWidth: 150, maxWidth: 380, align: 'right' },
 ];
@@ -673,7 +674,7 @@ export const AdminUsersPage: React.FC = () => {
                       }`}
                     >
                       <div className={`flex items-center gap-1 ${col.align === 'right' ? 'justify-end pr-2' : 'justify-between pr-2'}`}>
-                        <span className="truncate" title={col.label}>
+                        <span className="truncate" title={col.title || col.label}>
                           {col.label}
                         </span>
                       </div>
