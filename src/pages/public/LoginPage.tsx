@@ -27,7 +27,11 @@ export const LoginPage: React.FC = () => {
       login(res.token, res.user, res.user.wallet);
       navigate('/app');
     } catch (err: any) {
-      setError(err.message || 'Login failed. Please check credentials.');
+      if (err.isAdmin || err.message?.includes('Administrator') || err.message?.includes('adminpanal')) {
+        setError('Administrator credentials detected. Please sign in via the Administrator Portal.');
+      } else {
+        setError(err.message || 'Login failed. Please check credentials.');
+      }
     } finally {
       setLoading(false);
     }
@@ -58,9 +62,19 @@ export const LoginPage: React.FC = () => {
         {/* Form Card */}
         <div className="relative bg-[#0D1324]/90 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl shadow-black/70 overflow-hidden before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-amber-400/40 before:to-transparent">
           {error && (
-            <div className="mb-5 p-3 bg-red-500/15 border border-red-500/30 rounded-xl text-red-300 text-xs flex items-center gap-2.5 animate-in fade-in">
-              <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
-              <span className="leading-relaxed">{error}</span>
+            <div className="mb-5 p-3 bg-red-500/15 border border-red-500/30 rounded-xl text-red-300 text-xs flex items-start gap-2.5 animate-in fade-in">
+              <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
+              <div className="leading-relaxed">
+                <span>{error}</span>
+                {error.includes('Administrator') && (
+                  <Link
+                    to="/adminpanal"
+                    className="block mt-1.5 text-amber-400 font-bold underline hover:text-amber-300"
+                  >
+                    Open Administrator Control Portal →
+                  </Link>
+                )}
+              </div>
             </div>
           )}
 

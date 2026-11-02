@@ -91,6 +91,12 @@ export const App: React.FC = () => {
     };
   }, [checkMaintenance]);
 
+  const isBackendHost =
+    typeof window !== 'undefined' &&
+    (window.location.hostname.includes('backend') ||
+     window.location.hostname.includes('admin') ||
+     window.location.hostname.includes('streetearn-backend.vercel.app'));
+
   const isAdminRoute = window.location.pathname.startsWith('/adminpanal');
 
   if ((maintenanceTriggered || publicSettings?.maintenanceMode) && !isAdminRoute) {
@@ -106,10 +112,19 @@ export const App: React.FC = () => {
   return (
     <ErrorBoundary>
       <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<LandingPage />} />
+        {/* On backend host, root and /login route straight to AdminApp */}
+        {isBackendHost ? (
+          <>
+            <Route path="/" element={<Navigate to="/adminpanal/login" replace />} />
+            <Route path="/login" element={<Navigate to="/adminpanal/login" replace />} />
+          </>
+        ) : (
+          <>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<LoginPage />} />
+          </>
+        )}
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/login" element={<LoginPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/terms" element={<TermsPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
@@ -134,7 +149,7 @@ export const App: React.FC = () => {
         <Route path="/adminpanal" element={<AdminApp />} />
 
         {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to={isBackendHost ? "/adminpanal/login" : "/"} replace />} />
       </Routes>
     </ErrorBoundary>
   );
