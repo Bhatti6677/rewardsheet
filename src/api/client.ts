@@ -480,6 +480,10 @@ export const api = {
     request('/admin/telegram-users/merge', { method: 'POST', body: JSON.stringify({ sourceChatId, targetChatId }) }, true),
   grantTelegramUserCodes: (chatId: string, amount: number) =>
     request(`/admin/telegram-users/${chatId}/grant`, { method: 'POST', body: JSON.stringify({ amount }) }, true),
+  deductTelegramUserCodes: (chatId: string, amount: number) =>
+    request(`/admin/telegram-users/${chatId}/deduct`, { method: 'POST', body: JSON.stringify({ amount }) }, true),
+  generateMyAssignedCode: (chatId?: string) =>
+    request('/admin/my-assigned-codes/generate', { method: 'POST', body: JSON.stringify({ chatId }) }, true),
   generateAdminReferralCodes: (payload?: { count?: number; prefix?: string }) =>
     request('/admin/referral-codes/generate', { method: 'POST', body: JSON.stringify(payload || {}) }, true),
   createAdminReferralCode: (payload: { code: string; notes?: string }) =>

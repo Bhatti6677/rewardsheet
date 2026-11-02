@@ -5,6 +5,7 @@ import {
   Check,
   Search,
   Plus,
+  Minus,
   RefreshCw,
   CheckCircle2,
   Users,
@@ -193,7 +194,7 @@ export const AdminReferralCodesPage: React.FC = () => {
         );
       }
       setActionNotice(
-        `Granted +${amount} referral codes to Telegram client (Chat ID: ${chatId})! Client has been notified via bot.`
+        res.message || `Granted +${amount} referral codes to Telegram client (Chat ID: ${chatId})! Client has been notified via bot.`
       );
       setTimeout(() => setActionNotice(null), 5000);
     } catch (err: any) {
@@ -203,7 +204,29 @@ export const AdminReferralCodesPage: React.FC = () => {
     }
   };
 
+  const handleDeductCodes = async (chatId: string, amount: number) => {
+    setGrantingChatId(chatId);
+    try {
+      const res: any = await api.deductTelegramUserCodes(chatId, amount);
+      if (res.user) {
+        setTelegramUsers((prev) =>
+          prev.map((u) => (String(u.chatId) === String(chatId) ? res.user : u))
+        );
+      }
+      setActionNotice(
+        res.message || `Decreased quota by -${amount} codes for Telegram client (Chat ID: ${chatId})! Client has been notified via bot.`
+      );
+      setTimeout(() => setActionNotice(null), 5000);
+    } catch (err: any) {
+      alert(err.message || 'Failed to decrease quota');
+    } finally {
+      setGrantingChatId(null);
+    }
+  };
+
   const availableList = (data?.availableCodes || []).filter((item: any) => {
+    // Strictly isolate: Assigned codes belong exclusively to their respective users and are never shown in Admin Available codes
+    if (item.notes && item.notes.startsWith('TG:')) return false;
     if (!searchQuery.trim()) return true;
     const q = searchQuery.toLowerCase().trim();
     return item.code.toLowerCase().includes(q) || (item.notes && item.notes.toLowerCase().includes(q));
@@ -570,10 +593,18 @@ export const AdminReferralCodesPage: React.FC = () => {
                           </strong>
                         </td>
                         <td>
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
-                            <Users className="w-3 h-3 text-slate-500" />
-                            <span>USED</span>
-                          </span>
+                          <div className="flex flex-col gap-1">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200 w-fit">
+                              <Users className="w-3 h-3 text-slate-500" />
+                              <span>USED</span>
+                            </span>
+                            {item.notes && item.notes.startsWith('TG:') && (
+                              <span className="inline-flex items-center gap-1 text-[9px] text-sky-700 bg-sky-50 border border-sky-200 px-1.5 py-0.5 rounded w-fit font-medium">
+                                <Send className="w-2.5 h-2.5 text-sky-600" />
+                                <span>Invited by: {item.notes.replace(/^TG:[^|]+\|?/, '') || 'Client'}</span>
+                              </span>
+                            )}
+                          </div>
                         </td>
                         <td>
                           <strong className="text-[#111827]">{item.usedByName || 'Registered User'}</strong>
@@ -663,15 +694,17 @@ export const AdminReferralCodesPage: React.FC = () => {
                       <th>Client Name</th>
                       <th>Telegram Chat ID</th>
                       <th>Codes Generated</th>
-                      <th>Remaining Quota</th>
+                      <th>Remaining Quota (Max 50)</th>
                       <th>Registered On</th>
-                      <th className="text-right">Grant More Codes</th>
+                      <th className="text-right">Adjust Quota (Max 50)</th>
                     </tr>
                   </thead>
                   <tbody>
                     {tgList.map((client: any) => {
                       const isGranting = grantingChatId === String(client.chatId);
                       const isExhausted = client.remainingQuota <= 0;
+                      const isMax = client.remainingQuota >= 50;
+                      const customQty = parseInt(customAmounts[String(client.chatId)] || '0', 10);
                       return (
                         <tr key={client.id} className="hover:bg-slate-50/70">
                           <td>
@@ -706,18 +739,23 @@ export const AdminReferralCodesPage: React.FC = () => {
                             <span className="font-bold text-[#111827]">
                               {client.codesGenerated || 0}
                             </span>
-                            <span className="text-[10px] text-[#6B7280]"> / {client.totalQuota || 10}</span>
+                            <span className="text-[10px] text-[#6B7280]"> generated</span>
                           </td>
                           <td>
-                            {isExhausted ? (
+                            {isMax ? (
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black bg-blue-100 text-blue-800 border border-blue-300">
+                                <ShieldCheck className="w-3 h-3 text-blue-600" />
+                                <span>50 / 50 (MAX)</span>
+                              </span>
+                            ) : isExhausted ? (
                               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
                                 <AlertCircle className="w-3 h-3 text-amber-600" />
-                                <span>0 Left (Quota Exhausted)</span>
+                                <span>0 / 50 Left (Exhausted)</span>
                               </span>
                             ) : (
                               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                                 <Check className="w-3 h-3 text-emerald-600" />
-                                <span>{client.remainingQuota} Codes Left</span>
+                                <span>{client.remainingQuota} / 50 Available</span>
                               </span>
                             )}
                           </td>
@@ -741,37 +779,53 @@ export const AdminReferralCodesPage: React.FC = () => {
                                 <GitMerge className="w-3 h-3 text-indigo-600" />
                                 <span>Murj</span>
                               </button>
+
+                              {/* Decrease Quota Buttons */}
                               <button
-                                disabled={isGranting}
-                                onClick={() => handleGrantCodes(client.chatId, 10)}
-                                className="px-2 py-1 bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-[11px] font-bold rounded shadow-sm disabled:opacity-50 transition-all cursor-pointer flex items-center gap-1"
-                                title="Grant 10 more codes"
+                                disabled={isGranting || isExhausted}
+                                onClick={() => handleDeductCodes(client.chatId, 5)}
+                                className="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 text-[11px] font-bold rounded border border-rose-200 disabled:opacity-40 transition-all cursor-pointer flex items-center gap-0.5"
+                                title="Decrease quota by 5 codes"
                               >
-                                {isGranting ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Plus className="w-3 h-3" />}
-                                <span>+10</span>
+                                <Minus className="w-3 h-3" />
+                                <span>5</span>
                               </button>
                               <button
-                                disabled={isGranting}
-                                onClick={() => handleGrantCodes(client.chatId, 20)}
-                                className="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-[#111827] text-[11px] font-bold rounded border border-slate-300 disabled:opacity-50 transition-all cursor-pointer"
-                                title="Grant 20 more codes"
+                                disabled={isGranting || isExhausted}
+                                onClick={() => handleDeductCodes(client.chatId, 10)}
+                                className="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 text-[11px] font-bold rounded border border-rose-200 disabled:opacity-40 transition-all cursor-pointer flex items-center gap-0.5"
+                                title="Decrease quota by 10 codes"
                               >
-                                +20
-                              </button>
-                              <button
-                                disabled={isGranting}
-                                onClick={() => handleGrantCodes(client.chatId, 50)}
-                                className="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-[#111827] text-[11px] font-bold rounded border border-slate-300 disabled:opacity-50 transition-all cursor-pointer"
-                                title="Grant 50 more codes"
-                              >
-                                +50
+                                <Minus className="w-3 h-3" />
+                                <span>10</span>
                               </button>
 
+                              {/* Increase Quota Buttons */}
+                              <button
+                                disabled={isGranting || isMax}
+                                onClick={() => handleGrantCodes(client.chatId, 5)}
+                                className="px-2 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-[11px] font-bold rounded border border-emerald-200 disabled:opacity-40 transition-all cursor-pointer flex items-center gap-0.5"
+                                title="Grant 5 more codes (Max 50)"
+                              >
+                                <Plus className="w-3 h-3" />
+                                <span>5</span>
+                              </button>
+                              <button
+                                disabled={isGranting || isMax}
+                                onClick={() => handleGrantCodes(client.chatId, 10)}
+                                className="px-2 py-1 bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-[11px] font-bold rounded shadow-sm disabled:opacity-40 transition-all cursor-pointer flex items-center gap-0.5"
+                                title="Grant 10 more codes (Max 50)"
+                              >
+                                {isGranting ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Plus className="w-3 h-3" />}
+                                <span>10</span>
+                              </button>
+
+                              {/* Custom Quantity Adjustment */}
                               <div className="inline-flex items-center gap-1 pl-1 border-l border-slate-200">
                                 <input
                                   type="number"
                                   min="1"
-                                  max="1000"
+                                  max="50"
                                   placeholder="Qty"
                                   value={customAmounts[String(client.chatId)] || ''}
                                   onChange={(e) => {
@@ -781,27 +835,39 @@ export const AdminReferralCodesPage: React.FC = () => {
                                       [String(client.chatId)]: val,
                                     }));
                                   }}
-                                  className="w-14 px-1.5 py-1 bg-white border border-[#D9E4F2] focus:border-[#2563EB] rounded text-xs text-center font-bold text-[#111827] focus:outline-none"
+                                  className="w-12 px-1 py-1 bg-white border border-[#D9E4F2] focus:border-[#2563EB] rounded text-xs text-center font-bold text-[#111827] focus:outline-none"
                                 />
                                 <button
-                                  disabled={
-                                    isGranting ||
-                                    !parseInt(customAmounts[String(client.chatId)] || '0', 10)
-                                  }
+                                  disabled={isGranting || isMax || !customQty}
                                   onClick={() => {
-                                    const qty = parseInt(customAmounts[String(client.chatId)] || '0', 10);
-                                    if (qty > 0) {
-                                      handleGrantCodes(client.chatId, qty);
+                                    if (customQty > 0) {
+                                      handleGrantCodes(client.chatId, customQty);
                                       setCustomAmounts((prev) => ({
                                         ...prev,
                                         [String(client.chatId)]: '',
                                       }));
                                     }
                                   }}
-                                  className="px-2 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold rounded shadow-sm disabled:opacity-40 transition-all cursor-pointer"
-                                  title="Grant custom amount of codes"
+                                  className="px-2 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold rounded shadow-sm disabled:opacity-30 transition-all cursor-pointer"
+                                  title="Grant custom quota"
                                 >
-                                  Grant
+                                  +Grant
+                                </button>
+                                <button
+                                  disabled={isGranting || isExhausted || !customQty}
+                                  onClick={() => {
+                                    if (customQty > 0) {
+                                      handleDeductCodes(client.chatId, customQty);
+                                      setCustomAmounts((prev) => ({
+                                        ...prev,
+                                        [String(client.chatId)]: '',
+                                      }));
+                                    }
+                                  }}
+                                  className="px-2 py-1 bg-rose-600 hover:bg-rose-700 text-white text-[10px] font-bold rounded shadow-sm disabled:opacity-30 transition-all cursor-pointer"
+                                  title="Deduct custom quota"
+                                >
+                                  -Deduct
                                 </button>
                               </div>
                             </div>

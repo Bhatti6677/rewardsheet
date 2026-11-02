@@ -11,12 +11,14 @@ import {
   UserCheck,
   CheckCircle2,
   ShieldAlert,
+  Plus,
 } from 'lucide-react';
 import { api } from '../../api/client';
 
 export const AdminAssignedCodesPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [reloading, setReloading] = useState(false);
+  const [generating, setGenerating] = useState(false);
   const [data, setData] = useState<any>(null);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'AVAILABLE' | 'USED'>('ALL');
@@ -53,6 +55,20 @@ export const AdminAssignedCodesPage: React.FC = () => {
       setCopiedCode(null);
       setActionNotice(null);
     }, 2500);
+  };
+
+  const handleGenerateCode = async () => {
+    setGenerating(true);
+    try {
+      const res: any = await api.generateMyAssignedCode();
+      setActionNotice(res.message || `Code "${res.code}" generated successfully from your available quota!`);
+      loadAssignedCodes(true);
+      setTimeout(() => setActionNotice(null), 5000);
+    } catch (err: any) {
+      alert(err.message || 'Failed to generate code from quota');
+    } finally {
+      setGenerating(false);
+    }
   };
 
   if (loading) {
@@ -96,14 +112,28 @@ export const AdminAssignedCodesPage: React.FC = () => {
           </p>
         </div>
 
-        <button
-          onClick={() => loadAssignedCodes(true)}
-          disabled={reloading}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#D9E4F2] bg-white hover:bg-[#F8FAFD] text-[#2563EB] font-bold text-xs transition-all h-9 disabled:opacity-60 shadow-xs cursor-pointer self-start sm:self-auto"
-        >
-          <RefreshCw className={`w-3.5 h-3.5 ${reloading ? 'animate-spin' : ''}`} />
-          <span>{reloading ? 'Refreshing...' : 'Refresh Codes'}</span>
-        </button>
+        <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
+          {hasLinkedTelegram && (tg?.availableCodes ?? 0) > 0 && (
+            <button
+              onClick={handleGenerateCode}
+              disabled={generating}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-all h-9 disabled:opacity-60 shadow-xs cursor-pointer"
+              title="Generate next 6-letter referral code from your remaining quota"
+            >
+              {generating ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
+              <span>{generating ? 'Generating...' : 'Generate Code from Quota'}</span>
+            </button>
+          )}
+
+          <button
+            onClick={() => loadAssignedCodes(true)}
+            disabled={reloading}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#D9E4F2] bg-white hover:bg-[#F8FAFD] text-[#2563EB] font-bold text-xs transition-all h-9 disabled:opacity-60 shadow-xs cursor-pointer"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${reloading ? 'animate-spin' : ''}`} />
+            <span>{reloading ? 'Refreshing...' : 'Refresh Codes'}</span>
+          </button>
+        </div>
       </div>
 
       {actionNotice && (
