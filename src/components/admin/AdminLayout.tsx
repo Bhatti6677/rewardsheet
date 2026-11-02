@@ -23,6 +23,8 @@ import {
   ChevronRight,
   Bell,
   Ticket,
+  KeyRound,
+  ShieldCheck,
 } from 'lucide-react';
 import { api } from '../../api/client';
 import { useAdminAuth } from '../../context/AdminAuthContext';
@@ -32,6 +34,10 @@ const PAGE_TITLES: Record<string, { title: string; subtitle: string }> = {
   '/adminpanal/users': {
     title: 'Member Management',
     subtitle: 'View member accounts, reset passwords with audit logging, and perform balance adjustments.',
+  },
+  '/adminpanal/mini-admins': {
+    title: 'Mini Admin Management',
+    subtitle: 'Create and control Mini Admins with unique 10-minute dynamic OTP authentication.',
   },
   '/adminpanal/level-approvals': {
     title: 'Unlock Levels',
@@ -207,24 +213,33 @@ export const AdminLayout: React.FC = () => {
     return 0;
   };
 
-  const menuItems = [
-    { label: 'Dashboard', path: '/adminpanal/dashboard', icon: LayoutDashboard },
-    { label: 'Users', path: '/adminpanal/users', icon: Users },
-    { label: 'Unlock Levels', path: '/adminpanal/level-approvals', icon: KeyRound },
-    { label: 'Levels', path: '/adminpanal/levels', icon: Layers },
-    { label: 'Tasks', path: '/adminpanal/tasks', icon: CheckSquare },
-    { label: 'Submissions', path: '/adminpanal/submissions', icon: FileCheck2 },
-    { label: 'Spin Wheel', path: '/adminpanal/spin', icon: Disc },
-    { label: 'Deposits', path: '/adminpanal/deposits', icon: ArrowDownLeft },
-    { label: 'Withdrawals', path: '/adminpanal/withdrawals', icon: ArrowUpRight },
-    { label: 'Balance Adjustments', path: '/adminpanal/wallets', icon: Wallet },
-    { label: '100 Invitation Codes', path: '/adminpanal/referral-codes', icon: Ticket },
-    { label: 'Transactions', path: '/adminpanal/transactions', icon: Receipt },
-    { label: 'Announcements', path: '/adminpanal/announcements', icon: Megaphone },
-    { label: 'Reports', path: '/adminpanal/reports', icon: BarChart3 },
-    { label: 'Website Settings', path: '/adminpanal/settings', icon: Settings },
-    { label: 'Audit Logs', path: '/adminpanal/activity-logs', icon: HistoryIcon },
-  ];
+  const isMiniAdmin = admin?.role === 'MINI_ADMIN';
+
+  const menuItems = isMiniAdmin
+    ? [
+        { label: 'Dashboard', path: '/adminpanal/dashboard', icon: LayoutDashboard },
+        { label: 'Level 1 Users', path: '/adminpanal/users', icon: Users },
+        { label: 'Level 1 Submissions', path: '/adminpanal/submissions', icon: FileCheck2 },
+      ]
+    : [
+        { label: 'Dashboard', path: '/adminpanal/dashboard', icon: LayoutDashboard },
+        { label: 'Users', path: '/adminpanal/users', icon: Users },
+        { label: 'Mini Admins', path: '/adminpanal/mini-admins', icon: ShieldCheck },
+        { label: 'Unlock Levels', path: '/adminpanal/level-approvals', icon: KeyRound },
+        { label: 'Levels', path: '/adminpanal/levels', icon: Layers },
+        { label: 'Tasks', path: '/adminpanal/tasks', icon: CheckSquare },
+        { label: 'Submissions', path: '/adminpanal/submissions', icon: FileCheck2 },
+        { label: 'Spin Wheel', path: '/adminpanal/spin', icon: Disc },
+        { label: 'Deposits', path: '/adminpanal/deposits', icon: ArrowDownLeft },
+        { label: 'Withdrawals', path: '/adminpanal/withdrawals', icon: ArrowUpRight },
+        { label: 'Balance Adjustments', path: '/adminpanal/wallets', icon: Wallet },
+        { label: '100 Invitation Codes', path: '/adminpanal/referral-codes', icon: Ticket },
+        { label: 'Transactions', path: '/adminpanal/transactions', icon: Receipt },
+        { label: 'Announcements', path: '/adminpanal/announcements', icon: Megaphone },
+        { label: 'Reports', path: '/adminpanal/reports', icon: BarChart3 },
+        { label: 'Website Settings', path: '/adminpanal/settings', icon: Settings },
+        { label: 'Audit Logs', path: '/adminpanal/activity-logs', icon: HistoryIcon },
+      ];
 
   const handleLogout = () => {
     adminLogout();
@@ -294,7 +309,9 @@ export const AdminLayout: React.FC = () => {
               </div>
               <div className="min-w-0">
                 <p className="text-xs font-bold text-[#111827] truncate">{admin?.username || 'Admin'}</p>
-                <p className="text-[10px] text-[#6B7280] truncate">{admin?.role || 'Super Admin'}</p>
+                <p className="text-[10px] text-[#6B7280] truncate font-semibold">
+                  {admin?.role === 'MINI_ADMIN' ? 'Mini Admin (Level 1 Only)' : 'Master Admin'}
+                </p>
               </div>
             </div>
             <button

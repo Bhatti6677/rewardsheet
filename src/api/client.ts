@@ -496,4 +496,17 @@ export const api = {
   // Admin Reports & Audit
   getAdminReports: () => request('/admin/reports', {}, true),
   getAdminActivityLogs: (page = 1, limit = 30) => request(`/admin/activity-logs?page=${page}&limit=${limit}`, {}, true),
+
+  // Admin Mini Admin Management (Master Admin only)
+  getAdminMiniAdmins: () => request('/admin/mini-admins', {}, true),
+  createAdminMiniAdmin: (payload: { email: string; password: string; username?: string }) =>
+    request('/admin/mini-admins', { method: 'POST', body: JSON.stringify(payload) }, true),
+  updateAdminMiniAdminStatus: (id: string, status: 'ACTIVE' | 'SUSPENDED') =>
+    request(`/admin/mini-admins/${id}/status`, { method: 'PUT', body: JSON.stringify({ status }) }, true),
+  updateAdminMiniAdminPassword: (id: string, password: string) =>
+    request(`/admin/mini-admins/${id}/password`, { method: 'PUT', body: JSON.stringify({ password }) }, true),
+  regenerateAdminMiniAdminOtp: (id: string) =>
+    request(`/admin/mini-admins/${id}/regenerate-otp`, { method: 'POST' }, true),
+  deleteAdminMiniAdmin: (id: string) =>
+    request(`/admin/mini-admins/${id}`, { method: 'DELETE' }, true),
 };

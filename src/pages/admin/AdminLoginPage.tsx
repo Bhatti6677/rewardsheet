@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Shield, Lock, User, ArrowRight, AlertCircle, Sparkles } from 'lucide-react';
+import { Shield, Lock, User, ArrowRight, AlertCircle, Sparkles, KeyRound } from 'lucide-react';
 import { api } from '../../api/client';
 import { useAdminAuth } from '../../context/AdminAuthContext';
 
@@ -10,6 +10,7 @@ export const AdminLoginPage: React.FC = () => {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [otp, setOtp] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -19,7 +20,11 @@ export const AdminLoginPage: React.FC = () => {
     setLoading(true);
 
     try {
-      const res = await api.adminLogin({ username, password });
+      const res = await api.adminLogin({
+        username: username.trim(),
+        password,
+        otp: otp.trim() ? otp.trim() : undefined,
+      });
       adminLogin(res.token, res.admin);
       navigate('/adminpanal/dashboard');
     } catch (err: any) {
@@ -75,14 +80,14 @@ export const AdminLoginPage: React.FC = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Administrator Username
+                Administrator Username or Gmail
               </label>
               <div className="relative group">
                 <User className="w-4 h-4 text-slate-400 group-focus-within:text-amber-400 absolute left-3.5 top-3.5 transition-colors" />
                 <input
                   type="text"
                   required
-                  placeholder="admin"
+                  placeholder="admin or miniadmin@gmail.com"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   className="w-full bg-[#060A14] border border-slate-800/90 focus:border-amber-400/80 focus:ring-2 focus:ring-amber-400/15 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none transition-all shadow-inner h-11"
@@ -103,6 +108,26 @@ export const AdminLoginPage: React.FC = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full bg-[#060A14] border border-slate-800/90 focus:border-amber-400/80 focus:ring-2 focus:ring-amber-400/15 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none transition-all shadow-inner h-11"
+                />
+              </div>
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-semibold text-slate-300">
+                  Dynamic OTP Code
+                </label>
+                <span className="text-[10px] text-amber-400 font-bold">Required for Mini Admin</span>
+              </div>
+              <div className="relative group">
+                <KeyRound className="w-4 h-4 text-slate-400 group-focus-within:text-amber-400 absolute left-3.5 top-3.5 transition-colors" />
+                <input
+                  type="text"
+                  maxLength={6}
+                  placeholder="6-digit OTP (ask Master Admin)"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+                  className="w-full bg-[#060A14] border border-slate-800/90 focus:border-amber-400/80 focus:ring-2 focus:ring-amber-400/15 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none transition-all shadow-inner h-11 font-mono tracking-widest"
                 />
               </div>
             </div>

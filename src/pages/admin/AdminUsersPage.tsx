@@ -20,6 +20,7 @@ import {
   Unlock,
 } from 'lucide-react';
 import { api } from '../../api/client';
+import { useAdminAuth } from '../../context/AdminAuthContext';
 
 const COLUMN_KEYS = [
   'name',
@@ -64,6 +65,9 @@ const DEFAULT_WIDTHS: Record<ColumnKey, number> = {
 };
 
 export const AdminUsersPage: React.FC = () => {
+  const { admin } = useAdminAuth();
+  const isMiniAdmin = admin?.role === 'MINI_ADMIN';
+
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -840,73 +844,77 @@ export const AdminUsersPage: React.FC = () => {
                             >
                               <Eye className="w-3.5 h-3.5" />
                             </Link>
-                            <button
-                              onClick={() => {
-                                setEditModalUser(u);
-                                setEditName(u.name);
-                                setEditPhone(u.phone);
-                                setEditStatus(u.accountStatus || 'ACTIVE');
-                                setEditWithdrawalLocked(Boolean(u.isWithdrawalLocked));
-                                setEditWithdrawalLockReason(u.withdrawalLockReason || '');
-                                setEditReason('');
-                              }}
-                              className="p-1 rounded hover:bg-blue-50 text-[#4B5563] hover:text-[#2563EB]"
-                              title={`Edit Details for ${u.name}`}
-                            >
-                              <Edit3 className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                              onClick={() => {
-                                setAdjustPoints('');
-                                setPointsReason('');
-                                setPointsActionType('ADD');
-                                setPointsModalUser(u);
-                              }}
-                              className="p-1 rounded hover:bg-slate-100 text-[#4B5563] hover:text-[#111827] transition-colors"
-                              title={`Edit / Adjust Credit Points for ${u.name}`}
-                            >
-                              <Sparkles className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                              onClick={() => {
-                                setAdjustAmount('');
-                                setAdjustReason('');
-                                setBalanceModalUser(u);
-                              }}
-                              className="p-1 rounded hover:bg-emerald-50 text-[#4B5563] hover:text-emerald-700"
-                              title="Adjust Balance"
-                            >
-                              <Wallet className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                              onClick={() => {
-                                setWithdrawalLockModalUser(u);
-                                setLockWithdrawalReason(u.withdrawalLockReason || '');
-                              }}
-                              className={`p-1 rounded transition-colors ${
-                                u.isWithdrawalLocked
-                                  ? 'bg-rose-100 text-rose-700 hover:bg-rose-200'
-                                  : 'hover:bg-rose-50 text-[#4B5563] hover:text-rose-600'
-                              }`}
-                              title={
-                                u.isWithdrawalLocked
-                                  ? `Withdrawal is SUSPENDED / BLOCKED: "${u.withdrawalLockReason || 'No reason specified'}" - Click (X) to manage or unblock`
-                                  : `Suspend or Block Withdrawals for ${u.name}`
-                              }
-                            >
-                              <X className={`w-3.5 h-3.5 ${u.isWithdrawalLocked ? 'text-rose-700 stroke-[2.5]' : 'stroke-[2]'}`} />
-                            </button>
-                            <button
-                              onClick={() => {
-                                setTempPassword('');
-                                setResetReason('');
-                                setResetModalUser(u);
-                              }}
-                              className="p-1 rounded hover:bg-blue-50 text-[#4B5563] hover:text-[#2563EB]"
-                              title="Reset Password"
-                            >
-                              <KeyRound className="w-3.5 h-3.5" />
-                            </button>
+                            {!isMiniAdmin && (
+                              <>
+                                <button
+                                  onClick={() => {
+                                    setEditModalUser(u);
+                                    setEditName(u.name);
+                                    setEditPhone(u.phone);
+                                    setEditStatus(u.accountStatus || 'ACTIVE');
+                                    setEditWithdrawalLocked(Boolean(u.isWithdrawalLocked));
+                                    setEditWithdrawalLockReason(u.withdrawalLockReason || '');
+                                    setEditReason('');
+                                  }}
+                                  className="p-1 rounded hover:bg-blue-50 text-[#4B5563] hover:text-[#2563EB]"
+                                  title={`Edit Details for ${u.name}`}
+                                >
+                                  <Edit3 className="w-3.5 h-3.5" />
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    setAdjustPoints('');
+                                    setPointsReason('');
+                                    setPointsActionType('ADD');
+                                    setPointsModalUser(u);
+                                  }}
+                                  className="p-1 rounded hover:bg-slate-100 text-[#4B5563] hover:text-[#111827] transition-colors"
+                                  title={`Edit / Adjust Credit Points for ${u.name}`}
+                                >
+                                  <Sparkles className="w-3.5 h-3.5" />
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    setAdjustAmount('');
+                                    setAdjustReason('');
+                                    setBalanceModalUser(u);
+                                  }}
+                                  className="p-1 rounded hover:bg-emerald-50 text-[#4B5563] hover:text-emerald-700"
+                                  title="Adjust Balance"
+                                >
+                                  <Wallet className="w-3.5 h-3.5" />
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    setWithdrawalLockModalUser(u);
+                                    setLockWithdrawalReason(u.withdrawalLockReason || '');
+                                  }}
+                                  className={`p-1 rounded transition-colors ${
+                                    u.isWithdrawalLocked
+                                      ? 'bg-rose-100 text-rose-700 hover:bg-rose-200'
+                                      : 'hover:bg-rose-50 text-[#4B5563] hover:text-rose-600'
+                                  }`}
+                                  title={
+                                    u.isWithdrawalLocked
+                                      ? `Withdrawal is SUSPENDED / BLOCKED: "${u.withdrawalLockReason || 'No reason specified'}" - Click (X) to manage or unblock`
+                                      : `Suspend or Block Withdrawals for ${u.name}`
+                                  }
+                                >
+                                  <X className={`w-3.5 h-3.5 ${u.isWithdrawalLocked ? 'text-rose-700 stroke-[2.5]' : 'stroke-[2]'}`} />
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    setTempPassword('');
+                                    setResetReason('');
+                                    setResetModalUser(u);
+                                  }}
+                                  className="p-1 rounded hover:bg-blue-50 text-[#4B5563] hover:text-[#2563EB]"
+                                  title="Reset Password"
+                                >
+                                  <KeyRound className="w-3.5 h-3.5" />
+                                </button>
+                              </>
+                            )}
                             <button
                               onClick={() => handleToggleStatus(u)}
                               className={`px-1.5 py-0.5 rounded text-[10px] font-semibold flex items-center gap-1 transition-all ${

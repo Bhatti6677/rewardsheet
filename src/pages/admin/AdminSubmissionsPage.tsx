@@ -13,13 +13,17 @@ import {
   Check,
 } from 'lucide-react';
 import { api } from '../../api/client';
+import { useAdminAuth } from '../../context/AdminAuthContext';
 
 export const AdminSubmissionsPage: React.FC = () => {
+  const { admin } = useAdminAuth();
+  const isMiniAdmin = admin?.role === 'MINI_ADMIN';
+
   const [submissions, setSubmissions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [reloading, setReloading] = useState(false);
   const [status, setStatus] = useState('PENDING');
-  const [level, setLevel] = useState<string>('');
+  const [level, setLevel] = useState<string>(isMiniAdmin ? '1' : '');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
@@ -209,18 +213,24 @@ export const AdminSubmissionsPage: React.FC = () => {
             <option value="REJECTED">Rejected Submissions</option>
           </select>
 
-          <select
-            value={level}
-            onChange={(e) => setLevel(e.target.value)}
-            className="bg-white border border-[#D9E4F2] rounded-lg px-3 py-1.5 text-xs text-[#111827] focus:outline-none h-9"
-          >
-            <option value="">All Levels (1–10)</option>
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((l) => (
-              <option key={l} value={l.toString()}>
-                Level {l}
-              </option>
-            ))}
-          </select>
+          {isMiniAdmin ? (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg px-3 py-1.5 text-xs text-blue-700 font-bold flex items-center gap-1.5 h-9">
+              <span>Level 1 Tasks Only</span>
+            </div>
+          ) : (
+            <select
+              value={level}
+              onChange={(e) => setLevel(e.target.value)}
+              className="bg-white border border-[#D9E4F2] rounded-lg px-3 py-1.5 text-xs text-[#111827] focus:outline-none h-9"
+            >
+              <option value="">All Levels (1–10)</option>
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((l) => (
+                <option key={l} value={l.toString()}>
+                  Level {l}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
 
         <button

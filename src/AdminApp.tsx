@@ -22,6 +22,7 @@ import { AdminAnnouncementsPage } from './pages/admin/AdminAnnouncementsPage';
 import { AdminReportsPage } from './pages/admin/AdminReportsPage';
 import { AdminSettingsPage } from './pages/admin/AdminSettingsPage';
 import { AdminActivityLogsPage } from './pages/admin/AdminActivityLogsPage';
+import { AdminMiniAdminsPage } from './pages/admin/AdminMiniAdminsPage';
 
 const ProtectedAdminRoute: React.FC = () => {
   const { admin, loading: isLoading } = useAdminAuth();
@@ -53,22 +54,70 @@ export const AdminApp: React.FC = () => {
       <Route element={<ProtectedAdminRoute />}>
         <Route path="dashboard" element={<AdminDashboardPage />} />
         <Route path="users" element={<AdminUsersPage />} />
-        <Route path="level-approvals" element={<AdminLevelApprovalsPage />} />
-        <Route path="users/:userId" element={<AdminUserDetailPage />} />
-        <Route path="levels" element={<AdminLevelsPage />} />
-        <Route path="tasks" element={<AdminTasksPage />} />
         <Route path="submissions" element={<AdminSubmissionsPage />} />
-        <Route path="deposits" element={<AdminDepositsPage />} />
-        <Route path="withdrawals" element={<AdminWithdrawalsPage />} />
-        <Route path="wallets" element={<AdminWalletsPage />} />
-        <Route path="spin" element={<AdminSpinPage />} />
-        <Route path="referrals" element={<AdminReferralsPage />} />
-        <Route path="referral-codes" element={<AdminReferralCodesPage />} />
-        <Route path="transactions" element={<AdminTransactionsPage />} />
-        <Route path="announcements" element={<AdminAnnouncementsPage />} />
-        <Route path="reports" element={<AdminReportsPage />} />
-        <Route path="settings" element={<AdminSettingsPage />} />
-        <Route path="activity-logs" element={<AdminActivityLogsPage />} />
+        <Route path="users/:userId" element={<AdminUserDetailPage />} />
+
+        {/* Master Admin Only Routes (Restricted from Mini Admins) */}
+        <Route
+          path="mini-admins"
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminMiniAdminsPage />}
+        />
+        <Route
+          path="level-approvals"
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminLevelApprovalsPage />}
+        />
+        <Route
+          path="levels"
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminLevelsPage />}
+        />
+        <Route
+          path="tasks"
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminTasksPage />}
+        />
+        <Route
+          path="deposits"
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminDepositsPage />}
+        />
+        <Route
+          path="withdrawals"
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminWithdrawalsPage />}
+        />
+        <Route
+          path="wallets"
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminWalletsPage />}
+        />
+        <Route
+          path="spin"
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminSpinPage />}
+        />
+        <Route
+          path="referrals"
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminReferralsPage />}
+        />
+        <Route
+          path="referral-codes"
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminReferralCodesPage />}
+        />
+        <Route
+          path="transactions"
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminTransactionsPage />}
+        />
+        <Route
+          path="announcements"
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminAnnouncementsPage />}
+        />
+        <Route
+          path="reports"
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminReportsPage />}
+        />
+        <Route
+          path="settings"
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminSettingsPage />}
+        />
+        <Route
+          path="activity-logs"
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminActivityLogsPage />}
+        />
       </Route>
     </>
   );
@@ -88,6 +137,7 @@ export const AdminApp: React.FC = () => {
 
       {/* Top-level aliases for direct navigation */}
       <Route path="/dashboard" element={<Navigate to="/adminpanal/dashboard" replace />} />
+      <Route path="/mini-admins" element={<Navigate to="/adminpanal/mini-admins" replace />} />
       <Route path="/users" element={<Navigate to="/adminpanal/users" replace />} />
       <Route path="/level-approvals" element={<Navigate to="/adminpanal/level-approvals" replace />} />
       <Route path="/referral-codes" element={<Navigate to="/adminpanal/referral-codes" replace />} />

@@ -17,8 +17,12 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { api } from '../../api/client';
+import { useAdminAuth } from '../../context/AdminAuthContext';
 
 export const AdminDashboardPage: React.FC = () => {
+  const { admin } = useAdminAuth();
+  const isMiniAdmin = admin?.role === 'MINI_ADMIN';
+
   const [data, setData] = useState<any>(null);
   const [gridData, setGridData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -47,76 +51,114 @@ export const AdminDashboardPage: React.FC = () => {
     <div className="space-y-6">
       {/* Top Header Title */}
       <div>
-        <h1 className="text-xl sm:text-2xl font-bold text-[#111827]">Administrative Overview</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-[#111827]">
+          {isMiniAdmin ? 'Level 1 Delegated Administration' : 'Administrative Overview'}
+        </h1>
         <p className="text-xs text-[#6B7280] mt-0.5">
-          Real-time platform metrics, 10x10 task grid, financial queues, and audit trails.
+          {isMiniAdmin
+            ? 'Level 1 user management, submitted proof verification, and assigned task status.'
+            : 'Real-time platform metrics, 10x10 task grid, financial queues, and audit trails.'}
         </p>
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        {/* Total Users */}
-        <div className="admin-card p-4">
-          <span className="text-[11px] font-semibold text-[#6B7280] block">Total Members</span>
-          <span className="text-xl font-bold text-[#111827] block mt-1">
-            {metrics?.totalUsers?.toLocaleString() || 0}
-          </span>
-          <span className="text-[10px] text-emerald-600 font-medium">
-            {metrics?.activeUsers?.toLocaleString() || 0} active
-          </span>
+      {isMiniAdmin ? (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="admin-card p-5">
+            <span className="text-xs font-semibold text-[#6B7280] block">Assigned Level 1 Members</span>
+            <span className="text-2xl font-black text-[#111827] block mt-1">
+              {metrics?.totalUsers?.toLocaleString() || 0}
+            </span>
+            <span className="text-[11px] text-emerald-600 font-semibold mt-1 block">
+              {metrics?.activeUsers?.toLocaleString() || 0} active members
+            </span>
+          </div>
+
+          <Link to="/adminpanal/submissions" className="admin-card p-5 hover:border-[#2563EB] transition-colors">
+            <span className="text-xs font-semibold text-[#6B7280] block">Level 1 Pending Reviews</span>
+            <span className="text-2xl font-black text-[#2563EB] block mt-1">
+              {metrics?.pendingSubmissions || 0}
+            </span>
+            <span className="text-[11px] text-[#2563EB] font-semibold flex items-center gap-1 mt-1">
+              Review Queue <ChevronRight className="w-3.5 h-3.5" />
+            </span>
+          </Link>
+
+          <div className="admin-card p-5">
+            <span className="text-xs font-semibold text-[#6B7280] block">Level 1 Configured Tasks</span>
+            <span className="text-2xl font-black text-emerald-700 block mt-1">
+              {metrics?.totalTasks || 10}
+            </span>
+            <span className="text-[11px] text-slate-500 mt-1 block">
+              PKR {metrics?.totalApprovedRewardsAmount?.toLocaleString() || 0} rewards verified
+            </span>
+          </div>
         </div>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          {/* Total Users */}
+          <div className="admin-card p-4">
+            <span className="text-[11px] font-semibold text-[#6B7280] block">Total Members</span>
+            <span className="text-xl font-bold text-[#111827] block mt-1">
+              {metrics?.totalUsers?.toLocaleString() || 0}
+            </span>
+            <span className="text-[10px] text-emerald-600 font-medium">
+              {metrics?.activeUsers?.toLocaleString() || 0} active
+            </span>
+          </div>
 
-        {/* Pending Task Submissions */}
-        <Link to="/adminpanal/submissions" className="admin-card p-4 hover:border-[#2563EB] transition-colors">
-          <span className="text-[11px] font-semibold text-[#6B7280] block">Pending Tasks</span>
-          <span className="text-xl font-bold text-[#2563EB] block mt-1">
-            {metrics?.pendingSubmissions || 0}
-          </span>
-          <span className="text-[10px] text-[#2563EB] font-medium flex items-center gap-1">
-            Review Queue <ChevronRight className="w-3 h-3" />
-          </span>
-        </Link>
+          {/* Pending Task Submissions */}
+          <Link to="/adminpanal/submissions" className="admin-card p-4 hover:border-[#2563EB] transition-colors">
+            <span className="text-[11px] font-semibold text-[#6B7280] block">Pending Tasks</span>
+            <span className="text-xl font-bold text-[#2563EB] block mt-1">
+              {metrics?.pendingSubmissions || 0}
+            </span>
+            <span className="text-[10px] text-[#2563EB] font-medium flex items-center gap-1">
+              Review Queue <ChevronRight className="w-3 h-3" />
+            </span>
+          </Link>
 
-        {/* Pending Deposits */}
-        <Link to="/adminpanal/deposits" className="admin-card p-4 hover:border-[#2563EB] transition-colors">
-          <span className="text-[11px] font-semibold text-[#6B7280] block">Pending Deposits</span>
-          <span className="text-xl font-bold text-amber-600 block mt-1">
-            {metrics?.pendingDeposits || 0}
-          </span>
-          <span className="text-[10px] text-amber-600 font-medium flex items-center gap-1">
-            Verify Payments <ChevronRight className="w-3 h-3" />
-          </span>
-        </Link>
+          {/* Pending Deposits */}
+          <Link to="/adminpanal/deposits" className="admin-card p-4 hover:border-[#2563EB] transition-colors">
+            <span className="text-[11px] font-semibold text-[#6B7280] block">Pending Deposits</span>
+            <span className="text-xl font-bold text-amber-600 block mt-1">
+              {metrics?.pendingDeposits || 0}
+            </span>
+            <span className="text-[10px] text-amber-600 font-medium flex items-center gap-1">
+              Verify Payments <ChevronRight className="w-3 h-3" />
+            </span>
+          </Link>
 
-        {/* Pending Withdrawals */}
-        <Link to="/adminpanal/withdrawals" className="admin-card p-4 hover:border-[#2563EB] transition-colors">
-          <span className="text-[11px] font-semibold text-[#6B7280] block">Pending Payouts</span>
-          <span className="text-xl font-bold text-red-600 block mt-1">
-            {metrics?.pendingWithdrawals || 0}
-          </span>
-          <span className="text-[10px] text-red-600 font-medium flex items-center gap-1">
-            Review Requests <ChevronRight className="w-3 h-3" />
-          </span>
-        </Link>
+          {/* Pending Withdrawals */}
+          <Link to="/adminpanal/withdrawals" className="admin-card p-4 hover:border-[#2563EB] transition-colors">
+            <span className="text-[11px] font-semibold text-[#6B7280] block">Pending Payouts</span>
+            <span className="text-xl font-bold text-red-600 block mt-1">
+              {metrics?.pendingWithdrawals || 0}
+            </span>
+            <span className="text-[10px] text-red-600 font-medium flex items-center gap-1">
+              Review Requests <ChevronRight className="w-3 h-3" />
+            </span>
+          </Link>
 
-        {/* Total Deposits Sum */}
-        <div className="admin-card p-4">
-          <span className="text-[11px] font-semibold text-[#6B7280] block">Deposited PKR</span>
-          <span className="text-xl font-bold text-emerald-700 block mt-1 truncate">
-            PKR {metrics?.totalDepositsAmount?.toLocaleString() || 0}
-          </span>
-          <span className="text-[10px] text-[#6B7280]">Approved in bank</span>
+          {/* Total Deposits Sum */}
+          <div className="admin-card p-4">
+            <span className="text-[11px] font-semibold text-[#6B7280] block">Deposited PKR</span>
+            <span className="text-xl font-bold text-emerald-700 block mt-1 truncate">
+              PKR {metrics?.totalDepositsAmount?.toLocaleString() || 0}
+            </span>
+            <span className="text-[10px] text-[#6B7280]">Approved in bank</span>
+          </div>
+
+          {/* Total Paid Withdrawals Sum */}
+          <div className="admin-card p-4">
+            <span className="text-[11px] font-semibold text-[#6B7280] block">Paid Payouts</span>
+            <span className="text-xl font-bold text-blue-700 block mt-1 truncate">
+              PKR {metrics?.totalPaidWithdrawalsAmount?.toLocaleString() || 0}
+            </span>
+            <span className="text-[10px] text-[#6B7280]">Disbursed to members</span>
+          </div>
         </div>
-
-        {/* Total Paid Withdrawals Sum */}
-        <div className="admin-card p-4">
-          <span className="text-[11px] font-semibold text-[#6B7280] block">Paid Payouts</span>
-          <span className="text-xl font-bold text-blue-700 block mt-1 truncate">
-            PKR {metrics?.totalPaidWithdrawalsAmount?.toLocaleString() || 0}
-          </span>
-          <span className="text-[10px] text-[#6B7280]">Disbursed to members</span>
-        </div>
-      </div>
+      )}
 
       {/* 10x10 Task Status Overview Grid (Section 15) */}
       <div className="admin-card p-6 space-y-4">
@@ -211,47 +253,53 @@ export const AdminDashboardPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Two Column Layout: Recent Transactions & Recent Admin Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Transactions */}
-        <div className="admin-card p-6 space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-[#111827]">Recent Platform Ledger Transactions</h3>
-            <Link to="/adminpanal/transactions" className="text-xs text-[#2563EB] font-semibold hover:underline">
-              View All
-            </Link>
-          </div>
+      {/* Bottom Layout: Recent Transactions (Super Admin only) & Recent Admin Activity */}
+      <div className={`grid grid-cols-1 ${isMiniAdmin ? '' : 'lg:grid-cols-2'} gap-6`}>
+        {/* Recent Transactions (Super Admin only) */}
+        {!isMiniAdmin && (
+          <div className="admin-card p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-bold text-[#111827]">Recent Platform Ledger Transactions</h3>
+              <Link to="/adminpanal/transactions" className="text-xs text-[#2563EB] font-semibold hover:underline">
+                View All
+              </Link>
+            </div>
 
-          <div className="space-y-2">
-            {recentTransactions.map((tx: any) => (
-              <div
-                key={tx.id}
-                className="p-3 bg-[#F8FAFD] border border-[#EDF1F7] rounded-lg flex items-center justify-between text-xs"
-              >
-                <div className="min-w-0 pr-3">
-                  <p className="font-semibold text-[#111827] truncate">{tx.reason}</p>
-                  <p className="text-[10px] text-[#6B7280]">
-                    Member: {tx.user?.name || 'User'} ({tx.user?.phone || 'N/A'}) • {new Date(tx.createdAt).toLocaleDateString()}
-                  </p>
+            <div className="space-y-2">
+              {recentTransactions.map((tx: any) => (
+                <div
+                  key={tx.id}
+                  className="p-3 bg-[#F8FAFD] border border-[#EDF1F7] rounded-lg flex items-center justify-between text-xs"
+                >
+                  <div className="min-w-0 pr-3">
+                    <p className="font-semibold text-[#111827] truncate">{tx.reason}</p>
+                    <p className="text-[10px] text-[#6B7280]">
+                      Member: {tx.user?.name || 'User'} ({tx.user?.phone || 'N/A'}) • {new Date(tx.createdAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <div className="text-right whitespace-nowrap">
+                    <span className={`font-bold block ${tx.amount > 0 ? 'text-emerald-600' : 'text-[#111827]'}`}>
+                      {tx.amount > 0 ? '+' : ''}PKR {Math.abs(tx.amount).toLocaleString()}
+                    </span>
+                    <span className="text-[9px] text-[#6B7280] uppercase">{tx.status}</span>
+                  </div>
                 </div>
-                <div className="text-right whitespace-nowrap">
-                  <span className={`font-bold block ${tx.amount > 0 ? 'text-emerald-600' : 'text-[#111827]'}`}>
-                    {tx.amount > 0 ? '+' : ''}PKR {Math.abs(tx.amount).toLocaleString()}
-                  </span>
-                  <span className="text-[9px] text-[#6B7280] uppercase">{tx.status}</span>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Audit Logs */}
         <div className="admin-card p-6 space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-[#111827]">Recent Administrator Audit Logs</h3>
-            <Link to="/adminpanal/activity-logs" className="text-xs text-[#2563EB] font-semibold hover:underline">
-              View Audit Log
-            </Link>
+            <h3 className="text-sm font-bold text-[#111827]">
+              {isMiniAdmin ? 'Recent Level 1 Activity Logs' : 'Recent Administrator Audit Logs'}
+            </h3>
+            {!isMiniAdmin && (
+              <Link to="/adminpanal/activity-logs" className="text-xs text-[#2563EB] font-semibold hover:underline">
+                View Audit Log
+              </Link>
+            )}
           </div>
 
           <div className="space-y-2">
