@@ -427,30 +427,42 @@ export const TaskDetailPage: React.FC = () => {
                   <span>Deposit PKR {remainingNeeded.toLocaleString()} to Complete Task</span>
                 </Link>
               ) : (
-                <button
-                  type="button"
-                  onClick={handleSubmitProof}
-                  disabled={submitting}
-                  className={`w-full py-3 font-bold text-xs sm:text-sm rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer active:scale-98 ${
-                    task?.isPaid
-                      ? 'bg-gradient-to-r from-[#10D6A0] to-emerald-400 hover:from-emerald-400 hover:to-[#10D6A0] text-[#020B20] font-black'
-                      : 'bg-gradient-to-r from-[#1459E8] to-[#2478FF] hover:from-[#2478FF] hover:to-[#1459E8] text-white'
-                  }`}
-                >
-                  {submitting ? (
-                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  ) : task?.isPaid ? (
-                    <>
-                      <Zap className="w-4 h-4 text-[#020B20]" />
-                      <span>Complete Prepaid Task (+PKR {task?.rewardAmount?.toLocaleString() || 80} Reward)</span>
-                    </>
-                  ) : (
-                    <>
-                      <CheckCircle2 className="w-4 h-4" />
-                      <span>Complete Task & Claim PKR {task?.rewardAmount?.toLocaleString()}</span>
-                    </>
-                  )}
-                </button>
+                <>
+                  <button
+                    type="button"
+                    onClick={handleSubmitProof}
+                    disabled={submitting}
+                    className={`w-full py-3 font-bold text-xs sm:text-sm rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer active:scale-98 ${
+                      task?.isPaid
+                        ? 'bg-gradient-to-r from-[#10D6A0] to-emerald-400 hover:from-emerald-400 hover:to-[#10D6A0] text-[#020B20] font-black'
+                        : 'bg-gradient-to-r from-[#1459E8] to-[#2478FF] hover:from-[#2478FF] hover:to-[#1459E8] text-white'
+                    }`}
+                  >
+                    {submitting ? (
+                      <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    ) : task?.isPaid ? (
+                      <>
+                        <Zap className="w-4 h-4 text-[#020B20]" />
+                        <span>Complete Prepaid Task (+PKR {task?.rewardAmount?.toLocaleString() || 80} Reward)</span>
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle2 className="w-4 h-4" />
+                        <span>Complete Task & Claim PKR {task?.rewardAmount?.toLocaleString()}</span>
+                      </>
+                    )}
+                  </button>
+
+                  <p className="text-xs text-slate-400 text-center mt-2.5 select-none">
+                    By submitting this task, I agree to the{' '}
+                    <Link
+                      to="/terms"
+                      className="text-amber-400 hover:text-amber-300 font-semibold underline underline-offset-2 transition-colors cursor-pointer"
+                    >
+                      Terms and Conditions
+                    </Link>
+                  </p>
+                </>
               )}
             </div>
           )}
