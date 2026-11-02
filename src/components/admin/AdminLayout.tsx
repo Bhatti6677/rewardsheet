@@ -501,6 +501,7 @@ export const AdminLayout: React.FC = () => {
 
   const menuItems = isMiniAdmin
     ? [
+        { label: 'Dashboard', path: '/adminpanal/dashboard', icon: LayoutDashboard },
         { label: 'Submissions', path: '/adminpanal/submissions', icon: FileCheck2 },
       ]
     : [

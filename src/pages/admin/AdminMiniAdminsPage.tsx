@@ -19,6 +19,9 @@ import {
   Sparkles,
   Shield,
   Layers,
+  Send,
+  Link as LinkIcon,
+  Users,
 } from 'lucide-react';
 import { api } from '../../api/client';
 
@@ -30,12 +33,22 @@ interface MiniAdminItem {
   status: 'ACTIVE' | 'SUSPENDED';
   currentOtp: string;
   otpSecondsRemaining: number;
+  telegramChatId: string | null;
+  telegramUser?: {
+    chatId: string;
+    username: string | null;
+    firstName: string | null;
+    remainingQuota: number;
+    totalQuota: number;
+  } | null;
+  invitedUsersCount: number;
   createdAt: string;
   updatedAt?: string;
 }
 
 export const AdminMiniAdminsPage: React.FC = () => {
   const [miniAdmins, setMiniAdmins] = useState<MiniAdminItem[]>([]);
+  const [telegramUsers, setTelegramUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [copiedOtpId, setCopiedOtpId] = useState<string | null>(null);
@@ -44,14 +57,21 @@ export const AdminMiniAdminsPage: React.FC = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [resetModalAdmin, setResetModalAdmin] = useState<MiniAdminItem | null>(null);
   const [deleteModalAdmin, setDeleteModalAdmin] = useState<MiniAdminItem | null>(null);
+  const [assignTelegramModalAdmin, setAssignTelegramModalAdmin] = useState<MiniAdminItem | null>(null);
 
   // Create form state
   const [createEmail, setCreateEmail] = useState('');
   const [createPassword, setCreatePassword] = useState('');
   const [createUsername, setCreateUsername] = useState('');
+  const [createTelegramChatId, setCreateTelegramChatId] = useState('');
   const [showCreatePassword, setShowCreatePassword] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
+
+  // Assign Telegram state
+  const [selectedTelegramChatId, setSelectedTelegramChatId] = useState('');
+  const [updatingTelegram, setUpdatingTelegram] = useState(false);
+  const [assignError, setAssignError] = useState<string | null>(null);
 
   // Reset password state
   const [newPassword, setNewPassword] = useState('');
@@ -66,10 +86,13 @@ export const AdminMiniAdminsPage: React.FC = () => {
 
   const loadMiniAdmins = (silent = false) => {
     if (!silent) setLoading(true);
-    api
-      .getAdminMiniAdmins()
-      .then((res: any) => {
-        setMiniAdmins(res.miniAdmins || []);
+    Promise.all([
+      api.getAdminMiniAdmins(),
+      api.getAdminTelegramUsers().catch(() => ({ users: [] })),
+    ])
+      .then(([miniRes, tgRes]: [any, any]) => {
+        setMiniAdmins(miniRes.miniAdmins || []);
+        setTelegramUsers(tgRes.users || []);
       })
       .catch((err) => {
         console.error('Failed to load mini admins:', err);
@@ -131,6 +154,7 @@ export const AdminMiniAdminsPage: React.FC = () => {
         email: createEmail.trim(),
         password: createPassword,
         username: createUsername.trim() || undefined,
+        telegramChatId: createTelegramChatId ? createTelegramChatId.trim() : null,
       });
 
       showNotification(`Mini Admin account ${res.miniAdmin?.email || createEmail} created successfully!`);
@@ -138,11 +162,39 @@ export const AdminMiniAdminsPage: React.FC = () => {
       setCreateEmail('');
       setCreatePassword('');
       setCreateUsername('');
+      setCreateTelegramChatId('');
       loadMiniAdmins();
     } catch (err: any) {
       setCreateError(err.message || 'Failed to create Mini Admin account');
     } finally {
       setCreating(false);
+    }
+  };
+
+  const handleOpenAssignTelegram = (admin: MiniAdminItem) => {
+    setAssignTelegramModalAdmin(admin);
+    setSelectedTelegramChatId(admin.telegramChatId || '');
+    setAssignError(null);
+  };
+
+  const handleAssignTelegramSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!assignTelegramModalAdmin) return;
+    setAssignError(null);
+    setUpdatingTelegram(true);
+
+    try {
+      await api.updateAdminMiniAdminTelegram(
+        assignTelegramModalAdmin.id,
+        selectedTelegramChatId ? selectedTelegramChatId.trim() : null
+      );
+      showNotification(`Telegram account assignment updated for ${assignTelegramModalAdmin.email || assignTelegramModalAdmin.username}!`);
+      setAssignTelegramModalAdmin(null);
+      loadMiniAdmins(true);
+    } catch (err: any) {
+      setAssignError(err.message || 'Failed to update assigned Telegram account');
+    } finally {
+      setUpdatingTelegram(false);
     }
   };
 
@@ -330,6 +382,7 @@ export const AdminMiniAdminsPage: React.FC = () => {
                 <tr className="bg-[#F8FAFD] border-b border-[#E2E8F0] text-[11px] font-bold text-slate-600 uppercase tracking-wider">
                   <th className="py-3 px-4">Mini Admin</th>
                   <th className="py-3 px-4">Assigned Permission</th>
+                  <th className="py-3 px-4">Telegram Invite Account</th>
                   <th className="py-3 px-4">Status</th>
                   <th className="py-3 px-4">Active 10-Min OTP</th>
                   <th className="py-3 px-4">Rotation Timer</th>
@@ -363,6 +416,46 @@ export const AdminMiniAdminsPage: React.FC = () => {
                           <Layers className="w-3 h-3" />
                           Level 1 Tasks & Users Only
                         </span>
+                      </td>
+
+                      {/* Telegram Account & Performance */}
+                      <td className="py-3 px-4">
+                        {admin.telegramChatId ? (
+                          <div className="space-y-1">
+                            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-sky-50 border border-sky-200 text-sky-800 text-[11px] font-bold">
+                              <Send className="w-3 h-3 text-sky-600" />
+                              <span>
+                                {admin.telegramUser?.username
+                                  ? `@${admin.telegramUser.username}`
+                                  : admin.telegramUser?.firstName || 'Telegram User'}
+                              </span>
+                              <span className="text-[10px] text-sky-600 font-mono">({admin.telegramChatId})</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-[10px] text-slate-500">
+                              <span className="font-bold text-emerald-600 flex items-center gap-0.5">
+                                <Users className="w-3 h-3" />
+                                {admin.invitedUsersCount} invited
+                              </span>
+                              <span>•</span>
+                              <button
+                                onClick={() => handleOpenAssignTelegram(admin)}
+                                className="text-blue-600 hover:text-blue-800 font-bold hover:underline cursor-pointer"
+                              >
+                                Change
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2">
+                            <span className="text-[11px] text-slate-400 italic">Unassigned</span>
+                            <button
+                              onClick={() => handleOpenAssignTelegram(admin)}
+                              className="px-2 py-0.5 rounded text-[10.5px] font-bold bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors cursor-pointer"
+                            >
+                              Assign
+                            </button>
+                          </div>
+                        )}
                       </td>
 
                       <td className="py-3 px-4">
@@ -545,6 +638,27 @@ export const AdminMiniAdminsPage: React.FC = () => {
                 </div>
               </div>
 
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Assign Telegram Account <span className="text-slate-400 text-[10px]">(For invitation code tracking)</span>
+                </label>
+                <div className="relative">
+                  <Send className="w-4 h-4 text-sky-500 absolute left-3 top-3 pointer-events-none" />
+                  <select
+                    value={createTelegramChatId}
+                    onChange={(e) => setCreateTelegramChatId(e.target.value)}
+                    className="w-full bg-[#F8FAFD] border border-slate-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 focus:outline-none"
+                  >
+                    <option value="">-- No Telegram Account Assigned --</option>
+                    {telegramUsers.map((u: any) => (
+                      <option key={u.chatId} value={u.chatId}>
+                        {u.username ? `@${u.username}` : u.firstName || 'Telegram User'} (Chat ID: {u.chatId}) • Quota: {u.remainingQuota ?? u.totalQuota} left
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
               <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-[11px] text-amber-900 space-y-1">
                 <div className="font-bold flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-amber-700" />
@@ -702,6 +816,85 @@ export const AdminMiniAdminsPage: React.FC = () => {
                 Confirm Delete
               </button>
             </div>
+          </div>
+        </div>
+      )}
+      {/* ======================================================== */}
+      {/* 4. ASSIGN TELEGRAM INVITE ACCOUNT MODAL */}
+      {/* ======================================================== */}
+      {assignTelegramModalAdmin && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-white w-full max-w-md rounded-2xl border border-slate-200 shadow-2xl p-6 relative space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <div className="p-2 bg-sky-100 text-sky-700 rounded-xl">
+                  <Send className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-black text-slate-900">Assign Telegram Account</h3>
+                  <p className="text-[11px] text-slate-500 truncate max-w-[240px]">
+                    {assignTelegramModalAdmin.email || assignTelegramModalAdmin.username}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setAssignTelegramModalAdmin(null)}
+                className="text-slate-400 hover:text-slate-600 p-1 rounded-lg"
+              >
+                ✕
+              </button>
+            </div>
+
+            {assignError && (
+              <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-xs flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                <span>{assignError}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleAssignTelegramSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Select Telegram Account for Invite Codes
+                </label>
+                <select
+                  value={selectedTelegramChatId}
+                  onChange={(e) => setSelectedTelegramChatId(e.target.value)}
+                  className="w-full bg-[#F8FAFD] border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none"
+                >
+                  <option value="">-- No Telegram Account Assigned (Disconnect) --</option>
+                  {telegramUsers.map((u: any) => (
+                    <option key={u.chatId} value={u.chatId}>
+                      {u.username ? `@${u.username}` : u.firstName || 'Telegram User'} (Chat ID: {u.chatId}) • Remaining Quota: {u.remainingQuota ?? u.totalQuota}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-[11px] text-slate-500 mt-1.5 leading-relaxed">
+                  When linked, this Mini Admin's dashboard will track all users who register with invitation codes generated from this Telegram account.
+                </p>
+              </div>
+
+              <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setAssignTelegramModalAdmin(null)}
+                  className="px-4 py-2 border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-xl text-xs font-bold cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={updatingTelegram}
+                  className="px-5 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-xs font-bold shadow-md shadow-sky-500/20 disabled:opacity-50 cursor-pointer flex items-center gap-2"
+                >
+                  {updatingTelegram ? (
+                    <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <span>Save Assignment</span>
+                  )}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

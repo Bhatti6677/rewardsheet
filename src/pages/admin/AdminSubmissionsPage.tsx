@@ -221,7 +221,7 @@ export const AdminSubmissionsPage: React.FC = () => {
             <Search className="w-3.5 h-3.5 text-[#6B7280] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
-              placeholder="Search user name, phone, or ID..."
+              placeholder={isMiniAdmin ? 'Search user name or ID...' : 'Search user name, phone, or ID...'}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full bg-white border border-[#D9E4F2] focus:border-[#2563EB] rounded-lg pl-8 pr-7 py-1.5 text-xs text-[#111827] focus:outline-none placeholder:text-[#9CA3AF] shadow-xs h-9"
@@ -238,16 +238,23 @@ export const AdminSubmissionsPage: React.FC = () => {
             )}
           </div>
 
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            className="bg-white border border-[#D9E4F2] rounded-lg px-3 py-1.5 text-xs text-[#111827] focus:outline-none h-9"
-          >
-            <option value="">All Verification States</option>
-            <option value="PENDING">Pending Review</option>
-            <option value="APPROVED">Approved Submissions</option>
-            <option value="REJECTED">Rejected Submissions</option>
-          </select>
+          {isMiniAdmin ? (
+            <div className="bg-amber-50 border border-amber-200 rounded-lg px-3 py-1.5 text-xs text-amber-800 font-bold flex items-center gap-1.5 h-9">
+              <Clock className="w-3.5 h-3.5 text-amber-600" />
+              <span>Pending Submissions Only</span>
+            </div>
+          ) : (
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="bg-white border border-[#D9E4F2] rounded-lg px-3 py-1.5 text-xs text-[#111827] focus:outline-none h-9"
+            >
+              <option value="">All Verification States</option>
+              <option value="PENDING">Pending Review</option>
+              <option value="APPROVED">Approved Submissions</option>
+              <option value="REJECTED">Rejected Submissions</option>
+            </select>
+          )}
 
           {isMiniAdmin ? (
             <div className="bg-blue-50 border border-blue-200 rounded-lg px-3 py-1.5 text-xs text-blue-700 font-bold flex items-center gap-1.5 h-9">
@@ -362,7 +369,9 @@ export const AdminSubmissionsPage: React.FC = () => {
                     </td>
                     <td className="font-semibold text-[#111827]">
                       {sub.user?.name}
-                      <span className="block text-[10px] text-[#6B7280] font-mono">{sub.user?.phone}</span>
+                      {!isMiniAdmin && sub.user?.phone && (
+                        <span className="block text-[10px] text-[#6B7280] font-mono">{sub.user?.phone}</span>
+                      )}
                     </td>
                     <td>
                       <span className="font-semibold text-[#111827] block">
@@ -474,7 +483,8 @@ export const AdminSubmissionsPage: React.FC = () => {
 
             <div className="p-3 bg-[#F8FAFD] border border-[#D9E4F2] rounded-lg text-xs space-y-1.5">
               <p>
-                <strong className="text-[#111827]">Member:</strong> {reviewingSub.user?.name} ({reviewingSub.user?.phone})
+                <strong className="text-[#111827]">Member:</strong> {reviewingSub.user?.name}
+                {!isMiniAdmin && reviewingSub.user?.phone ? ` (${reviewingSub.user.phone})` : ''}
               </p>
               <p>
                 <strong className="text-[#111827]">Task:</strong> {reviewingSub.task?.title}

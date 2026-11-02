@@ -44,7 +44,7 @@ const ProtectedAdminRoute: React.FC = () => {
 
 export const AdminApp: React.FC = () => {
   const { admin } = useAdminAuth();
-  const defaultRoute = admin?.role === 'MINI_ADMIN' ? '/adminpanal/submissions' : '/adminpanal/dashboard';
+  const defaultRoute = '/adminpanal/dashboard';
 
   const adminRoutes = (
     <>
@@ -53,80 +53,77 @@ export const AdminApp: React.FC = () => {
 
       {/* Admin Protected Routes */}
       <Route element={<ProtectedAdminRoute />}>
-        <Route
-          path="dashboard"
-          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/submissions" replace /> : <AdminDashboardPage />}
-        />
+        <Route path="dashboard" element={<AdminDashboardPage />} />
         <Route
           path="users"
-          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/submissions" replace /> : <AdminUsersPage />}
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminUsersPage />}
         />
         <Route path="submissions" element={<AdminSubmissionsPage />} />
         <Route
           path="users/:userId"
-          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/submissions" replace /> : <AdminUserDetailPage />}
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminUserDetailPage />}
         />
 
         {/* Master Admin Only Routes (Restricted from Mini Admins) */}
         <Route
           path="mini-admins"
-          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/submissions" replace /> : <AdminMiniAdminsPage />}
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminMiniAdminsPage />}
         />
         <Route
           path="level-approvals"
-          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/submissions" replace /> : <AdminLevelApprovalsPage />}
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminLevelApprovalsPage />}
         />
         <Route
           path="levels"
-          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/submissions" replace /> : <AdminLevelsPage />}
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminLevelsPage />}
         />
         <Route
           path="tasks"
-          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/submissions" replace /> : <AdminTasksPage />}
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminTasksPage />}
         />
         <Route
           path="deposits"
-          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/submissions" replace /> : <AdminDepositsPage />}
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminDepositsPage />}
         />
         <Route
           path="withdrawals"
-          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/submissions" replace /> : <AdminWithdrawalsPage />}
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminWithdrawalsPage />}
         />
         <Route
           path="wallets"
-          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/submissions" replace /> : <AdminWalletsPage />}
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminWalletsPage />}
         />
         <Route
           path="spin"
-          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/submissions" replace /> : <AdminSpinPage />}
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminSpinPage />}
         />
         <Route
           path="referrals"
-          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/submissions" replace /> : <AdminReferralsPage />}
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminReferralsPage />}
         />
         <Route
           path="referral-codes"
-          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/submissions" replace /> : <AdminReferralCodesPage />}
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminReferralCodesPage />}
         />
         <Route
           path="transactions"
-          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/submissions" replace /> : <AdminTransactionsPage />}
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminTransactionsPage />}
         />
         <Route
           path="announcements"
-          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/submissions" replace /> : <AdminAnnouncementsPage />}
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminAnnouncementsPage />}
         />
         <Route
           path="reports"
-          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/submissions" replace /> : <AdminReportsPage />}
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminReportsPage />}
         />
         <Route
           path="settings"
-          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/submissions" replace /> : <AdminSettingsPage />}
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminSettingsPage />}
         />
         <Route
           path="activity-logs"
-          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/submissions" replace /> : <AdminActivityLogsPage />}
+          element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminActivityLogsPage />}
         />
       </Route>
     </>

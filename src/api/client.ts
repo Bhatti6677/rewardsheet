@@ -508,8 +508,10 @@ export const api = {
 
   // Admin Mini Admin Management (Master Admin only)
   getAdminMiniAdmins: () => request('/admin/mini-admins', {}, true),
-  createAdminMiniAdmin: (payload: { email: string; password: string; username?: string }) =>
+  createAdminMiniAdmin: (payload: { email: string; password: string; username?: string; telegramChatId?: string | null }) =>
     request('/admin/mini-admins', { method: 'POST', body: JSON.stringify(payload) }, true),
+  updateAdminMiniAdminTelegram: (id: string, telegramChatId: string | null) =>
+    request(`/admin/mini-admins/${id}/telegram`, { method: 'PUT', body: JSON.stringify({ telegramChatId }) }, true),
   updateAdminMiniAdminStatus: (id: string, status: 'ACTIVE' | 'SUSPENDED') =>
     request(`/admin/mini-admins/${id}/status`, { method: 'PUT', body: JSON.stringify({ status }) }, true),
   updateAdminMiniAdminPassword: (id: string, password: string) =>
