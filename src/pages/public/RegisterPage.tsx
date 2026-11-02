@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Crown, Lock, Phone, User, Ticket, ArrowRight, AlertCircle, Sparkles } from 'lucide-react';
+import { Crown, Lock, Phone, User, Ticket, ArrowRight, AlertCircle, Sparkles, Eye, EyeOff } from 'lucide-react';
 import { api } from '../../api/client';
 import { useAuth } from '../../context/AuthContext';
 
@@ -17,6 +17,8 @@ export const RegisterPage: React.FC = () => {
     referralCode: '',
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -121,7 +123,7 @@ export const RegisterPage: React.FC = () => {
                   type="text"
                   name="name"
                   required
-                  placeholder="e.g. Shahid Khan"
+                  placeholder="Full Name"
                   value={formData.name}
                   onChange={handleChange}
                   className="w-full bg-[#060A14] border border-slate-800/90 focus:border-amber-400/80 focus:ring-2 focus:ring-amber-400/15 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none transition-all shadow-inner"
@@ -139,7 +141,7 @@ export const RegisterPage: React.FC = () => {
                   type="tel"
                   name="phone"
                   required
-                  placeholder="e.g. 03001234567"
+                  placeholder="Mobile Number"
                   value={formData.phone}
                   onChange={handleChange}
                   className="w-full bg-[#060A14] border border-slate-800/90 focus:border-amber-400/80 focus:ring-2 focus:ring-amber-400/15 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none transition-all shadow-inner"
@@ -154,14 +156,22 @@ export const RegisterPage: React.FC = () => {
               <div className="relative group">
                 <Lock className="w-4 h-4 text-slate-400 group-focus-within:text-amber-400 absolute left-3.5 top-3.5 transition-colors" />
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   name="password"
                   required
-                  placeholder="Minimum 6 characters"
+                  placeholder="Password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full bg-[#060A14] border border-slate-800/90 focus:border-amber-400/80 focus:ring-2 focus:ring-amber-400/15 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none transition-all shadow-inner"
+                  className="w-full bg-[#060A14] border border-slate-800/90 focus:border-amber-400/80 focus:ring-2 focus:ring-amber-400/15 rounded-xl pl-10 pr-10 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none transition-all shadow-inner"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3.5 top-3 text-slate-400 hover:text-amber-400 transition-colors focus:outline-none cursor-pointer"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
             </div>
 
@@ -172,26 +182,29 @@ export const RegisterPage: React.FC = () => {
               <div className="relative group">
                 <Lock className="w-4 h-4 text-slate-400 group-focus-within:text-amber-400 absolute left-3.5 top-3.5 transition-colors" />
                 <input
-                  type="password"
+                  type={showConfirmPassword ? 'text' : 'password'}
                   name="confirmPassword"
                   required
-                  placeholder="Re-enter password"
+                  placeholder="Confirm Password"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className="w-full bg-[#060A14] border border-slate-800/90 focus:border-amber-400/80 focus:ring-2 focus:ring-amber-400/15 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none transition-all shadow-inner"
+                  className="w-full bg-[#060A14] border border-slate-800/90 focus:border-amber-400/80 focus:ring-2 focus:ring-amber-400/15 rounded-xl pl-10 pr-10 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none transition-all shadow-inner"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3.5 top-3 text-slate-400 hover:text-amber-400 transition-colors focus:outline-none cursor-pointer"
+                  aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
+                >
+                  {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-xs font-semibold text-slate-300">
-                  Official Referral Code *
-                </label>
-                <span className="text-[10px] font-bold text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-full">
-                  6-Letter Admin Code
-                </span>
-              </div>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                Official Referral Code *
+              </label>
               <div className="relative group">
                 <Ticket className="w-4 h-4 text-amber-400 absolute left-3.5 top-3.5" />
                 <input
@@ -199,15 +212,12 @@ export const RegisterPage: React.FC = () => {
                   name="referralCode"
                   required
                   maxLength={6}
-                  placeholder="e.g. lbhyfr"
+                  placeholder="Referral Code"
                   value={formData.referralCode}
                   onChange={handleChange}
                   className="w-full bg-[#060A14] border border-slate-800/90 focus:border-amber-400/80 focus:ring-2 focus:ring-amber-400/15 rounded-xl pl-10 pr-4 py-2.5 text-sm text-amber-300 font-mono font-bold tracking-wider placeholder-slate-500 focus:outline-none transition-all shadow-inner"
                 />
               </div>
-              <p className="text-[11px] text-slate-400 mt-1.5 leading-relaxed">
-                Enter your 6-letter official referral code provided by administration (e.g. <span className="font-mono text-amber-300">lbhyfr</span>, <span className="font-mono text-amber-300">LBHYFR</span>, or <span className="font-mono text-amber-300">Lbhyfr</span>). Each code is valid for a single registration only.
-              </p>
             </div>
 
             <div className="flex items-start gap-2.5 pt-1 pb-1">
