@@ -1,9 +1,4 @@
-const rawApiUrl = import.meta.env.VITE_API_URL;
-
 function resolveApiBase(): string {
-  if (rawApiUrl && typeof rawApiUrl === 'string' && !rawApiUrl.includes('<')) {
-    return rawApiUrl.replace(/\/$/, '') || '/api';
-  }
   return '/api';
 }
 
