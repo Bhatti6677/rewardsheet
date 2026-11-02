@@ -170,10 +170,10 @@ export const AdminReferralCodesPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-[#111827]">
-            100 Invitation Codes &amp; Telegram Bot Clients
+            Invitation Codes &amp; Telegram Bot Clients
           </h1>
           <p className="text-xs text-[#6B7280] mt-0.5">
-            Admin-only single-use 6-letter referral codes (auto-replenished to 100 codes). View every registered Telegram client and grant referral code quotas.
+            Admin-only single-use 6-letter referral codes. View registered Telegram bot clients and grant invitation code quotas.
           </p>
         </div>
 
