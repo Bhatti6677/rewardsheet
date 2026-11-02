@@ -661,7 +661,7 @@ export const AdminReferralCodesPage: React.FC = () => {
                   <Send className="w-4 h-4 text-sky-600" /> Telegram Invitation Bot Management
                 </span>
                 <p className="text-[11px] text-sky-800">
-                  Clients register by entering the access password (<code>9989GHYRT89</code>) in the Telegram bot. Each registered client gets an initial quota of <strong>10 codes</strong>. You can grant more codes below at any time, or merge (Murj) accounts if access was lost.
+                  Clients register by entering the configured access password in the Telegram bot. Each registered client gets an initial quota of <strong>10 codes</strong>. You can grant more codes below at any time, or merge (Murj) accounts if access was lost.
                 </p>
               </div>
               <div className="flex items-center gap-2 flex-shrink-0">
@@ -884,7 +884,7 @@ export const AdminReferralCodesPage: React.FC = () => {
                     No clients have started the Telegram Bot yet.
                   </p>
                   <p className="text-[11px] text-[#9CA3AF]">
-                    When your clients start the bot and send <code>9989GHYRT89</code>, they will appear here with an initial 10-code quota.
+                    When your clients start the bot and send the configured access password, they will appear here with an initial 10-code quota.
                   </p>
                 </div>
               )}

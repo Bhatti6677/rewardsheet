@@ -13,7 +13,7 @@ import {
   RefreshCw,
   Lock,
 } from 'lucide-react';
-import { supabase } from '../../utils/supabase';
+import { api } from '../../api/client';
 
 export interface LevelData {
   id: string;
@@ -74,112 +74,73 @@ export const LevelCard: React.FC<LevelCardProps> = ({
   const activeLevelId = propLevelId || level?.id;
 
   // -------------------------------------------------------------
-  // 1. Initial Fetch: Fetch level and sister tasks ONCE on mount
+  // 1. Initial Fetch: Fetch level and sister tasks via secure backend API
   // -------------------------------------------------------------
   useEffect(() => {
     if (!activeLevelId) return;
 
-    // If initial data wasn't pre-supplied, fetch once
     if (!initialLevel || !initialTasks) {
       setLoading(true);
-      Promise.all([
-        supabase.from('Level').select('id, levelNumber, title, description, completionReward, isUnlocked, isCompleted').eq('id', activeLevelId).maybeSingle(),
-        supabase
-          .from('Task')
-          .select('id, levelId, taskNumber, title, description, rewardAmount, status, isPaidTask, unlockFee, isPaidUnlocked')
-          .eq('levelId', activeLevelId)
-          .order('taskNumber', { ascending: true }),
-      ])
-        .then(([levelRes, tasksRes]) => {
-          if (levelRes.error && !initialLevel) {
-            console.warn('Supabase Level query notice:', levelRes.error.message);
-          } else if (levelRes.data) {
-            setLevel(levelRes.data as unknown as LevelData);
-          }
-
-          if (tasksRes.error && !initialTasks) {
-            console.warn('Supabase Task query notice:', tasksRes.error.message);
-          } else if (tasksRes.data) {
-            setTasks(tasksRes.data as unknown as TaskData[]);
+      api
+        .getLevels()
+        .then((res: any) => {
+          const allLevels = res?.levels || [];
+          const matched = allLevels.find((l: any) => l.id === activeLevelId);
+          if (matched) {
+            if (!initialLevel) {
+              setLevel({
+                id: matched.id,
+                level_number: matched.levelNumber,
+                title: matched.title,
+                description: matched.description,
+                status: matched.isCompleted ? 'completed' : matched.isUnlocked ? 'in_progress' : 'locked',
+                reward_amount: matched.completionReward,
+              });
+            }
+            if (!initialTasks && Array.isArray(matched.tasks)) {
+              setTasks(
+                matched.tasks.map((t: any) => ({
+                  id: t.id,
+                  level_id: matched.id,
+                  task_number: t.taskNumber,
+                  title: t.title,
+                  description: t.description,
+                  task_type: t.taskType,
+                  status: String(t.userStatus || 'pending').toLowerCase() as any,
+                  reward_amount: t.rewardAmount,
+                  instructions: t.instructions,
+                }))
+              );
+            }
           }
         })
-        .catch((err) => {
-          console.error('Failed to load level/tasks:', err);
-        })
+        .catch(() => {})
         .finally(() => setLoading(false));
     }
-  }, [activeLevelId]);
+  }, [activeLevelId, initialLevel, initialTasks]);
 
   // -------------------------------------------------------------
-  // 2. Supabase Realtime Channel: Zero Polling / No Refetches
-  // Updates local state DIRECTLY from postgres_changes payloads
+  // 2. Live Event Sync via internal event bus
   // -------------------------------------------------------------
   useEffect(() => {
     if (!activeLevelId) return;
 
-    const channelName = `realtime:level-card-${activeLevelId}`;
-    const channel = supabase
-      .channel(channelName)
-      // Listen to all Task changes under this level
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'tasks',
-          filter: `level_id=eq.${activeLevelId}`,
-        },
-        (payload) => {
-          // Trigger subtle visual pulse indicator showing live sync
-          setRealtimePulse(true);
-          setTimeout(() => setRealtimePulse(false), 1200);
+    const handleLiveUpdate = (e: Event) => {
+      const detail = (e as CustomEvent)?.detail;
+      if (!detail || detail.type === 'task' || detail.type === 'all') {
+        setRealtimePulse(true);
+        setTimeout(() => setRealtimePulse(false), 1200);
+      }
+    };
 
-          if (payload.eventType === 'UPDATE') {
-            const updated = payload.new as TaskData;
-            setTasks((prev) =>
-              prev.map((t) => (t.id === updated.id ? { ...t, ...updated } : t))
-            );
-          } else if (payload.eventType === 'INSERT') {
-            const created = payload.new as TaskData;
-            setTasks((prev) => {
-              if (prev.some((t) => t.id === created.id)) return prev;
-              return [...prev, created].sort((a, b) => a.task_number - b.task_number);
-            });
-          } else if (payload.eventType === 'DELETE') {
-            const deletedId = (payload.old as { id: string })?.id;
-            if (deletedId) {
-              setTasks((prev) => prev.filter((t) => t.id !== deletedId));
-            }
-          }
-        }
-      )
-      // Listen to Level status updates (e.g. updated atomically by PostgreSQL Trigger)
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'levels',
-          filter: `id=eq.${activeLevelId}`,
-        },
-        (payload) => {
-          const updatedLevel = payload.new as LevelData;
-          setLevel((prev) => (prev ? { ...prev, ...updatedLevel } : updatedLevel));
-
-          if (updatedLevel.status === 'completed') {
-            onLevelComplete?.(updatedLevel);
-          }
-        }
-      )
-      .subscribe();
-
+    window.addEventListener('royal_live_update', handleLiveUpdate);
     return () => {
-      supabase.removeChannel(channel);
+      window.removeEventListener('royal_live_update', handleLiveUpdate);
     };
   }, [activeLevelId, onLevelComplete]);
 
   // -------------------------------------------------------------
-  // 3. Admin Approval Action: Optimistic Update with Rollback
+  // 3. Admin Approval Action: Optimistic Update with Rollback via API
   // -------------------------------------------------------------
   const handleAdminApproveTask = useCallback(
     async (taskId: string) => {
@@ -187,38 +148,25 @@ export const LevelCard: React.FC<LevelCardProps> = ({
       setActionLoadingTaskId(taskId);
       setErrorMessage(null);
 
-      // Snapshot previous state for rollback on error
       const previousTasks = [...tasks];
       const previousLevel = level ? { ...level } : null;
 
-      // Optimistic update: mark task as approved immediately
       const nextTasks = tasks.map((t) =>
         t.id === taskId ? { ...t, status: 'approved' as const } : t
       );
       setTasks(nextTasks);
 
-      // Check if all tasks are now approved (optimistic parent level completion)
       const allApproved =
         nextTasks.length > 0 && nextTasks.every((t) => t.status === 'approved');
       if (allApproved && level) {
-        setLevel({ ...level, status: 'completed' });
+        const updated = { ...level, status: 'completed' as const };
+        setLevel(updated);
+        onLevelComplete?.(updated);
       }
 
       try {
-        const { error } = await supabase
-          .from('tasks')
-          .update({
-            status: 'approved',
-            updated_at: new Date().toISOString(),
-          })
-          .eq('id', taskId);
-
-        if (error) {
-          throw error;
-        }
+        await api.updateAdminTask(taskId, { status: 'ACTIVE' });
       } catch (err: any) {
-        console.error('Optimistic approval failed, rolling back:', err);
-        // Rollback on failure
         setTasks(previousTasks);
         setLevel(previousLevel);
         setErrorMessage(err.message || 'Failed to approve task. Rolled back changes.');
@@ -226,7 +174,7 @@ export const LevelCard: React.FC<LevelCardProps> = ({
         setActionLoadingTaskId(null);
       }
     },
-    [tasks, level, actionLoadingTaskId]
+    [tasks, level, actionLoadingTaskId, onLevelComplete]
   );
 
   // -------------------------------------------------------------

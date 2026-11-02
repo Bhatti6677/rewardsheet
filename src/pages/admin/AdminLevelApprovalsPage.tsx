@@ -137,7 +137,7 @@ export const AdminLevelApprovalsPage: React.FC = () => {
     const user = users.find((u) => u.id === userId);
     if (!user) return;
 
-    const allKeys = [5, 6, 7, 8, 9, 10].reduce((acc, lvl) => {
+    const allKeys = [4, 5, 6, 7, 8, 9, 10].reduce((acc, lvl) => {
       acc[`${userId}_${lvl}`] = true;
       return acc;
     }, {} as Record<string, boolean>);
@@ -149,7 +149,7 @@ export const AdminLevelApprovalsPage: React.FC = () => {
       prev.map((u) => {
         if (u.id === userId) {
           const newApprovals = { ...u.approvals };
-          for (let lvl = 5; lvl <= 10; lvl++) {
+          for (let lvl = 4; lvl <= 10; lvl++) {
             newApprovals[lvl] = isApproved;
           }
           return { ...u, approvals: newApprovals };
@@ -161,17 +161,17 @@ export const AdminLevelApprovalsPage: React.FC = () => {
     try {
       const res: any = await api.batchAdminLevelApprovals({
         userId,
-        levelNumbers: [5, 6, 7, 8, 9, 10],
+        levelNumbers: [4, 5, 6, 7, 8, 9, 10],
         isApproved,
       });
-      showNotification(res.message || `Levels 5-10 ${isApproved ? 'unlocked' : 'locked'} for ${user.name}.`);
+      showNotification(res.message || `Levels 4-10 ${isApproved ? 'unlocked' : 'locked'} for ${user.name}.`);
     } catch (err: any) {
       fetchLevelApprovals(page, search);
       alert(err.message || 'Failed to update levels in batch.');
     } finally {
       setUpdatingLevels((prev) => {
         const next = { ...prev };
-        for (let lvl = 5; lvl <= 10; lvl++) {
+        for (let lvl = 4; lvl <= 10; lvl++) {
           delete next[`${userId}_${lvl}`];
         }
         return next;
@@ -219,9 +219,9 @@ export const AdminLevelApprovalsPage: React.FC = () => {
       <div className="bg-[#EFF6FF] border border-[#BFDBFE] rounded-xl p-3.5 flex items-start gap-3">
         <KeyRound className="w-4 h-4 text-[#2563EB] flex-shrink-0 mt-0.5" />
         <div className="text-xs text-[#1E40AF]">
-          <p className="font-bold">Level 5 to 10 Approval System</p>
+          <p className="font-bold">Level 4 to 10 Approval System</p>
           <p className="text-[11px] text-[#3B82F6] mt-0.5">
-            Levels 1 through 4 unlock automatically through standard user progression. Every level beyond Level 4 (Levels 5 through 10) strictly requires administrative unlock approval. Click on any level tag below to toggle its unlocked/locked state for that member.
+            Levels 1 through 3 unlock automatically (completing Level 1 unlocks Level 2, and completing Level 2 unlocks Level 3). From Level 4 through Level 10, every level strictly requires manual administrative unlock approval from this dashboard. Click on any level tag below to toggle its unlocked/locked state for that member.
           </p>
         </div>
       </div>
@@ -235,7 +235,7 @@ export const AdminLevelApprovalsPage: React.FC = () => {
                 <th className="py-2.5 px-4 min-w-[170px]">Member Name</th>
                 <th className="py-2.5 px-3 min-w-[120px]">Phone</th>
                 <th className="py-2.5 px-3 min-w-[120px]">Current Tier</th>
-                <th className="py-2.5 px-4 min-w-[340px]">Post-Level 4 Approvals (Lvl 5 - 10)</th>
+                <th className="py-2.5 px-4 min-w-[380px]">Manual Level Approvals (Lvl 4 - 10)</th>
                 <th className="py-2.5 px-4 min-w-[180px] text-right">Quick Batch Actions</th>
               </tr>
             </thead>
@@ -286,6 +286,11 @@ export const AdminLevelApprovalsPage: React.FC = () => {
                           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-[#EFF6FF] text-[#1D4ED8] border border-[#BFDBFE]">
                             Level {u.currentLevel}
                           </span>
+                          {u.level3Completed && !u.level4Completed && (
+                            <span className="inline-flex items-center gap-0.5 text-[9.5px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-1.5 py-0.2 rounded">
+                              <Check className="w-2.5 h-2.5" /> L3 Completed
+                            </span>
+                          )}
                           {u.level4Completed && (
                             <span className="inline-flex items-center gap-0.5 text-[9.5px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 rounded">
                               <Check className="w-2.5 h-2.5" /> L4 Completed
@@ -294,10 +299,10 @@ export const AdminLevelApprovalsPage: React.FC = () => {
                         </div>
                       </td>
 
-                      {/* Post-Level 4 Approvals (5 to 10) */}
+                      {/* Manual Level Approvals (4 to 10) */}
                       <td className="py-3 px-4">
                         <div className="flex flex-wrap items-center gap-1.5">
-                          {[5, 6, 7, 8, 9, 10].map((lvl) => {
+                          {[4, 5, 6, 7, 8, 9, 10].map((lvl) => {
                             const isApproved = Boolean(u.approvals?.[lvl]);
                             const isUpdating = Boolean(updatingLevels[`${u.id}_${lvl}`]);
 
@@ -338,7 +343,7 @@ export const AdminLevelApprovalsPage: React.FC = () => {
                             type="button"
                             onClick={() => handleBatchUnlock(u.id, true)}
                             className="px-2 py-1 rounded text-[10px] font-bold bg-[#EAF2FF] text-[#2563EB] hover:bg-[#D4E5FF] border border-[#BFDBFE] transition-colors cursor-pointer"
-                            title="Unlock all levels from 5 through 10 at once"
+                            title="Unlock all levels from 4 through 10 at once"
                           >
                             Unlock All
                           </button>
@@ -346,7 +351,7 @@ export const AdminLevelApprovalsPage: React.FC = () => {
                             type="button"
                             onClick={() => handleBatchUnlock(u.id, false)}
                             className="px-2 py-1 rounded text-[10px] font-bold bg-[#F8FAFC] text-[#64748B] hover:bg-[#F1F5F9] border border-[#CBD5E1] transition-colors cursor-pointer"
-                            title="Lock all levels from 5 through 10"
+                            title="Lock all levels from 4 through 10"
                           >
                             Lock All
                           </button>

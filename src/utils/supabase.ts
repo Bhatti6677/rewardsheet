@@ -1,14 +1,8 @@
-import { createClient } from '@supabase/supabase-js';
-
-export const supabaseUrl =
-  import.meta.env.VITE_SUPABASE_URL ||
-  import.meta.env.NEXT_PUBLIC_SUPABASE_URL ||
-  'https://iwzonipiymbsspnyoszt.supabase.co';
-
-export const supabaseAnonKey =
-  import.meta.env.VITE_SUPABASE_ANON_KEY ||
-  import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-  import.meta.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
-  'sb_publishable_4EqCtWIiEIwm3ETQvxeOgA_fUcSKkiJ';
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+/**
+ * Client-side direct database access is disabled by Zero-Leak Security Architecture.
+ * All data operations and live state synchronization are routed exclusively through
+ * authenticated server-side /api/* proxy endpoints.
+ */
+export const supabaseUrl = '';
+export const supabaseAnonKey = '';
+export const supabase = null;

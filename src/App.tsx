@@ -94,8 +94,7 @@ export const App: React.FC = () => {
   const isBackendHost =
     typeof window !== 'undefined' &&
     (window.location.hostname.includes('backend') ||
-     window.location.hostname.includes('admin') ||
-     window.location.hostname.includes('streetearn-backend.vercel.app'));
+     window.location.hostname.includes('admin'));
 
   const isAdminRoute = window.location.pathname.startsWith('/adminpanal');
 

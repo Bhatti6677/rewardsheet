@@ -45,7 +45,7 @@ const PAGE_TITLES: Record<string, { title: string; subtitle: string }> = {
   },
   '/adminpanal/level-approvals': {
     title: 'Unlock Levels',
-    subtitle: 'Approve and unlock VIP tiers (Level 5 through 10) for registered members.',
+    subtitle: 'Approve and unlock VIP tiers (Level 4 through 10) for registered members.',
   },
   '/adminpanal/dashboard': {
     title: 'Administrative Overview',

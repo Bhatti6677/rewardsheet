@@ -144,15 +144,13 @@ export const TasksPage: React.FC = () => {
     return lastUnlocked ? lastUnlocked.levelNumber : 1;
   }, [levels]);
 
-  // Compute if User has reached Level 4 or above
+  // Compute if User has reached Level 4 or above (unlocked by admin)
   const isUserAtLevel4OrAbove = useMemo(() => {
     if (!levels || levels.length === 0) return false;
-    const lvl3 = levels.find((l) => l.levelNumber === 3);
     const lvl4 = levels.find((l) => l.levelNumber === 4);
-    const lvl3Completed = Boolean(lvl3 && lvl3.isCompleted);
-    const lvl4ActiveOrDone = Boolean(lvl4 && (lvl4.isUnlocked || (lvl4.approvedTaskCount || 0) > 0));
+    const lvl4ActiveOrDone = Boolean(lvl4 && (lvl4.isUnlocked || (lvl4.approvedTaskCount || 0) > 0 || lvl4.isCompleted));
     const isLevel4Plus = userCurrentLevelNumber >= 4;
-    return Boolean(lvl3Completed || lvl4ActiveOrDone || isLevel4Plus);
+    return Boolean(lvl4ActiveOrDone || isLevel4Plus);
   }, [levels, userCurrentLevelNumber]);
 
   const { level, tasks = [], isLevelUnlocked } = currentLevelData || {};
@@ -559,10 +557,12 @@ export const TasksPage: React.FC = () => {
         {isSelectedLevelLocked && (
           <div className="p-3.5 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-between gap-3 text-xs">
             <span className="text-slate-200">
-              {activeLevelNumber >= 4 && isUserAtLevel4OrAbove
-                ? `You have reached Level 4! All assignments for Level ${activeLevelNumber} are visible below. Complete preceding tasks to execute.`
+              {selectedLevelSummary?.lockReason
+                ? selectedLevelSummary.lockReason
+                : activeLevelNumber >= 4 && isUserAtLevel4OrAbove
+                ? `You have reached Level 4! All assignments for Level ${activeLevelNumber} are visible below. Complete preceding tasks and await admin approval to execute.`
                 : activeLevelNumber === 5
-                ? 'Complete any one task in Level 4 to unlock Level 5.'
+                ? 'Complete any one task in Level 4 and await administrator approval to unlock Level 5.'
                 : `Complete all tasks in Level ${activeLevelNumber - 1} to unlock this tier.`}
             </span>
             {userCurrentLevelNumber !== activeLevelNumber && (
@@ -581,7 +581,11 @@ export const TasksPage: React.FC = () => {
           <div className="p-3.5 rounded-xl bg-gradient-to-r from-emerald-500/15 via-[#07242B] to-emerald-500/15 border border-emerald-400/40 flex items-center justify-between gap-3 text-xs">
             <div className="flex items-center gap-2.5 text-emerald-300">
               <Sparkles className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-              <span>You have completed your Level 4 task! The remaining Level 4 tasks are closed. Level 5 tasks are now unlocked.</span>
+              <span>
+                {levels.find((l) => l.levelNumber === 5)?.isUnlocked
+                  ? 'You have completed your Level 4 task! The remaining Level 4 tasks are closed. Level 5 tasks are now unlocked.'
+                  : 'You have completed your Level 4 task! The remaining Level 4 tasks are closed. Level 5 will unlock upon administrator approval.'}
+              </span>
             </div>
             <button
               onClick={() => handleSelectLevel(5)}
