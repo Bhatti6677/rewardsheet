@@ -327,7 +327,7 @@ export const AdminMiniAdminsPage: React.FC = () => {
                 </span>
               </h1>
               <p className="text-xs text-slate-500 mt-0.5">
-                Create and control delegated Level 1 administrators with dynamic 10-minute rotating OTP security.
+                Create and control delegated Level 1 & 2 administrators with dynamic 10-minute rotating OTP security.
               </p>
             </div>
           </div>
@@ -376,10 +376,10 @@ export const AdminMiniAdminsPage: React.FC = () => {
           </div>
           <div className="space-y-1 text-xs">
             <p className="font-bold text-slate-900 flex items-center gap-2">
-              Strict Level 1 Sandbox & Rotating 10-Minute TOTP Architecture
+              Strict Level 1 & 2 Sandbox & Rotating 10-Minute TOTP Architecture
             </p>
             <p className="text-slate-600 leading-relaxed text-[11.5px]">
-              Mini Admins are strictly scoped: they can <strong>only</strong> view and manage users on <strong>Level 1</strong> and review <strong>Level 1 submitted tasks</strong>. They are strictly blocked from financial withdrawals, deposits, wallets, settings, spin wheel, or tiers beyond Level 1.
+              Mini Admins are strictly scoped: they can <strong>only</strong> view and manage users on <strong>Level 1 & Level 2</strong> and review <strong>Level 1 & Level 2 submitted tasks</strong>. They are strictly blocked from financial withdrawals, deposits, wallets, settings, spin wheel, or tiers beyond Level 2.
               Each Mini Admin is assigned a dynamic 6-digit OTP that changes automatically every <strong>10 minutes</strong>. The current OTP is displayed <strong>exclusively</strong> in this Master Admin panel. Mini Admins must request their active OTP from you to log in.
             </p>
           </div>
@@ -461,7 +461,7 @@ export const AdminMiniAdminsPage: React.FC = () => {
                       <td className="py-3 px-4">
                         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
                           <Layers className="w-3 h-3" />
-                          Level 1 Tasks & Users Only
+                          Level 1 & 2 Tasks & Users Only
                         </span>
                       </td>
 
@@ -844,7 +844,7 @@ export const AdminMiniAdminsPage: React.FC = () => {
             </div>
 
             <p className="text-xs text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-200 leading-relaxed">
-              This action is permanent and cannot be undone. The Mini Admin will immediately lose all access to Level 1 management and the system.
+              This action is permanent and cannot be undone. The Mini Admin will immediately lose all access to Level 1 & 2 management and the system.
             </p>
 
             <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-slate-100">

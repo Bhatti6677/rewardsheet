@@ -220,7 +220,7 @@ const AdminHeaderUserSearch: React.FC<{ isMiniAdmin: boolean }> = ({ isMiniAdmin
               setQuery(e.target.value);
               if (!isOpen && e.target.value.trim()) setIsOpen(true);
             }}
-            placeholder={isMiniAdmin ? "Search Level 1 submissions by user..." : "Search user (Name, Phone, ID, Referral)..."}
+            placeholder={isMiniAdmin ? "Search Level 1 & 2 submissions by user..." : "Search user (Name, Phone, ID, Referral)..."}
             className="w-full bg-[#F8FAFD] hover:bg-white focus:bg-white border border-[#D9E4F2] focus:border-[#2563EB] rounded-xl pl-9 pr-14 py-2 text-xs text-[#111827] focus:outline-none transition-all placeholder:text-[#9CA3AF] shadow-2xs focus:shadow-sm"
           />
           <div className="absolute right-2 flex items-center gap-1">

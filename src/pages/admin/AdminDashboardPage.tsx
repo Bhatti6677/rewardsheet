@@ -210,7 +210,7 @@ export const AdminDashboardPage: React.FC = () => {
               {perf.pendingSubmissions || 0}
             </span>
             <span className="text-[11px] text-[#2563EB] font-bold flex items-center gap-1 mt-1 group-hover:translate-x-0.5 transition-transform">
-              Review Level 1 Proofs <ChevronRight className="w-3.5 h-3.5" />
+              Review Level 1 & 2 Proofs <ChevronRight className="w-3.5 h-3.5" />
             </span>
           </Link>
         </div>
