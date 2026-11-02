@@ -217,9 +217,7 @@ export const AdminLayout: React.FC = () => {
 
   const menuItems = isMiniAdmin
     ? [
-        { label: 'Dashboard', path: '/adminpanal/dashboard', icon: LayoutDashboard },
-        { label: 'Level 1 Users', path: '/adminpanal/users', icon: Users },
-        { label: 'Level 1 Submissions', path: '/adminpanal/submissions', icon: FileCheck2 },
+        { label: 'Submissions', path: '/adminpanal/submissions', icon: FileCheck2 },
       ]
     : [
         { label: 'Dashboard', path: '/adminpanal/dashboard', icon: LayoutDashboard },
@@ -310,7 +308,7 @@ export const AdminLayout: React.FC = () => {
               <div className="min-w-0">
                 <p className="text-xs font-bold text-[#111827] truncate">{admin?.username || 'Admin'}</p>
                 <p className="text-[10px] text-[#6B7280] truncate font-semibold">
-                  {admin?.role === 'MINI_ADMIN' ? 'Mini Admin (Level 1 Only)' : 'Master Admin'}
+                  {admin?.role === 'MINI_ADMIN' ? 'Mini Admin (Submissions Only)' : 'Master Admin'}
                 </p>
               </div>
             </div>
