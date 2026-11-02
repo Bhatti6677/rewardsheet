@@ -6,6 +6,7 @@ import { AdminLayout } from './components/admin/AdminLayout';
 import { AdminLoginPage } from './pages/admin/AdminLoginPage';
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { AdminUsersPage } from './pages/admin/AdminUsersPage';
+import { AdminLevelApprovalsPage } from './pages/admin/AdminLevelApprovalsPage';
 import { AdminUserDetailPage } from './pages/admin/AdminUserDetailPage';
 import { AdminLevelsPage } from './pages/admin/AdminLevelsPage';
 import { AdminTasksPage } from './pages/admin/AdminTasksPage';
@@ -52,6 +53,7 @@ export const AdminApp: React.FC = () => {
       <Route element={<ProtectedAdminRoute />}>
         <Route path="dashboard" element={<AdminDashboardPage />} />
         <Route path="users" element={<AdminUsersPage />} />
+        <Route path="level-approvals" element={<AdminLevelApprovalsPage />} />
         <Route path="users/:userId" element={<AdminUserDetailPage />} />
         <Route path="levels" element={<AdminLevelsPage />} />
         <Route path="tasks" element={<AdminTasksPage />} />
@@ -87,6 +89,7 @@ export const AdminApp: React.FC = () => {
       {/* Top-level aliases for direct navigation */}
       <Route path="/dashboard" element={<Navigate to="/adminpanal/dashboard" replace />} />
       <Route path="/users" element={<Navigate to="/adminpanal/users" replace />} />
+      <Route path="/level-approvals" element={<Navigate to="/adminpanal/level-approvals" replace />} />
       <Route path="/referral-codes" element={<Navigate to="/adminpanal/referral-codes" replace />} />
       <Route path="/tasks" element={<Navigate to="/adminpanal/tasks" replace />} />
       <Route path="/submissions" element={<Navigate to="/adminpanal/submissions" replace />} />

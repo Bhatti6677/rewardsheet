@@ -33,6 +33,10 @@ const PAGE_TITLES: Record<string, { title: string; subtitle: string }> = {
     title: 'Member Management',
     subtitle: 'View member accounts, reset passwords with audit logging, and perform balance adjustments.',
   },
+  '/adminpanal/level-approvals': {
+    title: 'Unlock Levels',
+    subtitle: 'Approve and unlock VIP tiers (Level 5 through 10) for registered members.',
+  },
   '/adminpanal/dashboard': {
     title: 'Administrative Overview',
     subtitle: 'System performance, user metrics, real-time platform activity and summary.',
@@ -206,6 +210,7 @@ export const AdminLayout: React.FC = () => {
   const menuItems = [
     { label: 'Dashboard', path: '/adminpanal/dashboard', icon: LayoutDashboard },
     { label: 'Users', path: '/adminpanal/users', icon: Users },
+    { label: 'Unlock Levels', path: '/adminpanal/level-approvals', icon: KeyRound },
     { label: 'Levels', path: '/adminpanal/levels', icon: Layers },
     { label: 'Tasks', path: '/adminpanal/tasks', icon: CheckSquare },
     { label: 'Submissions', path: '/adminpanal/submissions', icon: FileCheck2 },

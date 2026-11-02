@@ -387,6 +387,20 @@ export const api = {
   adjustUserCreditPoints: (userId: string, payload: { points: number; actionType: 'ADD' | 'DEDUCT'; reason: string; notes?: string }) =>
     request(`/admin/users/${userId}/adjust-credit-points`, { method: 'POST', body: JSON.stringify(payload) }, true),
 
+  // Admin Level Approvals (Level 5 - 10)
+  getAdminLevelApprovals: (params?: { search?: string; status?: string; page?: number; limit?: number }) => {
+    const q = new URLSearchParams();
+    if (params?.search) q.append('search', params.search);
+    if (params?.status) q.append('status', params.status);
+    if (params?.page) q.append('page', params.page.toString());
+    if (params?.limit) q.append('limit', params.limit.toString());
+    return request(`/admin/level-approvals?${q.toString()}`, {}, true);
+  },
+  toggleAdminLevelApproval: (payload: { userId: string; levelNumber: number; isApproved: boolean }) =>
+    request('/admin/level-approvals/toggle', { method: 'POST', body: JSON.stringify(payload) }, true),
+  batchAdminLevelApprovals: (payload: { userId: string; levelNumbers: number[]; isApproved: boolean }) =>
+    request('/admin/level-approvals/batch', { method: 'POST', body: JSON.stringify(payload) }, true),
+
   // Admin Levels & Tasks
   getAdminLevels: () => request('/admin/levels', {}, true),
   updateAdminLevel: (levelId: string, payload: any) =>
