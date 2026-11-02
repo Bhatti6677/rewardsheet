@@ -146,16 +146,14 @@ export const TasksPage: React.FC = () => {
 
   // Compute if User has reached Level 4 or above
   const isUserAtLevel4OrAbove = useMemo(() => {
-    if (currentLevelData?.isLevel4Reached) return true;
     if (!levels || levels.length === 0) return false;
     const lvl3 = levels.find((l) => l.levelNumber === 3);
     const lvl4 = levels.find((l) => l.levelNumber === 4);
-    return Boolean(
-      (lvl3 && lvl3.isCompleted) ||
-      (lvl4 && (lvl4.isUnlocked || (lvl4.approvedTaskCount || 0) > 0)) ||
-      userCurrentLevelNumber >= 4
-    );
-  }, [levels, currentLevelData, userCurrentLevelNumber]);
+    const lvl3Completed = Boolean(lvl3 && lvl3.isCompleted);
+    const lvl4ActiveOrDone = Boolean(lvl4 && (lvl4.isUnlocked || (lvl4.approvedTaskCount || 0) > 0));
+    const isLevel4Plus = userCurrentLevelNumber >= 4;
+    return Boolean(lvl3Completed || lvl4ActiveOrDone || isLevel4Plus);
+  }, [levels, userCurrentLevelNumber]);
 
   const { level, tasks = [], isLevelUnlocked } = currentLevelData || {};
   const selectedLevelSummary = levels.find((l) => l.levelNumber === activeLevelNumber);
