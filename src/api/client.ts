@@ -471,7 +471,13 @@ export const api = {
     return request(`/admin/referrals${queryStr}`, {}, true);
   },
   getAdminReferralCodes: () => request('/admin/referral-codes', {}, true),
+  deleteAdminReferralCode: (id: string) => request(`/admin/referral-codes/${id}`, { method: 'DELETE' }, true),
+  batchDeleteAdminReferralCodes: (ids: string[]) =>
+    request('/admin/referral-codes/batch-delete', { method: 'POST', body: JSON.stringify({ ids }) }, true),
+  getAdminMyAssignedCodes: () => request('/admin/my-assigned-codes', {}, true),
   getAdminTelegramUsers: () => request('/admin/telegram-users', {}, true),
+  mergeAdminTelegramUsers: (sourceChatId: string, targetChatId: string) =>
+    request('/admin/telegram-users/merge', { method: 'POST', body: JSON.stringify({ sourceChatId, targetChatId }) }, true),
   grantTelegramUserCodes: (chatId: string, amount: number) =>
     request(`/admin/telegram-users/${chatId}/grant`, { method: 'POST', body: JSON.stringify({ amount }) }, true),
   generateAdminReferralCodes: (payload?: { count?: number; prefix?: string }) =>

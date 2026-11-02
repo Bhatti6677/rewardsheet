@@ -140,15 +140,11 @@ export const AdminDashboardPage: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-3 text-xs">
-              <div className="bg-white/80 border border-sky-200 rounded-xl px-3 py-1.5">
-                <span className="text-[10px] text-slate-500 block uppercase font-bold">Remaining Quota</span>
-                <span className="font-black text-sky-700 text-sm">
-                  {tg.remainingQuota ?? 0} <span className="text-[10px] text-slate-400 font-normal">/ {tg.totalQuota ?? 0}</span>
+              <div className="bg-white/90 border border-sky-200 rounded-xl px-4 py-2 shadow-xs">
+                <span className="text-[10px] text-slate-500 block uppercase font-bold tracking-wider">Available Codes</span>
+                <span className="font-black text-sky-700 text-base">
+                  {tg.availableCodes ?? 0}
                 </span>
-              </div>
-              <div className="bg-white/80 border border-sky-200 rounded-xl px-3 py-1.5">
-                <span className="text-[10px] text-slate-500 block uppercase font-bold">Codes Generated</span>
-                <span className="font-black text-slate-800 text-sm">{tg.codesGenerated ?? 0}</span>
               </div>
             </div>
           </div>
@@ -158,7 +154,7 @@ export const AdminDashboardPage: React.FC = () => {
             <div>
               <span className="font-bold block">No Telegram Invitation Account Linked</span>
               <p className="text-amber-800 mt-0.5">
-                Your Master Administrator has not linked a Telegram invite account to this profile yet. Once linked, users registering through your codes will be tracked here.
+                Please ask administration to link or merge your Telegram account. Once linked, users registering through your codes will be tracked here.
               </p>
             </div>
           </div>

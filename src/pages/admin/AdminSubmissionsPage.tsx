@@ -198,6 +198,13 @@ export const AdminSubmissionsPage: React.FC = () => {
         </p>
       </div>
 
+      {isMiniAdmin && (
+        <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl text-blue-900 text-xs font-semibold flex items-center gap-2">
+          <ShieldCheck className="w-4 h-4 text-[#2563EB] flex-shrink-0" />
+          <span>Showing pending task submissions for members invited by your Telegram account.</span>
+        </div>
+      )}
+
       {message && (
         <div
           className={`p-3.5 rounded-lg border text-xs flex items-center justify-between ${

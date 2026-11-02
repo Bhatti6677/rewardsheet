@@ -13,6 +13,9 @@ import {
   Send,
   ShieldCheck,
   Zap,
+  Trash2,
+  GitMerge,
+  X,
 } from 'lucide-react';
 import { api } from '../../api/client';
 
@@ -35,6 +38,18 @@ export const AdminReferralCodesPage: React.FC = () => {
   const [grantingChatId, setGrantingChatId] = useState<string | null>(null);
   const [customAmounts, setCustomAmounts] = useState<Record<string, string>>({});
   const [actionNotice, setActionNotice] = useState<string | null>(null);
+
+  // Delete & batch selection state
+  const [selectedCodes, setSelectedCodes] = useState<string[]>([]);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [batchDeleting, setBatchDeleting] = useState(false);
+
+  // Murj (Merge) Telegram state
+  const [mergeModalOpen, setMergeModalOpen] = useState(false);
+  const [mergeSourceChatId, setMergeSourceChatId] = useState('');
+  const [mergeTargetChatId, setMergeTargetChatId] = useState('');
+  const [merging, setMerging] = useState(false);
+  const [mergeError, setMergeError] = useState<string | null>(null);
 
   const loadCodes = (silent = false) => {
     if (!silent) setLoading(true);
@@ -110,6 +125,64 @@ export const AdminReferralCodesPage: React.FC = () => {
     }
   };
 
+  const handleDeleteCode = async (id: string, code: string) => {
+    if (!confirm(`Are you sure you want to permanently delete code "${code}"?`)) return;
+    setDeletingId(id);
+    try {
+      await api.deleteAdminReferralCode(id);
+      setActionNotice(`Referral code "${code}" deleted successfully.`);
+      setSelectedCodes((prev) => prev.filter((item) => item !== id));
+      loadCodes(true);
+    } catch (err: any) {
+      alert(err.message || 'Failed to delete code');
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  const handleBatchDelete = async () => {
+    if (selectedCodes.length === 0) return;
+    if (!confirm(`Are you sure you want to delete ${selectedCodes.length} selected referral codes?`)) return;
+    setBatchDeleting(true);
+    try {
+      await api.batchDeleteAdminReferralCodes(selectedCodes);
+      setActionNotice(`Successfully deleted ${selectedCodes.length} referral codes.`);
+      setSelectedCodes([]);
+      loadCodes(true);
+    } catch (err: any) {
+      alert(err.message || 'Failed to delete selected codes');
+    } finally {
+      setBatchDeleting(false);
+    }
+  };
+
+  const handleMergeSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!mergeSourceChatId.trim() || !mergeTargetChatId.trim()) {
+      setMergeError('Please select or enter both old and new Telegram account chat IDs.');
+      return;
+    }
+    if (mergeSourceChatId.trim() === mergeTargetChatId.trim()) {
+      setMergeError('Source (old) and Target (new) accounts cannot be the identical chat ID.');
+      return;
+    }
+    setMergeError(null);
+    setMerging(true);
+    try {
+      const res: any = await api.mergeAdminTelegramUsers(mergeSourceChatId.trim(), mergeTargetChatId.trim());
+      setActionNotice(res.message || 'Telegram accounts merged successfully!');
+      setMergeModalOpen(false);
+      setMergeSourceChatId('');
+      setMergeTargetChatId('');
+      loadTelegramUsers();
+      loadCodes(true);
+    } catch (err: any) {
+      setMergeError(err.message || 'Failed to merge Telegram accounts');
+    } finally {
+      setMerging(false);
+    }
+  };
+
   const handleGrantCodes = async (chatId: string, amount: number) => {
     setGrantingChatId(chatId);
     try {
@@ -179,6 +252,17 @@ export const AdminReferralCodesPage: React.FC = () => {
 
         <div className="flex items-center gap-2">
           <button
+            onClick={() => {
+              setMergeError(null);
+              setMergeModalOpen(true);
+            }}
+            className="px-3.5 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold rounded-lg text-xs shadow-sm flex items-center gap-1.5 transition-all cursor-pointer"
+            title="Merge old/lost Telegram account data into a new account"
+          >
+            <GitMerge className="w-4 h-4" />
+            <span>Merge Telegram (Murj)</span>
+          </button>
+          <button
             onClick={handleQuickCopyNext}
             disabled={!data?.availableCodes?.length}
             className="px-3.5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold rounded-lg text-xs shadow-sm flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
@@ -222,7 +306,7 @@ export const AdminReferralCodesPage: React.FC = () => {
           </div>
           <div>
             <div className="text-2xl font-black text-emerald-700">{data?.stats?.available || 0}</div>
-            <div className="text-xs text-[#6B7280]">Available 6-Letter Codes (Auto-100)</div>
+            <div className="text-xs text-[#6B7280]">Available 6-Letter Codes</div>
           </div>
         </div>
 
@@ -281,7 +365,7 @@ export const AdminReferralCodesPage: React.FC = () => {
                   : 'text-[#4B5563] hover:bg-[#F3F4F6]'
               }`}
             >
-              <span>Available 100 Codes</span>
+              <span>Available Codes</span>
               <span
                 className={`px-1.5 py-0.5 rounded-full text-[10px] ${
                   activeTab === 'available' ? 'bg-white/20 text-white' : 'bg-[#E5E7EB] text-[#4B5563]'
@@ -331,44 +415,113 @@ export const AdminReferralCodesPage: React.FC = () => {
         {/* Tab 1: Available Codes */}
         {activeTab === 'available' && (
           <div className="space-y-4">
+            {/* Batch actions toolbar */}
+            {availableList.length > 0 && (
+              <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-xs">
+                <div className="flex items-center gap-3">
+                  <label className="flex items-center gap-2 cursor-pointer font-semibold text-slate-700 select-none">
+                    <input
+                      type="checkbox"
+                      checked={availableList.length > 0 && selectedCodes.length === availableList.length}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedCodes(availableList.map((item: any) => item.id));
+                        } else {
+                          setSelectedCodes([]);
+                        }
+                      }}
+                      className="w-4 h-4 rounded border-slate-300 text-[#2563EB] focus:ring-[#2563EB] cursor-pointer"
+                    />
+                    <span>Select All ({availableList.length})</span>
+                  </label>
+                  {selectedCodes.length > 0 && (
+                    <span className="text-[11px] text-slate-500 font-medium">
+                      {selectedCodes.length} code{selectedCodes.length > 1 ? 's' : ''} selected
+                    </span>
+                  )}
+                </div>
+
+                {selectedCodes.length > 0 && (
+                  <button
+                    onClick={handleBatchDelete}
+                    disabled={batchDeleting}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-lg text-xs shadow-xs transition-all disabled:opacity-50 cursor-pointer"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>{batchDeleting ? 'Deleting...' : `Delete Selected (${selectedCodes.length})`}</span>
+                  </button>
+                )}
+              </div>
+            )}
+
             {availableList.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                 {availableList.map((item: any) => {
                   const isCopied = copiedCode === item.code;
+                  const isSelected = selectedCodes.includes(item.id);
+                  const isDeleting = deletingId === item.id;
                   return (
                     <div
                       key={item.id}
-                      className="p-3.5 bg-[#F8FAFD] border border-[#D9E4F2] hover:border-[#2563EB]/40 rounded-xl flex items-center justify-between transition-all group"
+                      className={`p-3.5 bg-[#F8FAFD] border rounded-xl flex items-center justify-between transition-all group ${
+                        isSelected
+                          ? 'border-[#2563EB] bg-blue-50/40 ring-1 ring-[#2563EB]/30'
+                          : 'border-[#D9E4F2] hover:border-[#2563EB]/40'
+                      }`}
                     >
-                      <div className="space-y-0.5">
-                        <div className="flex items-center gap-2">
-                          <strong className="font-mono text-base text-[#111827] tracking-widest">
-                            {item.code}
-                          </strong>
-                          <span className="text-[10px] font-mono text-[#6B7280] bg-white px-1.5 py-0.5 rounded border border-[#E2E8F0]">
-                            {String(item.code).toUpperCase()}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1.5 text-[10px] text-[#6B7280]">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                          <span className="text-emerald-700 font-semibold uppercase">Single-Use</span>
-                          <span>•</span>
-                          <span>Case-Insensitive</span>
+                      <div className="flex items-center gap-2.5">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedCodes((prev) => [...prev, item.id]);
+                            } else {
+                              setSelectedCodes((prev) => prev.filter((id) => id !== item.id));
+                            }
+                          }}
+                          className="w-4 h-4 rounded border-slate-300 text-[#2563EB] focus:ring-[#2563EB] cursor-pointer"
+                        />
+                        <div className="space-y-0.5">
+                          <div className="flex items-center gap-2">
+                            <strong className="font-mono text-base text-[#111827] tracking-widest">
+                              {item.code}
+                            </strong>
+                            <span className="text-[10px] font-mono text-[#6B7280] bg-white px-1.5 py-0.5 rounded border border-[#E2E8F0]">
+                              {String(item.code).toUpperCase()}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1.5 text-[10px] text-[#6B7280]">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                            <span className="text-emerald-700 font-semibold uppercase">Single-Use</span>
+                            <span>•</span>
+                            <span>Case-Insensitive</span>
+                          </div>
                         </div>
                       </div>
 
-                      <button
-                        onClick={() => handleCopy(item.code)}
-                        className={`p-2 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 ${
-                          isCopied
-                            ? 'bg-emerald-500 text-white'
-                            : 'bg-white border border-[#D9E4F2] text-[#4B5563] hover:text-[#2563EB] hover:border-[#2563EB]'
-                        }`}
-                        title="Copy Code"
-                      >
-                        {isCopied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                        <span className="text-[11px]">{isCopied ? 'Copied' : 'Copy'}</span>
-                      </button>
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          onClick={() => handleCopy(item.code)}
+                          className={`p-2 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 ${
+                            isCopied
+                              ? 'bg-emerald-500 text-white'
+                              : 'bg-white border border-[#D9E4F2] text-[#4B5563] hover:text-[#2563EB] hover:border-[#2563EB]'
+                          }`}
+                          title="Copy Code"
+                        >
+                          {isCopied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                          <span className="text-[11px]">{isCopied ? 'Copied' : 'Copy'}</span>
+                        </button>
+                        <button
+                          onClick={() => handleDeleteCode(item.id, item.code)}
+                          disabled={isDeleting}
+                          className="p-2 rounded-lg text-xs font-semibold bg-white border border-[#D9E4F2] text-rose-500 hover:text-rose-700 hover:bg-rose-50 hover:border-rose-300 transition-all cursor-pointer disabled:opacity-50"
+                          title="Delete Code"
+                        >
+                          {isDeleting ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                        </button>
+                      </div>
                     </div>
                   );
                 })}
@@ -403,43 +556,58 @@ export const AdminReferralCodesPage: React.FC = () => {
                     <th>Redeemed By Member</th>
                     <th>Phone Number</th>
                     <th>Date &amp; Time Redeemed</th>
+                    <th className="text-right">Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {usedList.map((item: any) => (
-                    <tr key={item.id} className="hover:bg-slate-50/70">
-                      <td>
-                        <strong className="font-mono text-xs text-[#111827] bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200 tracking-wider">
-                          {item.code}
-                        </strong>
-                      </td>
-                      <td>
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
-                          <Users className="w-3 h-3 text-slate-500" />
-                          <span>USED</span>
-                        </span>
-                      </td>
-                      <td>
-                        <strong className="text-[#111827]">{item.usedByName || 'Registered User'}</strong>
-                        {item.usedById && (
-                          <span className="block text-[10px] text-[#9CA3AF] font-mono">
-                            ID: {item.usedById}
+                  {usedList.map((item: any) => {
+                    const isDeleting = deletingId === item.id;
+                    return (
+                      <tr key={item.id} className="hover:bg-slate-50/70">
+                        <td>
+                          <strong className="font-mono text-xs text-[#111827] bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200 tracking-wider">
+                            {item.code}
+                          </strong>
+                        </td>
+                        <td>
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
+                            <Users className="w-3 h-3 text-slate-500" />
+                            <span>USED</span>
                           </span>
-                        )}
-                      </td>
-                      <td>
-                        <span className="font-mono text-[#374151]">{item.usedByPhone || '—'}</span>
-                      </td>
-                      <td>
-                        <div className="flex items-center gap-1 text-[#4B5563]">
-                          <Clock className="w-3.5 h-3.5 text-[#9CA3AF]" />
-                          <span>
-                            {item.usedAt ? new Date(item.usedAt).toLocaleString() : new Date(item.updatedAt).toLocaleString()}
-                          </span>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td>
+                          <strong className="text-[#111827]">{item.usedByName || 'Registered User'}</strong>
+                          {item.usedById && (
+                            <span className="block text-[10px] text-[#9CA3AF] font-mono">
+                              ID: {item.usedById}
+                            </span>
+                          )}
+                        </td>
+                        <td>
+                          <span className="font-mono text-[#374151]">{item.usedByPhone || '—'}</span>
+                        </td>
+                        <td>
+                          <div className="flex items-center gap-1 text-[#4B5563]">
+                            <Clock className="w-3.5 h-3.5 text-[#9CA3AF]" />
+                            <span>
+                              {item.usedAt ? new Date(item.usedAt).toLocaleString() : new Date(item.updatedAt).toLocaleString()}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="text-right">
+                          <button
+                            onClick={() => handleDeleteCode(item.id, item.code)}
+                            disabled={isDeleting}
+                            className="p-1.5 rounded-lg text-xs font-semibold text-rose-500 hover:text-rose-700 hover:bg-rose-50 border border-transparent hover:border-rose-200 transition-all cursor-pointer disabled:opacity-50 inline-flex items-center gap-1"
+                            title="Delete Code"
+                          >
+                            {isDeleting ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />}
+                            <span className="text-[10px]">Delete</span>
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             ) : (
@@ -456,22 +624,35 @@ export const AdminReferralCodesPage: React.FC = () => {
         {/* Tab 3: Telegram Bot Clients & Quota Management */}
         {activeTab === 'telegram' && (
           <div className="space-y-4">
-            <div className="p-4 bg-sky-50 border border-sky-200 rounded-xl text-xs text-sky-900 flex items-center justify-between">
+            <div className="p-4 bg-sky-50 border border-sky-200 rounded-xl text-xs text-sky-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="space-y-0.5">
                 <span className="font-bold flex items-center gap-1.5">
                   <Send className="w-4 h-4 text-sky-600" /> Telegram Invitation Bot Management
                 </span>
                 <p className="text-[11px] text-sky-800">
-                  Clients register by entering the access password (<code>9989GHYRT89</code>) in the Telegram bot. Each registered client gets an initial quota of <strong>10 codes</strong>. You can grant more codes below at any time.
+                  Clients register by entering the access password (<code>9989GHYRT89</code>) in the Telegram bot. Each registered client gets an initial quota of <strong>10 codes</strong>. You can grant more codes below at any time, or merge (Murj) accounts if access was lost.
                 </p>
               </div>
-              <button
-                onClick={() => loadTelegramUsers()}
-                className="px-3 py-1.5 bg-white border border-sky-300 hover:bg-sky-100 text-sky-700 font-bold rounded-lg text-xs flex items-center gap-1"
-              >
-                <RefreshCw className={`w-3.5 h-3.5 ${loadingTg ? 'animate-spin' : ''}`} />
-                <span>Refresh</span>
-              </button>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <button
+                  onClick={() => {
+                    setMergeError(null);
+                    setMergeModalOpen(true);
+                  }}
+                  className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg text-xs flex items-center gap-1.5 shadow-xs transition-all cursor-pointer"
+                  title="Merge old/lost account data into new account"
+                >
+                  <GitMerge className="w-3.5 h-3.5" />
+                  <span>Merge Account (Murj)</span>
+                </button>
+                <button
+                  onClick={() => loadTelegramUsers()}
+                  className="px-3 py-1.5 bg-white border border-sky-300 hover:bg-sky-100 text-sky-700 font-bold rounded-lg text-xs flex items-center gap-1 cursor-pointer"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${loadingTg ? 'animate-spin' : ''}`} />
+                  <span>Refresh</span>
+                </button>
+              </div>
             </div>
 
             <div className="overflow-x-auto">
@@ -548,6 +729,18 @@ export const AdminReferralCodesPage: React.FC = () => {
                           </td>
                           <td className="text-right">
                             <div className="inline-flex items-center gap-1.5 flex-wrap justify-end">
+                              <button
+                                onClick={() => {
+                                  setMergeSourceChatId(String(client.chatId));
+                                  setMergeError(null);
+                                  setMergeModalOpen(true);
+                                }}
+                                className="px-2 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-[11px] font-bold rounded shadow-xs transition-all cursor-pointer inline-flex items-center gap-1"
+                                title="Merge this account into a new account"
+                              >
+                                <GitMerge className="w-3 h-3 text-indigo-600" />
+                                <span>Murj</span>
+                              </button>
                               <button
                                 disabled={isGranting}
                                 onClick={() => handleGrantCodes(client.chatId, 10)}
@@ -633,6 +826,122 @@ export const AdminReferralCodesPage: React.FC = () => {
           </div>
         )}
       </div>
+      {/* ======================================================== */}
+      {/* MURJ (MERGE) TELEGRAM ACCOUNT MODAL                      */}
+      {/* ======================================================== */}
+      {mergeModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-150">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200">
+            {/* Modal Header */}
+            <div className="p-5 border-b border-slate-200 flex items-center justify-between bg-gradient-to-r from-indigo-50 to-purple-50">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-xs">
+                  <GitMerge className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-black text-sm text-slate-900">Merge Telegram Account (Murj Data)</h3>
+                  <p className="text-[11px] text-slate-500">Transfer data from a lost Telegram account to a new account.</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setMergeModalOpen(false)}
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-white transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <form onSubmit={handleMergeSubmit} className="p-5 space-y-4">
+              {mergeError && (
+                <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-xs font-semibold flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 text-rose-600 flex-shrink-0" />
+                  <span>{mergeError}</span>
+                </div>
+              )}
+
+              <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 text-[11px] leading-relaxed">
+                <strong>How Murj (Merge) Works:</strong> If a Mini Admin or client lost access to their Telegram account, have them register a new Telegram account in the bot first. Then select their old account below as the <em>Source</em> and their new account as the <em>Target</em>. All generated referral codes, registered members, remaining quota, and Mini Admin connections will be safely merged into the new account.
+              </div>
+
+              {/* Source Account */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-700 block">
+                  1. Old / Lost Telegram Account (Source)
+                </label>
+                <select
+                  value={mergeSourceChatId}
+                  onChange={(e) => setMergeSourceChatId(e.target.value)}
+                  className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-indigo-600 font-medium"
+                >
+                  <option value="">-- Select Old / Lost Account --</option>
+                  {telegramUsers.map((u) => (
+                    <option key={u.id} value={String(u.chatId)}>
+                      {u.firstName || 'User'} {u.username ? `(@${u.username})` : ''} — Chat ID: {u.chatId} (Quota: {u.remainingQuota})
+                    </option>
+                  ))}
+                </select>
+                <input
+                  type="text"
+                  placeholder="Or enter Chat ID manually (e.g. 123456789)"
+                  value={mergeSourceChatId}
+                  onChange={(e) => setMergeSourceChatId(e.target.value)}
+                  className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono text-slate-800 focus:outline-none focus:border-indigo-600 mt-1"
+                />
+              </div>
+
+              {/* Target Account */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-700 block">
+                  2. New Telegram Account (Target)
+                </label>
+                <select
+                  value={mergeTargetChatId}
+                  onChange={(e) => setMergeTargetChatId(e.target.value)}
+                  className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-indigo-600 font-medium"
+                >
+                  <option value="">-- Select New Account to Receive Data --</option>
+                  {telegramUsers
+                    .filter((u) => String(u.chatId) !== String(mergeSourceChatId))
+                    .map((u) => (
+                      <option key={u.id} value={String(u.chatId)}>
+                        {u.firstName || 'User'} {u.username ? `(@${u.username})` : ''} — Chat ID: {u.chatId}
+                      </option>
+                    ))}
+                </select>
+                <input
+                  type="text"
+                  placeholder="Or enter new Chat ID manually (e.g. 987654321)"
+                  value={mergeTargetChatId}
+                  onChange={(e) => setMergeTargetChatId(e.target.value)}
+                  className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono text-slate-800 focus:outline-none focus:border-indigo-600 mt-1"
+                />
+              </div>
+
+              {/* Modal Footer */}
+              <div className="pt-3 border-t border-slate-200 flex items-center justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setMergeModalOpen(false)}
+                  disabled={merging}
+                  className="px-4 py-2 border border-slate-300 hover:bg-slate-50 rounded-xl text-xs font-semibold text-slate-700 transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={merging || !mergeSourceChatId.trim() || !mergeTargetChatId.trim()}
+                  className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer disabled:opacity-50 inline-flex items-center gap-1.5"
+                >
+                  {merging ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <GitMerge className="w-3.5 h-3.5" />}
+                  <span>{merging ? 'Merging Data...' : 'Confirm & Murj Account'}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -87,6 +87,10 @@ const PAGE_TITLES: Record<string, { title: string; subtitle: string }> = {
     title: 'Invitation Codes',
     subtitle: 'Manage 6-letter single-use invitation codes and registered Telegram bot clients with referral quotas.',
   },
+  '/adminpanal/assigned-codes': {
+    title: 'Assigned Codes',
+    subtitle: 'View your live available invitation codes and assigned referral activity.',
+  },
   '/adminpanal/transactions': {
     title: 'Financial Transactions Ledger',
     subtitle: 'Comprehensive audit trail of all platform financial movements.',
@@ -503,6 +507,7 @@ export const AdminLayout: React.FC = () => {
     ? [
         { label: 'Dashboard', path: '/adminpanal/dashboard', icon: LayoutDashboard },
         { label: 'Submissions', path: '/adminpanal/submissions', icon: FileCheck2 },
+        { label: 'Assigned Codes', path: '/adminpanal/assigned-codes', icon: Ticket },
       ]
     : [
         { label: 'Dashboard', path: '/adminpanal/dashboard', icon: LayoutDashboard },

@@ -17,6 +17,7 @@ import { AdminWalletsPage } from './pages/admin/AdminWalletsPage';
 import { AdminSpinPage } from './pages/admin/AdminSpinPage';
 import { AdminReferralsPage } from './pages/admin/AdminReferralsPage';
 import { AdminReferralCodesPage } from './pages/admin/AdminReferralCodesPage';
+import { AdminAssignedCodesPage } from './pages/admin/AdminAssignedCodesPage';
 import { AdminTransactionsPage } from './pages/admin/AdminTransactionsPage';
 import { AdminAnnouncementsPage } from './pages/admin/AdminAnnouncementsPage';
 import { AdminReportsPage } from './pages/admin/AdminReportsPage';
@@ -59,6 +60,7 @@ export const AdminApp: React.FC = () => {
           element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminUsersPage />}
         />
         <Route path="submissions" element={<AdminSubmissionsPage />} />
+        <Route path="assigned-codes" element={<AdminAssignedCodesPage />} />
         <Route
           path="users/:userId"
           element={admin?.role === 'MINI_ADMIN' ? <Navigate to="/adminpanal/dashboard" replace /> : <AdminUserDetailPage />}
@@ -148,6 +150,7 @@ export const AdminApp: React.FC = () => {
       <Route path="/users" element={<Navigate to={defaultRoute} replace />} />
       <Route path="/level-approvals" element={<Navigate to={defaultRoute} replace />} />
       <Route path="/referral-codes" element={<Navigate to={defaultRoute} replace />} />
+      <Route path="/assigned-codes" element={<Navigate to={defaultRoute} replace />} />
       <Route path="/tasks" element={<Navigate to={defaultRoute} replace />} />
       <Route path="/submissions" element={<Navigate to="/adminpanal/submissions" replace />} />
       <Route path="/deposits" element={<Navigate to={defaultRoute} replace />} />
