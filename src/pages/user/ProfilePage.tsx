@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Phone,
   Lock,
@@ -8,6 +9,8 @@ import {
   CheckCircle2,
   AlertCircle,
   Save,
+  FileText,
+  ExternalLink,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../api/client';
@@ -156,6 +159,32 @@ export const ProfilePage: React.FC = () => {
             )}
           </button>
         </form>
+      </div>
+
+      {/* Platform Policies & Terms Card */}
+      <div className="royal-card p-5 sm:p-6 rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-4 border border-blue-500/20 bg-gradient-to-r from-[#020B20] via-[#051636] to-[#020B20]">
+        <div className="flex items-center gap-3 text-left">
+          <div className="w-10 h-10 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 flex-shrink-0">
+            <FileText className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
+              <span>Platform Terms & Conditions</span>
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+            </h3>
+            <p className="text-[11px] text-slate-400 mt-0.5">
+              Review platform policies, task standards, VIP progression, and withdrawal rules.
+            </p>
+          </div>
+        </div>
+
+        <Link
+          to="/terms"
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-amber-600/30 hover:from-amber-500/30 hover:to-amber-600/40 border border-amber-400/50 text-amber-300 font-bold text-xs transition-all whitespace-nowrap shadow-sm hover:scale-[1.02] active:scale-[0.98]"
+        >
+          <span>View Terms & Conditions</span>
+          <ExternalLink className="w-3.5 h-3.5" />
+        </Link>
       </div>
     </div>
   );

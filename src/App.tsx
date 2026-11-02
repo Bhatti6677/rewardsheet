@@ -142,6 +142,7 @@ export const App: React.FC = () => {
           <Route path="activity" element={<Navigate to="/app/wallet" replace />} />
           <Route path="notifications" element={<NotificationsPage />} />
           <Route path="profile" element={<ProfilePage />} />
+          <Route path="terms" element={<TermsPage />} />
         </Route>
 
         {/* Admin Panel Native Routes */}

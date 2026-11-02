@@ -18,6 +18,7 @@ export const RegisterPage: React.FC = () => {
   });
 
   const [error, setError] = useState<string | null>(null);
+  const [agreeTerms, setAgreeTerms] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -43,6 +44,11 @@ export const RegisterPage: React.FC = () => {
 
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
+      return;
+    }
+
+    if (!agreeTerms) {
+      setError('You must read and agree to the Terms and Conditions to create an account.');
       return;
     }
 
@@ -202,6 +208,31 @@ export const RegisterPage: React.FC = () => {
               <p className="text-[11px] text-slate-400 mt-1.5 leading-relaxed">
                 Enter your 6-letter official referral code provided by administration (e.g. <span className="font-mono text-amber-300">lbhyfr</span>, <span className="font-mono text-amber-300">LBHYFR</span>, or <span className="font-mono text-amber-300">Lbhyfr</span>). Each code is valid for a single registration only.
               </p>
+            </div>
+
+            <div className="flex items-start gap-2.5 pt-1 pb-1">
+              <input
+                type="checkbox"
+                id="agreeTerms"
+                checked={agreeTerms}
+                onChange={(e) => {
+                  setAgreeTerms(e.target.checked);
+                  if (error && error.includes('Terms and Conditions')) setError(null);
+                }}
+                required
+                className="mt-0.5 w-4 h-4 rounded border-slate-700 text-amber-500 focus:ring-amber-400/20 bg-[#060A14] cursor-pointer"
+              />
+              <label htmlFor="agreeTerms" className="text-xs text-slate-300 select-none leading-relaxed cursor-pointer">
+                I have read and agree to the{' '}
+                <Link
+                  to="/terms"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-amber-400 hover:text-amber-300 font-bold underline underline-offset-2 transition-colors inline-flex items-center gap-1"
+                >
+                  Terms and Conditions
+                </Link>
+              </label>
             </div>
 
             <button
