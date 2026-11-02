@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   Users,
   Search,
@@ -12,20 +13,22 @@ import {
   Check,
   ChevronRight,
   Sparkles,
+  X,
 } from 'lucide-react';
 import { api } from '../../api/client';
 
 export const AdminLevelApprovalsPage: React.FC = () => {
+  const [searchParams] = useSearchParams();
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(searchParams.get('search') || '');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [updatingLevels, setUpdatingLevels] = useState<Record<string, boolean>>({});
   const [notificationMessage, setNotificationMessage] = useState<string | null>(null);
 
-  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const searchTimeoutRef = useRef<any | null>(null);
 
   const fetchLevelApprovals = async (targetPage = page, searchTerm = search) => {
     try {
@@ -50,8 +53,14 @@ export const AdminLevelApprovalsPage: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchLevelApprovals(1, search);
-  }, []);
+    const urlSearch = searchParams.get('search');
+    if (urlSearch !== null && urlSearch !== search) {
+      setSearch(urlSearch);
+      fetchLevelApprovals(1, urlSearch);
+    } else {
+      fetchLevelApprovals(1, search);
+    }
+  }, [searchParams]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;

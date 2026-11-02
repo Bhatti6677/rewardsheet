@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   ArrowDownLeft,
   CheckCircle2,
@@ -13,10 +14,12 @@ import {
 import { api } from '../../api/client';
 
 export const AdminDepositsPage: React.FC = () => {
+  const [searchParams] = useSearchParams();
   const [deposits, setDeposits] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [reloading, setReloading] = useState(false);
   const [status, setStatus] = useState('PENDING');
+  const [search, setSearch] = useState(searchParams.get('search') || '');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pendingCount, setPendingCount] = useState<number>(0);
@@ -38,14 +41,19 @@ export const AdminDepositsPage: React.FC = () => {
       .catch(() => {});
   };
 
-  const loadDeposits = (p = 1, isManual = false) => {
+  const loadDeposits = (p = 1, isManual = false, searchVal = search) => {
     if (isManual) {
       setReloading(true);
     } else if (deposits.length === 0) {
       setLoading(true);
     }
     fetchPendingCount();
-    api.getAdminDeposits({ status: status || undefined, page: p, limit: 15 })
+    api.getAdminDeposits({
+      status: status || undefined,
+      search: searchVal.trim() || undefined,
+      page: p,
+      limit: 15,
+    })
       .then((res) => {
         setDeposits(res.deposits || []);
         setTotalPages(res.pagination?.totalPages || 1);
@@ -59,8 +67,18 @@ export const AdminDepositsPage: React.FC = () => {
   };
 
   useEffect(() => {
-    loadDeposits(1);
-  }, [status]);
+    const urlSearch = searchParams.get('search');
+    if (urlSearch !== null && urlSearch !== search) {
+      setSearch(urlSearch);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      loadDeposits(1, false, search);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [status, search]);
 
   const handleOpenReview = (dep: any, defaultAction: 'APPROVE' | 'REJECT') => {
     setReviewingDep(dep);
@@ -140,19 +158,43 @@ export const AdminDepositsPage: React.FC = () => {
       )}
 
       {/* Filter Bar */}
-      <div className="admin-card p-4 flex items-center justify-between">
-        <select
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-          className="bg-white border border-[#D9E4F2] rounded-lg px-3 py-1.5 text-xs text-[#111827] focus:outline-none h-9"
-        >
-          <option value="">All Deposit States</option>
-          <option value="PENDING">
-            Pending Verification {pendingCount > 0 ? `(${pendingCount})` : ''}
-          </option>
-          <option value="APPROVED">Approved Deposits</option>
-          <option value="REJECTED">Rejected Deposits</option>
-        </select>
+      <div className="admin-card p-4 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-2 flex-1 min-w-[280px]">
+          {/* User Search Input */}
+          <div className="relative min-w-[200px] sm:min-w-[260px] flex-1 max-w-sm">
+            <Search className="w-3.5 h-3.5 text-[#6B7280] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <input
+              type="text"
+              placeholder="Search user name, phone, or TxID..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full bg-white border border-[#D9E4F2] focus:border-[#2563EB] rounded-lg pl-8 pr-7 py-1.5 text-xs text-[#111827] focus:outline-none placeholder:text-[#9CA3AF] shadow-xs h-9"
+            />
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch('')}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
+                title="Clear search"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="bg-white border border-[#D9E4F2] rounded-lg px-3 py-1.5 text-xs text-[#111827] focus:outline-none h-9"
+          >
+            <option value="">All Deposit States</option>
+            <option value="PENDING">
+              Pending Verification {pendingCount > 0 ? `(${pendingCount})` : ''}
+            </option>
+            <option value="APPROVED">Approved Deposits</option>
+            <option value="REJECTED">Rejected Deposits</option>
+          </select>
+        </div>
 
         <button
           type="button"

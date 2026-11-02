@@ -25,6 +25,10 @@ import {
   Ticket,
   KeyRound,
   ShieldCheck,
+  Search,
+  User as UserIcon,
+  ExternalLink,
+  Loader2,
 } from 'lucide-react';
 import { api } from '../../api/client';
 import { useAdminAuth } from '../../context/AdminAuthContext';
@@ -103,6 +107,286 @@ const PAGE_TITLES: Record<string, { title: string; subtitle: string }> = {
     title: 'Administrative Audit Trail',
     subtitle: 'Tamper-proof record of all admin activities and changes.',
   },
+};
+
+const AdminHeaderUserSearch: React.FC<{ isMiniAdmin: boolean }> = ({ isMiniAdmin }) => {
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
+
+  // Keyboard shortcuts: Cmd+K / Ctrl+K to focus search, Escape to close
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        inputRef.current?.focus();
+        setIsOpen(true);
+      }
+      if (e.key === 'Escape') {
+        setIsOpen(false);
+        inputRef.current?.blur();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Click outside to dismiss dropdown
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Live debounced search across database
+  useEffect(() => {
+    const trimmed = query.trim();
+    if (!trimmed) {
+      setResults([]);
+      setLoading(false);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setLoading(true);
+      try {
+        if (isMiniAdmin) {
+          const res: any = await api.getAdminSubmissions({ search: trimmed, limit: 6 });
+          setResults(res.submissions || []);
+        } else {
+          const res: any = await api.getAdminUsers({ search: trimmed, limit: 6 });
+          setResults(res.users || []);
+        }
+        setIsOpen(true);
+      } catch (err) {
+        console.error('Header user search error:', err);
+      } finally {
+        setLoading(false);
+      }
+    }, 250);
+
+    return () => clearTimeout(timer);
+  }, [query, isMiniAdmin]);
+
+  const handleSelectUser = (user: any, target: 'users' | 'submissions' | 'deposits' | 'withdrawals' = 'users') => {
+    setIsOpen(false);
+    const identifier = user.phone || user.name || user.id;
+    navigate(`/adminpanal/${target}?search=${encodeURIComponent(identifier)}`);
+  };
+
+  const handleSelectSubmission = (sub: any) => {
+    setIsOpen(false);
+    const identifier = sub.user?.phone || sub.user?.name || sub.id;
+    navigate(`/adminpanal/submissions?search=${encodeURIComponent(identifier)}`);
+  };
+
+  const handleSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const trimmed = query.trim();
+    if (!trimmed) return;
+    setIsOpen(false);
+    if (isMiniAdmin) {
+      navigate(`/adminpanal/submissions?search=${encodeURIComponent(trimmed)}`);
+    } else {
+      navigate(`/adminpanal/users?search=${encodeURIComponent(trimmed)}`);
+    }
+  };
+
+  return (
+    <div className="relative flex-1 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-2" ref={containerRef}>
+      <form onSubmit={handleSubmit} className="relative w-full">
+        <div className="relative flex items-center">
+          <Search className="w-4 h-4 text-[#6B7280] absolute left-3 pointer-events-none" />
+          <input
+            ref={inputRef}
+            type="text"
+            value={query}
+            onFocus={() => {
+              if (query.trim()) setIsOpen(true);
+            }}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              if (!isOpen && e.target.value.trim()) setIsOpen(true);
+            }}
+            placeholder={isMiniAdmin ? "Search Level 1 submissions by user..." : "Search user (Name, Phone, ID, Referral)..."}
+            className="w-full bg-[#F8FAFD] hover:bg-white focus:bg-white border border-[#D9E4F2] focus:border-[#2563EB] rounded-xl pl-9 pr-14 py-2 text-xs text-[#111827] focus:outline-none transition-all placeholder:text-[#9CA3AF] shadow-2xs focus:shadow-sm"
+          />
+          <div className="absolute right-2 flex items-center gap-1">
+            {query ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setQuery('');
+                  setResults([]);
+                  setIsOpen(false);
+                }}
+                className="p-1 text-slate-400 hover:text-slate-600 rounded-md transition-colors"
+                title="Clear search"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            ) : (
+              <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] font-semibold text-[#6B7280] bg-white border border-[#D9E4F2] rounded shadow-3xs pointer-events-none">
+                ⌘K
+              </kbd>
+            )}
+          </div>
+        </div>
+      </form>
+
+      {/* Floating Live Results Dropdown */}
+      {isOpen && query.trim() && (
+        <div className="absolute left-0 right-0 top-full mt-2 bg-white rounded-2xl shadow-2xl border border-[#D9E4F2] p-2 z-50 animate-in fade-in zoom-in-95 duration-150 max-h-[440px] flex flex-col">
+          <div className="px-3 py-2 border-b border-[#E5E7EB] flex items-center justify-between text-xs">
+            <span className="font-bold text-[#111827] flex items-center gap-1.5">
+              <span>{isMiniAdmin ? 'Matching Submissions' : 'Matching Members'}</span>
+              {!loading && (
+                <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                  {results.length}
+                </span>
+              )}
+            </span>
+            <span className="text-[10px] text-[#9CA3AF] font-medium hidden sm:inline">Esc to dismiss</span>
+          </div>
+
+          <div className="overflow-y-auto divide-y divide-[#F1F5F9] max-h-[340px] py-1">
+            {loading ? (
+              <div className="py-8 flex flex-col items-center justify-center gap-2 text-xs text-[#6B7280]">
+                <Loader2 className="w-5 h-5 animate-spin text-[#2563EB]" />
+                <span>Searching {isMiniAdmin ? 'submissions' : 'database for members'}...</span>
+              </div>
+            ) : results.length === 0 ? (
+              <div className="py-8 text-center text-xs text-[#6B7280]">
+                No {isMiniAdmin ? 'submissions' : 'members'} found matching "{query}".
+              </div>
+            ) : isMiniAdmin ? (
+              results.map((sub: any) => (
+                <div
+                  key={sub.id}
+                  onClick={() => handleSelectSubmission(sub)}
+                  className="p-2.5 hover:bg-[#F8FAFD] rounded-xl cursor-pointer transition-colors flex items-center justify-between gap-2"
+                >
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-xs text-[#111827] truncate">{sub.user?.name || 'Unknown Member'}</span>
+                      <span className="text-[10px] font-mono text-[#6B7280]">{sub.user?.phone}</span>
+                      <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+                        sub.status === 'APPROVED' ? 'bg-emerald-50 text-emerald-700' :
+                        sub.status === 'REJECTED' ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700'
+                      }`}>
+                        {sub.status}
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-[#6B7280] truncate mt-0.5">
+                      Task: {sub.task?.title || 'Level 1 Task'} • ID: {sub.id.slice(0, 8)}
+                    </p>
+                  </div>
+                  <ExternalLink className="w-4 h-4 text-[#2563EB] flex-shrink-0" />
+                </div>
+              ))
+            ) : (
+              results.map((u: any) => (
+                <div
+                  key={u.id}
+                  className="p-2.5 hover:bg-[#F8FAFD] rounded-xl transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-2"
+                >
+                  <div
+                    onClick={() => handleSelectUser(u, 'users')}
+                    className="min-w-0 flex items-center gap-2.5 cursor-pointer flex-1"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-600 to-indigo-700 text-white flex items-center justify-center font-bold text-xs flex-shrink-0 shadow-xs">
+                      {u.name?.charAt(0)?.toUpperCase() || 'U'}
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="font-bold text-xs text-[#111827] truncate hover:text-[#2563EB]">{u.name}</span>
+                        <span className="text-[10px] font-mono text-[#6B7280]">{u.phone}</span>
+                        <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded-full ${
+                          u.accountStatus === 'ACTIVE'
+                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                            : u.accountStatus === 'SUSPENDED'
+                            ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                            : 'bg-red-50 text-red-700 border border-red-200'
+                        }`}>
+                          {u.accountStatus || 'ACTIVE'}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-3 text-[11px] text-[#6B7280] mt-0.5">
+                        <span className="font-semibold text-emerald-700">
+                          Balance: ₨ {(u.wallet?.availableBalance ?? 0).toLocaleString()}
+                        </span>
+                        {u.referralCode && (
+                          <span className="text-[10px] font-mono bg-slate-100 px-1 rounded text-slate-600">
+                            Ref: {u.referralCode}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Quick Action Shortcuts */}
+                  <div className="flex items-center gap-1 self-end sm:self-center flex-shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => handleSelectUser(u, 'users')}
+                      className="px-2 py-1 text-[11px] font-semibold text-[#2563EB] hover:bg-blue-50 rounded-md transition-colors cursor-pointer"
+                      title="View user details and edit"
+                    >
+                      User
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectUser(u, 'submissions')}
+                      className="px-2 py-1 text-[11px] font-semibold text-purple-700 hover:bg-purple-50 rounded-md transition-colors cursor-pointer"
+                      title="View user task submissions"
+                    >
+                      Submissions
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectUser(u, 'deposits')}
+                      className="px-2 py-1 text-[11px] font-semibold text-emerald-700 hover:bg-emerald-50 rounded-md transition-colors cursor-pointer"
+                      title="View user deposit history"
+                    >
+                      Deposits
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectUser(u, 'withdrawals')}
+                      className="px-2 py-1 text-[11px] font-semibold text-amber-700 hover:bg-amber-50 rounded-md transition-colors cursor-pointer"
+                      title="View user withdrawal requests"
+                    >
+                      Withdrawals
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          <div className="pt-2 border-t border-[#E5E7EB] px-2 flex items-center justify-between text-[11px]">
+            <button
+              type="button"
+              onClick={() => handleSubmit()}
+              className="text-[#2563EB] hover:text-[#1D4ED8] font-bold flex items-center gap-1 cursor-pointer"
+            >
+              <span>View all matching results in {isMiniAdmin ? 'Submissions' : 'Users directory'}</span>
+              <span>→</span>
+            </button>
+            <span className="text-[#9CA3AF] text-[10px]">Press Enter ↵</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export const AdminLayout: React.FC = () => {
@@ -386,25 +670,28 @@ export const AdminLayout: React.FC = () => {
       {/* Main Container */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Top Header */}
-        <header className="h-16 sm:h-18 bg-white border-b border-[#D9E4F2] px-4 lg:px-8 flex items-center justify-between sticky top-0 z-20 shadow-sm">
-          <div className="flex items-center gap-3 min-w-0">
+        <header className="h-16 sm:h-18 bg-white border-b border-[#D9E4F2] px-3 sm:px-4 lg:px-8 flex items-center justify-between sticky top-0 z-20 shadow-sm gap-2">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-shrink">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-2 text-[#4B5563] hover:bg-[#F8FAFD] rounded-lg border border-[#D9E4F2] flex-shrink-0"
+              className="lg:hidden p-2 text-[#4B5563] hover:bg-[#F8FAFD] rounded-lg border border-[#D9E4F2] flex-shrink-0 cursor-pointer"
             >
               <Menu className="w-5 h-5" />
             </button>
-            <div className="min-w-0">
+            <div className="min-w-0 hidden md:block">
               <h1 className="text-base sm:text-lg lg:text-xl font-bold text-[#111827] truncate">
                 {pageInfo.title}
               </h1>
-              <p className="text-[11px] sm:text-xs text-[#6B7280] truncate max-w-xl hidden sm:block">
+              <p className="text-[11px] sm:text-xs text-[#6B7280] truncate max-w-xs lg:max-w-md hidden sm:block">
                 {pageInfo.subtitle}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 flex-shrink-0">
+          {/* Persistent Global User Search - Available across ALL Admin Pages */}
+          <AdminHeaderUserSearch isMiniAdmin={isMiniAdmin} />
+
+          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
             {/* Notification Bell with Dot Badge & Quantity Count */}
             <div className="relative" ref={dropdownRef}>
               <button

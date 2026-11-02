@@ -1,17 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Receipt, Search, Filter } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
+import { Receipt, Search, Filter, X } from 'lucide-react';
 import { api } from '../../api/client';
 
 export const AdminTransactionsPage: React.FC = () => {
+  const [searchParams] = useSearchParams();
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [typeFilter, setTypeFilter] = useState('');
+  const [search, setSearch] = useState(searchParams.get('search') || '');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const loadTransactions = (p = 1) => {
+  const loadTransactions = (p = 1, searchVal = search) => {
     setLoading(true);
-    api.getAdminTransactions({ type: typeFilter || undefined, page: p, limit: 20 })
+    api.getAdminTransactions({
+      type: typeFilter || undefined,
+      search: searchVal.trim() || undefined,
+      page: p,
+      limit: 20,
+    })
       .then((res) => {
         setTransactions(res.transactions || []);
         setTotalPages(res.pagination?.totalPages || 1);
@@ -22,8 +30,18 @@ export const AdminTransactionsPage: React.FC = () => {
   };
 
   useEffect(() => {
-    loadTransactions(1);
-  }, [typeFilter]);
+    const urlSearch = searchParams.get('search');
+    if (urlSearch !== null && urlSearch !== search) {
+      setSearch(urlSearch);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      loadTransactions(1, search);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [typeFilter, search]);
 
   return (
     <div className="space-y-6">
@@ -34,23 +52,47 @@ export const AdminTransactionsPage: React.FC = () => {
         </p>
       </div>
 
-      <div className="admin-card p-4 flex items-center justify-between">
-        <select
-          value={typeFilter}
-          onChange={(e) => setTypeFilter(e.target.value)}
-          className="bg-white border border-[#D9E4F2] rounded-lg px-3 py-1.5 text-xs text-[#111827] focus:outline-none h-9"
-        >
-          <option value="">All Transaction Categories</option>
-          <option value="DEPOSIT_CREDIT">Deposit Credits</option>
-          <option value="TASK_REWARD">Task Rewards</option>
-          <option value="LEVEL_REWARD">Level Rewards</option>
-          <option value="REFERRAL_REWARD">Referral Bonuses</option>
-          <option value="SPIN_REWARD">Spin Rewards</option>
-          <option value="TASK_UNLOCK_FEE">Task Unlock Fees</option>
-          <option value="WITHDRAWAL_PAID">Withdrawals Paid</option>
-          <option value="ADMIN_CREDIT">Admin Credits</option>
-          <option value="ADMIN_DEBIT">Admin Debits</option>
-        </select>
+      <div className="admin-card p-4 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-2 flex-1 min-w-[280px]">
+          {/* User Search Input */}
+          <div className="relative min-w-[200px] sm:min-w-[260px] flex-1 max-w-sm">
+            <Search className="w-3.5 h-3.5 text-[#6B7280] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <input
+              type="text"
+              placeholder="Search user name, phone, description..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full bg-white border border-[#D9E4F2] focus:border-[#2563EB] rounded-lg pl-8 pr-7 py-1.5 text-xs text-[#111827] focus:outline-none placeholder:text-[#9CA3AF] shadow-xs h-9"
+            />
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch('')}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
+                title="Clear search"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+
+          <select
+            value={typeFilter}
+            onChange={(e) => setTypeFilter(e.target.value)}
+            className="bg-white border border-[#D9E4F2] rounded-lg px-3 py-1.5 text-xs text-[#111827] focus:outline-none h-9"
+          >
+            <option value="">All Transaction Categories</option>
+            <option value="DEPOSIT_CREDIT">Deposit Credits</option>
+            <option value="TASK_REWARD">Task Rewards</option>
+            <option value="LEVEL_REWARD">Level Rewards</option>
+            <option value="REFERRAL_REWARD">Referral Bonuses</option>
+            <option value="SPIN_REWARD">Spin Rewards</option>
+            <option value="TASK_UNLOCK_FEE">Task Unlock Fees</option>
+            <option value="WITHDRAWAL_PAID">Withdrawals Paid</option>
+            <option value="ADMIN_CREDIT">Admin Credits</option>
+            <option value="ADMIN_DEBIT">Admin Debits</option>
+          </select>
+        </div>
       </div>
 
       <div className="admin-card overflow-hidden">

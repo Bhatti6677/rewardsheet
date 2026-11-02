@@ -415,12 +415,13 @@ export const api = {
     request(`/admin/tasks/${taskId}`, { method: 'PUT', body: JSON.stringify(payload) }, true),
 
   // Admin Submissions
-  getAdminSubmissions: (params?: { status?: string; level?: number; page?: number; limit?: number }) => {
+  getAdminSubmissions: (params?: { status?: string; level?: number; page?: number; limit?: number; search?: string }) => {
     const q = new URLSearchParams();
     if (params?.status) q.append('status', params.status);
     if (params?.level) q.append('level', params.level.toString());
     if (params?.page) q.append('page', params.page.toString());
     if (params?.limit) q.append('limit', params.limit.toString());
+    if (params?.search) q.append('search', params.search);
     return request(`/admin/submissions?${q.toString()}`, {}, true);
   },
   reviewTaskSubmission: (submissionId: string, payload: any) =>
@@ -429,23 +430,25 @@ export const api = {
     request(`/admin/submissions/batch-review`, { method: 'POST', body: JSON.stringify(payload) }, true),
 
   // Admin Deposits
-  getAdminDeposits: (params?: { status?: string; page?: number; limit?: number }) => {
+  getAdminDeposits: (params?: { status?: string; page?: number; limit?: number; search?: string }) => {
     const q = new URLSearchParams();
     if (params?.status) q.append('status', params.status);
     if (params?.page) q.append('page', params.page.toString());
     if (params?.limit) q.append('limit', params.limit.toString());
+    if (params?.search) q.append('search', params.search);
     return request(`/admin/deposits?${q.toString()}`, {}, true);
   },
   reviewDeposit: (depositId: string, payload: any) =>
     request(`/admin/deposits/${depositId}/review`, { method: 'PUT', body: JSON.stringify(payload) }, true),
 
   // Admin Withdrawals
-  getAdminWithdrawals: (params?: { approvalStatus?: string; paymentStatus?: string; page?: number; limit?: number }) => {
+  getAdminWithdrawals: (params?: { approvalStatus?: string; paymentStatus?: string; page?: number; limit?: number; search?: string }) => {
     const q = new URLSearchParams();
     if (params?.approvalStatus) q.append('approvalStatus', params.approvalStatus);
     if (params?.paymentStatus) q.append('paymentStatus', params.paymentStatus);
     if (params?.page) q.append('page', params.page.toString());
     if (params?.limit) q.append('limit', params.limit.toString());
+    if (params?.search) q.append('search', params.search);
     return request(`/admin/withdrawals?${q.toString()}`, {}, true);
   },
   reviewWithdrawal: (withdrawalId: string, payload: any) =>
@@ -461,7 +464,12 @@ export const api = {
   createSpinPrize: (payload: any) => request('/admin/spin/prizes', { method: 'POST', body: JSON.stringify(payload) }, true),
 
   // Admin Referrals & Transactions
-  getAdminReferrals: () => request('/admin/referrals', {}, true),
+  getAdminReferrals: (params?: { search?: string }) => {
+    const q = new URLSearchParams();
+    if (params?.search) q.append('search', params.search);
+    const queryStr = q.toString() ? `?${q.toString()}` : '';
+    return request(`/admin/referrals${queryStr}`, {}, true);
+  },
   getAdminReferralCodes: () => request('/admin/referral-codes', {}, true),
   getAdminTelegramUsers: () => request('/admin/telegram-users', {}, true),
   grantTelegramUserCodes: (chatId: string, amount: number) =>
@@ -471,11 +479,12 @@ export const api = {
   createAdminReferralCode: (payload: { code: string; notes?: string }) =>
     request('/admin/referral-codes/create', { method: 'POST', body: JSON.stringify(payload) }, true),
   validateReferralCode: (code: string) => request(`/auth/validate-referral/${encodeURIComponent(code)}`),
-  getAdminTransactions: (params?: { type?: string; page?: number; limit?: number }) => {
+  getAdminTransactions: (params?: { type?: string; page?: number; limit?: number; search?: string }) => {
     const q = new URLSearchParams();
     if (params?.type) q.append('type', params.type);
     if (params?.page) q.append('page', params.page.toString());
     if (params?.limit) q.append('limit', params.limit.toString());
+    if (params?.search) q.append('search', params.search);
     return request(`/admin/transactions?${q.toString()}`, {}, true);
   },
 

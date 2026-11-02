@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Wallet, Search, Plus, Minus, CheckCircle2, AlertCircle, X, RefreshCw, Sparkles } from 'lucide-react';
 import { api } from '../../api/client';
 
 export const AdminWalletsPage: React.FC = () => {
+  const [searchParams] = useSearchParams();
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(searchParams.get('search') || '');
   const [updatingUserId, setUpdatingUserId] = useState<string | null>(null);
 
   // Balance Modal
@@ -23,17 +25,23 @@ export const AdminWalletsPage: React.FC = () => {
 
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  const loadUsers = () => {
+  const loadUsers = (searchVal = search) => {
     setLoading(true);
-    api.getAdminUsers({ search: search.trim(), limit: 30 })
+    api.getAdminUsers({ search: searchVal.trim(), limit: 30 })
       .then((res) => setUsers(res.users || []))
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
   };
 
   useEffect(() => {
-    loadUsers();
-  }, []);
+    const urlSearch = searchParams.get('search');
+    if (urlSearch !== null && urlSearch !== search) {
+      setSearch(urlSearch);
+      loadUsers(urlSearch);
+    } else {
+      loadUsers(search);
+    }
+  }, [searchParams]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

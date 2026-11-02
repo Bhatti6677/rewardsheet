@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import {
   Users,
   Search,
@@ -68,9 +68,10 @@ export const AdminUsersPage: React.FC = () => {
   const { admin } = useAdminAuth();
   const isMiniAdmin = admin?.role === 'MINI_ADMIN';
 
+  const [searchParams] = useSearchParams();
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(searchParams.get('search') || '');
   const [status, setStatus] = useState('');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -113,13 +114,13 @@ export const AdminUsersPage: React.FC = () => {
 
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  const loadUsers = (p = 1, isManualReload = false) => {
+  const loadUsers = (p = 1, isManualReload = false, searchVal = search) => {
     if (isManualReload) {
       setReloadingAll(true);
     } else if (users.length === 0) {
       setLoading(true);
     }
-    api.getAdminUsers({ search: search.trim(), status, page: p, limit: 15 })
+    api.getAdminUsers({ search: searchVal.trim(), status, page: p, limit: 15 })
       .then((res) => {
         setUsers(res.users || []);
         setTotalPages(res.pagination?.totalPages || 1);
@@ -139,8 +140,18 @@ export const AdminUsersPage: React.FC = () => {
   };
 
   useEffect(() => {
-    loadUsers(1);
-  }, [status]);
+    const urlSearch = searchParams.get('search');
+    if (urlSearch !== null && urlSearch !== search) {
+      setSearch(urlSearch);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      loadUsers(1, false, search);
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [status, search]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -517,11 +528,21 @@ export const AdminUsersPage: React.FC = () => {
             <Search className="w-4 h-4 text-[#9CA3AF] absolute left-3 top-2.5" />
             <input
               type="text"
-              placeholder="Search by Name or Phone..."
+              placeholder="Search by Name, Phone, ID, or Referral Code..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-white border border-[#D9E4F2] focus:border-[#2563EB] rounded-lg pl-9 pr-3 py-1.5 text-xs text-[#111827] focus:outline-none h-9"
+              className="w-full bg-white border border-[#D9E4F2] focus:border-[#2563EB] rounded-lg pl-9 pr-8 py-1.5 text-xs text-[#111827] focus:outline-none h-9"
             />
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch('')}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
+                title="Clear search"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
           <button
             type="submit"

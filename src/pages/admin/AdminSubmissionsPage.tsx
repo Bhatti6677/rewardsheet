@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   FileCheck2,
   CheckCircle2,
@@ -18,12 +19,14 @@ import { useAdminAuth } from '../../context/AdminAuthContext';
 export const AdminSubmissionsPage: React.FC = () => {
   const { admin } = useAdminAuth();
   const isMiniAdmin = admin?.role === 'MINI_ADMIN';
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [submissions, setSubmissions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [reloading, setReloading] = useState(false);
   const [status, setStatus] = useState('PENDING');
   const [level, setLevel] = useState<string>(isMiniAdmin ? '1' : '');
+  const [search, setSearch] = useState(searchParams.get('search') || '');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
@@ -37,7 +40,7 @@ export const AdminSubmissionsPage: React.FC = () => {
   const [batchLoading, setBatchLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  const loadSubmissions = (p = 1, isManual = false) => {
+  const loadSubmissions = (p = 1, isManual = false, searchVal = search) => {
     if (isManual) {
       setReloading(true);
     } else if (submissions.length === 0) {
@@ -46,6 +49,7 @@ export const AdminSubmissionsPage: React.FC = () => {
     api.getAdminSubmissions({
       status: status || undefined,
       level: level ? parseInt(level, 10) : undefined,
+      search: searchVal.trim() || undefined,
       page: p,
       limit: 15,
     })
@@ -62,9 +66,19 @@ export const AdminSubmissionsPage: React.FC = () => {
   };
 
   useEffect(() => {
-    loadSubmissions(1);
-    setSelectedSubIds(new Set());
-  }, [status, level]);
+    const urlSearch = searchParams.get('search');
+    if (urlSearch !== null && urlSearch !== search) {
+      setSearch(urlSearch);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      loadSubmissions(1, false, search);
+      setSelectedSubIds(new Set());
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [status, level, search]);
 
   const pendingSubmissions = submissions.filter((s) => s.status === 'PENDING');
   const allPendingSelected =
@@ -201,7 +215,29 @@ export const AdminSubmissionsPage: React.FC = () => {
 
       {/* Filter Bar */}
       <div className="admin-card p-4 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 flex-1 min-w-[280px]">
+          {/* User Search Input */}
+          <div className="relative min-w-[200px] sm:min-w-[260px] flex-1 max-w-sm">
+            <Search className="w-3.5 h-3.5 text-[#6B7280] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <input
+              type="text"
+              placeholder="Search user name, phone, or ID..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full bg-white border border-[#D9E4F2] focus:border-[#2563EB] rounded-lg pl-8 pr-7 py-1.5 text-xs text-[#111827] focus:outline-none placeholder:text-[#9CA3AF] shadow-xs h-9"
+            />
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch('')}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
+                title="Clear search"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
