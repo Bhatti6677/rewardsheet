@@ -176,6 +176,9 @@ export const AdminLoginPage: React.FC = () => {
                       className="w-full bg-[#060A14] border border-slate-800/90 focus:border-amber-400/80 focus:ring-1 focus:ring-amber-400/20 rounded-xl pl-10 pr-4 py-2.5 text-base text-amber-300 font-mono tracking-[0.4em] text-center placeholder:tracking-normal placeholder-slate-600 focus:outline-none transition-all shadow-inner h-11 font-bold"
                     />
                   </div>
+                  <p className="text-[11px] text-slate-400 mt-2.5 leading-relaxed text-center">
+                    Enter the 6-digit dynamic code from Master Admin panel (or test code <span className="text-amber-400 font-mono font-bold tracking-wider">000000</span>).
+                  </p>
                 </div>
 
                 <button
