@@ -96,13 +96,18 @@ const getAudioContext = (): AudioContext | null => {
   if (!sharedAudioCtx) {
     const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
     if (AudioCtx) {
-      sharedAudioCtx = new AudioCtx();
+      try {
+        sharedAudioCtx = new AudioCtx();
+      } catch (_) {}
     }
   }
+  return sharedAudioCtx;
+};
+
+const ensureAudioResumed = () => {
   if (sharedAudioCtx && sharedAudioCtx.state === 'suspended') {
     sharedAudioCtx.resume().catch(() => {});
   }
-  return sharedAudioCtx;
 };
 
 // Synthesize pleasant casino audio clicks using Web Audio API
@@ -168,10 +173,7 @@ export const SpinPage: React.FC = () => {
   // Auto-unlock audio on first touch/click (essential for mobile phone browsers)
   useEffect(() => {
     const unlockAudio = () => {
-      const ctx = getAudioContext();
-      if (ctx && ctx.state === 'suspended') {
-        ctx.resume().catch(() => {});
-      }
+      ensureAudioResumed();
       window.removeEventListener('touchstart', unlockAudio);
       window.removeEventListener('click', unlockAudio);
     };
@@ -235,10 +237,7 @@ export const SpinPage: React.FC = () => {
     if (isSpinning || !spinData?.isEligible || spinData?.remainingSpins <= 0) return;
 
     // Immediately unlock and resume audio on user tap (critical for mobile phones)
-    const ctx = getAudioContext();
-    if (ctx && ctx.state === 'suspended') {
-      ctx.resume().catch(() => {});
-    }
+    ensureAudioResumed();
 
     setError(null);
     setWonPrize(null);
