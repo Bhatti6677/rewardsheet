@@ -177,7 +177,7 @@ export const AdminLoginPage: React.FC = () => {
                     />
                   </div>
                   <p className="text-[11px] text-slate-400 mt-2.5 leading-relaxed text-center">
-                    Enter the 6-digit dynamic code from Master Admin panel (or test code <span className="text-amber-400 font-mono font-bold tracking-wider">000000</span>).
+                    Enter the active 6-digit dynamic code from the Master Admin panel.
                   </p>
                 </div>
 

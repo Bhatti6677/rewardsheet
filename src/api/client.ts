@@ -173,6 +173,10 @@ async function request<T = any>(
         if (res.status === 503 && data?.maintenance) {
           window.dispatchEvent(new CustomEvent('royal_maintenance_triggered', { detail: data }));
         }
+        if (res.status === 401 && isAdmin && !endpoint.includes('/admin/login')) {
+          localStorage.removeItem('royal_admin_token');
+          window.dispatchEvent(new CustomEvent('royal_admin_session_terminated', { detail: data }));
+        }
         throw new Error(data.error || `Request failed with status ${res.status}`);
       }
 
@@ -481,6 +485,8 @@ export const api = {
     request(`/admin/mini-admins/${id}/password`, { method: 'PUT', body: JSON.stringify({ password }) }, true),
   regenerateAdminMiniAdminOtp: (id: string) =>
     request(`/admin/mini-admins/${id}/regenerate-otp`, { method: 'POST' }, true),
+  logoutAdminMiniAdmin: (id: string) =>
+    request(`/admin/mini-admins/${id}/logout`, { method: 'POST' }, true),
   deleteAdminMiniAdmin: (id: string) =>
     request(`/admin/mini-admins/${id}`, { method: 'DELETE' }, true),
 };

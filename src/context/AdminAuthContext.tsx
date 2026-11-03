@@ -41,6 +41,34 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       });
   }, []);
 
+  useEffect(() => {
+    const handleTerminated = (e: any) => {
+      localStorage.removeItem('royal_admin_token');
+      setAdmin(null);
+      if (e?.detail?.error) {
+        alert(e.detail.error);
+      }
+    };
+    window.addEventListener('royal_admin_session_terminated', handleTerminated);
+    return () => {
+      window.removeEventListener('royal_admin_session_terminated', handleTerminated);
+    };
+  }, []);
+
+  // Periodic session heartbeat for active admin sessions (detects revoked sessions promptly)
+  useEffect(() => {
+    if (!admin) return;
+    const interval = setInterval(() => {
+      api.adminGetMe().catch((err: any) => {
+        if (err?.message?.includes('Session Terminated') || err?.message?.includes('401')) {
+          localStorage.removeItem('royal_admin_token');
+          setAdmin(null);
+        }
+      });
+    }, 15000);
+    return () => clearInterval(interval);
+  }, [admin]);
+
   const adminLogin = (token: string, adminData: Admin) => {
     localStorage.setItem('royal_admin_token', token);
     setAdmin(adminData);

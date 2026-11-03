@@ -24,6 +24,7 @@ import {
   Users,
   GitMerge,
   X,
+  LogOut,
 } from 'lucide-react';
 import { api } from '../../api/client';
 
@@ -60,6 +61,8 @@ export const AdminMiniAdminsPage: React.FC = () => {
   const [resetModalAdmin, setResetModalAdmin] = useState<MiniAdminItem | null>(null);
   const [deleteModalAdmin, setDeleteModalAdmin] = useState<MiniAdminItem | null>(null);
   const [assignTelegramModalAdmin, setAssignTelegramModalAdmin] = useState<MiniAdminItem | null>(null);
+  const [logoutModalAdmin, setLogoutModalAdmin] = useState<MiniAdminItem | null>(null);
+  const [loggingOut, setLoggingOut] = useState(false);
 
   // Create form state
   const [createEmail, setCreateEmail] = useState('');
@@ -284,6 +287,21 @@ export const AdminMiniAdminsPage: React.FC = () => {
       loadMiniAdmins();
     } catch (err: any) {
       alert(err.message || 'Failed to delete Mini Admin');
+    }
+  };
+
+  const handleLogoutSubmit = async () => {
+    if (!logoutModalAdmin) return;
+    setLoggingOut(true);
+    try {
+      const res: any = await api.logoutAdminMiniAdmin(logoutModalAdmin.id);
+      showNotification(res.message || `Mini Admin ${logoutModalAdmin.email || logoutModalAdmin.username} session terminated.`);
+      setLogoutModalAdmin(null);
+      loadMiniAdmins(true);
+    } catch (err: any) {
+      alert(err.message || 'Failed to logout Mini Admin');
+    } finally {
+      setLoggingOut(false);
     }
   };
 
@@ -542,6 +560,14 @@ export const AdminMiniAdminsPage: React.FC = () => {
                             title="Rotate OTP Secret"
                           >
                             <RefreshCw className="w-4 h-4" />
+                          </button>
+
+                          <button
+                            onClick={() => setLogoutModalAdmin(admin)}
+                            className="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors cursor-pointer"
+                            title="Logout / Terminate Mini Admin Session Anytime"
+                          >
+                            <LogOut className="w-4 h-4 text-amber-600" />
                           </button>
 
                           <button
@@ -1038,6 +1064,53 @@ export const AdminMiniAdminsPage: React.FC = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* 5. FORCE LOGOUT MINI ADMIN MODAL                         */}
+      {/* ======================================================== */}
+      {logoutModalAdmin && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-white w-full max-w-sm rounded-2xl border border-slate-200 shadow-2xl p-6 relative space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-amber-100 text-amber-800 rounded-2xl flex-shrink-0">
+                <LogOut className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-base font-black text-slate-900">Logout Mini Admin?</h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Terminate session for <strong className="text-slate-800">{logoutModalAdmin.email || logoutModalAdmin.username}</strong>.
+                </p>
+              </div>
+            </div>
+
+            <p className="text-xs text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-200 leading-relaxed">
+              This will immediately invalidate their current login session across all devices and rotate their active OTP secret. They will be logged out instantly and will need a new 6-digit code to log back in.
+            </p>
+
+            <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setLogoutModalAdmin(null)}
+                className="px-4 py-2 border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-xl text-xs font-bold cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={loggingOut}
+                onClick={handleLogoutSubmit}
+                className="px-5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold shadow-md shadow-amber-500/20 cursor-pointer flex items-center gap-2"
+              >
+                {loggingOut ? (
+                  <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <span>Logout Mini Admin</span>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       )}
