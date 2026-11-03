@@ -205,13 +205,6 @@ export const AdminSettingsPage: React.FC = () => {
 
   return (
     <div className="max-w-4xl space-y-6">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-[#111827]">Website Settings</h1>
-          <p className="text-xs text-[#6B7280] mt-0.5">
-            Configure official receiving bank & mobile accounts, limits, and brand details.
-          </p>
-        </div>
-
       {message && (
         <div
           className={`p-3.5 rounded-lg border text-xs flex items-center justify-between ${

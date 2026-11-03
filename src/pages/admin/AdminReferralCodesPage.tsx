@@ -262,18 +262,8 @@ export const AdminReferralCodesPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header & Quick Action Buttons */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-[#111827]">
-            Invitation Codes &amp; Telegram Bot Clients
-          </h1>
-          <p className="text-xs text-[#6B7280] mt-0.5">
-            Admin-only single-use 6-letter referral codes. View registered Telegram bot clients and grant invitation code quotas.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2">
+      {/* Quick Action Buttons */}
+      <div className="flex items-center justify-end gap-2 flex-wrap">
           <button
             onClick={() => {
               setMergeError(null);
@@ -302,7 +292,6 @@ export const AdminReferralCodesPage: React.FC = () => {
             <span>{generating ? 'Generating...' : '+10 Codes'}</span>
           </button>
         </div>
-      </div>
 
       {actionNotice && (
         <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs font-semibold flex items-center gap-2 animate-in fade-in duration-200">

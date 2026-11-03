@@ -52,13 +52,6 @@ export const AdminAnnouncementsPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-xl sm:text-2xl font-bold text-[#111827]">Announcement Management</h1>
-        <p className="text-xs text-[#6B7280] mt-0.5">
-          Publish real-time news bulletins and notifications to all registered members.
-        </p>
-      </div>
-
       {message && (
         <div
           className={`p-3.5 rounded-lg border text-xs flex items-center justify-between ${

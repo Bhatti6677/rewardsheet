@@ -190,18 +190,41 @@ export const AdminSubmissionsPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Title */}
-      <div>
-        <h1 className="text-xl sm:text-2xl font-bold text-[#111827]">Task Verification Desk</h1>
-        <p className="text-xs text-[#6B7280] mt-0.5">
-          Inspect member submitted proof, approve task rewards, or reject incomplete submissions.
-        </p>
-      </div>
-
       {isMiniAdmin && (
-        <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl text-blue-900 text-xs font-semibold flex items-center gap-2">
-          <ShieldCheck className="w-4 h-4 text-[#2563EB] flex-shrink-0" />
-          <span>Showing pending task submissions for members invited by your Telegram account.</span>
+        <div className="mini-beam-card mini-beam-card-cyan">
+          <div className="mini-beam-inner p-4 mini-water-surface relative">
+            <div className="mini-water-caustic" />
+            <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 via-blue-600 to-teal-400 text-white flex items-center justify-center flex-shrink-0 shadow-md shadow-sky-500/30 mini-water-ripple-cyan">
+                  <ShieldCheck className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-black text-slate-900 text-sm">Task Submissions Queue</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-800 border border-emerald-400/40 px-2 py-0.5 rounded-full mini-water-ripple-emerald">
+                      Level 1 & 2 Active
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-600 mt-0.5 font-medium">
+                    Showing pending task submissions for members invited by your Telegram account.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 self-start sm:self-auto">
+                <button
+                  onClick={() => loadSubmissions(1)}
+                  disabled={loading}
+                  className="mini-btn-water-splash inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-sky-300 bg-white/95 hover:bg-sky-50 text-blue-700 font-bold text-xs shadow-xs cursor-pointer mini-water-ripple-cyan"
+                  title="Refresh Submissions"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+                  <span>{loading ? 'Refreshing...' : 'Refresh Queue'}</span>
+                </button>
+              </div>
+            </div>
+            <div className="mini-water-wave-bar mt-3 rounded-full" />
+          </div>
         </div>
       )}
 
@@ -337,7 +360,8 @@ export const AdminSubmissionsPage: React.FC = () => {
       )}
 
       {/* Submissions Table */}
-      <div className="admin-card overflow-hidden">
+      <div className={`${isMiniAdmin ? 'mini-beam-card mini-beam-card-cyan' : 'admin-card'} overflow-hidden`}>
+        <div className={isMiniAdmin ? 'mini-beam-inner' : ''}>
         {loading && submissions.length === 0 ? (
           <div className="py-16 text-center text-xs text-[#6B7280]">Loading submissions...</div>
         ) : submissions.length > 0 ? (
@@ -366,7 +390,7 @@ export const AdminSubmissionsPage: React.FC = () => {
               </thead>
               <tbody>
                 {submissions.map((sub) => (
-                  <tr key={sub.id} className={selectedSubIds.has(sub.id) ? 'bg-blue-50/50' : ''}>
+                  <tr key={sub.id} className={`${selectedSubIds.has(sub.id) ? 'bg-blue-50/50' : ''} ${isMiniAdmin ? 'mini-water-table-row' : ''}`}>
                     <td className="w-10">
                       {sub.status === 'PENDING' ? (
                         <input
@@ -409,11 +433,11 @@ export const AdminSubmissionsPage: React.FC = () => {
                         </span>
                       ) : (
                         <span
-                          className={`font-semibold text-[10px] px-2 py-0.5 rounded-full ${
+                          className={`font-semibold text-[10px] px-2.5 py-0.5 rounded-full ${
                             sub.status === 'APPROVED'
                               ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                               : sub.status === 'PENDING'
-                              ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                              ? isMiniAdmin ? 'bg-sky-50 text-sky-800 border border-sky-300 mini-water-ripple-cyan' : 'bg-blue-50 text-blue-700 border border-blue-200'
                               : 'bg-red-50 text-red-700 border border-red-200'
                           }`}
                         >
@@ -431,13 +455,21 @@ export const AdminSubmissionsPage: React.FC = () => {
                         <div className="flex items-center justify-end gap-1.5">
                           <button
                             onClick={() => handleOpenReview(sub, 'APPROVE')}
-                            className="px-2.5 py-1 rounded bg-emerald-50 text-emerald-700 font-semibold hover:bg-emerald-600 hover:text-white transition-colors text-xs"
+                            className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                              isMiniAdmin
+                                ? 'bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-xs mini-btn-water-splash mini-water-ripple-emerald cursor-pointer'
+                                : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white'
+                            }`}
                           >
                             Approve
                           </button>
                           <button
                             onClick={() => handleOpenReview(sub, 'REJECT')}
-                            className="px-2.5 py-1 rounded bg-red-50 text-red-700 font-semibold hover:bg-red-600 hover:text-white transition-colors text-xs"
+                            className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                              isMiniAdmin
+                                ? 'bg-gradient-to-r from-rose-500 to-red-600 hover:from-rose-600 hover:to-red-700 text-white shadow-xs mini-btn-water-splash cursor-pointer'
+                                : 'bg-red-50 text-red-700 hover:bg-red-600 hover:text-white'
+                            }`}
                           >
                             Reject
                           </button>
@@ -479,6 +511,7 @@ export const AdminSubmissionsPage: React.FC = () => {
             </button>
           </div>
         )}
+        </div>
       </div>
 
       {/* Review Modal */}

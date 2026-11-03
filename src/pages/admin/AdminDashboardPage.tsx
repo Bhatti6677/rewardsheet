@@ -92,39 +92,6 @@ export const AdminDashboardPage: React.FC = () => {
 
     return (
       <div className="space-y-6">
-        {/* Top Header with Liquid Water Accent & Moving Beam */}
-        <div className="mini-beam-card">
-          <div className="mini-beam-inner p-4 sm:p-5 mini-water-surface relative">
-            <div className="mini-water-caustic" />
-            <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div>
-                <h1 className="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2.5">
-                  <span className="bg-gradient-to-r from-blue-700 via-sky-600 to-teal-600 bg-clip-text text-transparent">
-                    Mini Admin Performance Dashboard
-                  </span>
-                  <span className="text-[10px] font-black uppercase tracking-wider bg-sky-500/15 text-sky-700 border border-sky-400/30 px-2.5 py-0.5 rounded-full mini-water-ripple-cyan shadow-xs">
-                    Live Stream
-                  </span>
-                </h1>
-                <p className="text-xs text-slate-600 mt-1 font-medium">
-                  Track your Telegram invitation code performance, date-wise registrations, and pending task reviews.
-                </p>
-              </div>
-
-              <button
-                onClick={() => loadData(true)}
-                disabled={reloading}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-sky-300 bg-white/90 hover:bg-sky-50 text-blue-700 font-bold text-xs transition-all h-9 disabled:opacity-60 shadow-sm cursor-pointer self-start sm:self-auto mini-water-ripple-cyan"
-                title="Refresh Performance Data"
-              >
-                <RefreshCw className={`w-3.5 h-3.5 ${reloading ? 'animate-spin' : ''}`} />
-                <span>{reloading ? 'Refreshing...' : 'Refresh Stats'}</span>
-              </button>
-            </div>
-            <div className="mini-water-wave-bar mt-3.5 rounded-full" />
-          </div>
-        </div>
-
         {/* Telegram Account Info Banner */}
         {tg ? (
           <div className="mini-beam-card mini-beam-card-cyan">
@@ -155,6 +122,15 @@ export const AdminDashboardPage: React.FC = () => {
                 </div>
 
                 <div className="flex items-center gap-3 text-xs">
+                  <button
+                    onClick={() => loadData(true)}
+                    disabled={reloading}
+                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-sky-300 bg-white/90 hover:bg-sky-50 text-blue-700 font-bold text-xs transition-all disabled:opacity-60 shadow-xs cursor-pointer mini-water-ripple-cyan"
+                    title="Refresh Performance Data"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${reloading ? 'animate-spin' : ''}`} />
+                    <span>{reloading ? 'Refreshing...' : 'Refresh'}</span>
+                  </button>
                   <div className="bg-white/95 border border-sky-200/90 rounded-xl px-4 py-2.5 shadow-sm min-w-[130px] text-right sm:text-left">
                     <span className="text-[10px] text-slate-500 block uppercase font-bold tracking-wider">Available Codes</span>
                     <span className="font-black text-sky-600 text-xl block mt-0.5 font-mono">
@@ -300,13 +276,13 @@ export const AdminDashboardPage: React.FC = () => {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                 {dateBreakdown.map((item, idx) => (
-                  <div key={idx} className="p-3.5 bg-gradient-to-br from-white via-sky-50/40 to-blue-50/30 border border-sky-200/80 rounded-xl space-y-2.5 shadow-xs hover:border-sky-400 hover:shadow-sm transition-all">
+                  <div key={idx} className="mini-water-sweep p-3.5 bg-gradient-to-br from-white via-sky-50/40 to-blue-50/30 border border-sky-200/90 rounded-xl space-y-2.5 shadow-xs hover:border-sky-400 hover:shadow-md hover:-translate-y-0.5 transition-all cursor-default">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
                         <Calendar className="w-3.5 h-3.5 text-blue-600" />
                         {item.date}
                       </span>
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-blue-100 text-blue-800 border border-blue-200 shadow-xs">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-blue-100 text-blue-800 border border-blue-200 shadow-xs mini-water-ripple-cyan">
                         {item.count} {item.count === 1 ? 'user' : 'users'}
                       </span>
                     </div>
@@ -388,7 +364,7 @@ export const AdminDashboardPage: React.FC = () => {
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {filteredUsers.map((user, idx) => (
-                      <tr key={idx} className="hover:bg-sky-50/50 transition-colors">
+                      <tr key={idx} className="mini-water-table-row transition-colors">
                         <td className="py-3 px-4 text-center text-slate-400 font-mono text-[11px]">
                           {idx + 1}
                         </td>
@@ -413,7 +389,7 @@ export const AdminDashboardPage: React.FC = () => {
                             : 'N/A'}
                         </td>
                         <td className="py-3 px-4 text-right">
-                          <span className="font-mono text-[11px] font-bold px-2.5 py-1 rounded-md bg-sky-50 text-sky-800 border border-sky-200 shadow-2xs">
+                          <span className="font-mono text-[11px] font-bold px-2.5 py-1 rounded-md bg-sky-50 text-sky-800 border border-sky-200 shadow-2xs mini-water-ripple-cyan">
                             {user.code || 'N/A'}
                           </span>
                         </td>
@@ -423,6 +399,7 @@ export const AdminDashboardPage: React.FC = () => {
                 </table>
               </div>
             )}
+            <div className="mini-water-wave-bar" />
             <div className="mini-water-wave-bar -mx-0 -mb-0" />
           </div>
         </div>
@@ -437,16 +414,6 @@ export const AdminDashboardPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Top Header Title */}
-      <div>
-        <h1 className="text-xl sm:text-2xl font-bold text-[#111827]">
-          Administrative Overview
-        </h1>
-        <p className="text-xs text-[#6B7280] mt-0.5">
-          Real-time platform metrics, 10x10 task grid, financial queues, and audit trails.
-        </p>
-      </div>
-
       {/* Summary Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         {/* Total Users */}

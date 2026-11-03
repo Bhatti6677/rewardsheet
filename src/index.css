@@ -551,3 +551,97 @@ textarea:focus {
   background-size: 200% 100%;
   animation: waterLiquidShift 3s linear infinite;
 }
+
+/* Moving fluid border for mini admin sidebar */
+@keyframes miniWaterFlow {
+  0% {
+    border-image-source: linear-gradient(180deg, #38bdf8, #2563eb, #10b981, #06b6d4, #38bdf8);
+  }
+  50% {
+    border-image-source: linear-gradient(180deg, #10b981, #06b6d4, #38bdf8, #2563eb, #10b981);
+  }
+  100% {
+    border-image-source: linear-gradient(180deg, #38bdf8, #2563eb, #10b981, #06b6d4, #38bdf8);
+  }
+}
+
+.mini-sidebar-water {
+  border-right-width: 2.5px !important;
+  border-right-style: solid !important;
+  border-image: linear-gradient(180deg, #38bdf8, #2563eb, #10b981, #06b6d4, #38bdf8) 1 !important;
+  animation: miniWaterFlow 6s linear infinite;
+}
+
+/* Water sweep light reflection */
+@keyframes waterSweep {
+  0% { transform: translateX(-150%) skewX(-20deg); }
+  50%, 100% { transform: translateX(250%) skewX(-20deg); }
+}
+
+.mini-water-sweep {
+  position: relative;
+  overflow: hidden;
+}
+
+.mini-water-sweep::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transform: translateX(-150%) skewX(-20deg);
+  animation: waterSweep 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+
+/* Bubble floating animation */
+@keyframes floatBubble {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(1.5deg); }
+}
+
+.mini-bubble-float {
+  animation: floatBubble 3.5s ease-in-out infinite;
+}
+
+/* Laser breathing glow for interactive badges */
+@keyframes laserGlow {
+  0%, 100% {
+    box-shadow: 0 0 6px rgba(14, 165, 233, 0.25), inset 0 0 3px rgba(14, 165, 233, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(14, 165, 233, 0.65), inset 0 0 6px rgba(14, 165, 233, 0.35);
+  }
+}
+
+.mini-laser-glow {
+  animation: laserGlow 2.5s ease-in-out infinite;
+}
+
+/* Water table row interactive hover */
+.mini-water-table-row {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mini-water-table-row:hover {
+  background: linear-gradient(90deg, rgba(240, 249, 255, 0.8), rgba(224, 242, 254, 0.9), rgba(240, 249, 255, 0.8)) !important;
+  transform: scale(1.002) translateX(2px);
+}
+
+/* Water button splash */
+.mini-btn-water-splash {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.mini-btn-water-splash:hover {
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 20px -3px rgba(14, 165, 233, 0.45);
+}
+
+.mini-btn-water-splash:active {
+  transform: translateY(1px) scale(0.98);
+}

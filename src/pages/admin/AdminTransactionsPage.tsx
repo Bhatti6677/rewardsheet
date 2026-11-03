@@ -45,13 +45,6 @@ export const AdminTransactionsPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-xl sm:text-2xl font-bold text-[#111827]">Financial Transactions Ledger</h1>
-        <p className="text-xs text-[#6B7280] mt-0.5">
-          Auditable immutable ledger of all deposits, task rewards, level rewards, spin prizes, and payouts.
-        </p>
-      </div>
-
       <div className="admin-card p-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2 flex-1 min-w-[280px]">
           {/* User Search Input */}

@@ -312,28 +312,8 @@ export const AdminMiniAdminsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Header Cards with Stats & Action */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-[#D9E4F2] shadow-sm">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="p-2 bg-blue-50 text-[#2563EB] rounded-xl border border-blue-100">
-              <ShieldCheck className="w-5 h-5" />
-            </span>
-            <div>
-              <h1 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-                Mini Admin Management
-                <span className="text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-full">
-                  Master Admin Exclusive
-                </span>
-              </h1>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Create and control delegated Level 1 & 2 administrators with dynamic 10-minute rotating OTP security.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2.5 flex-wrap">
+      {/* Action Buttons */}
+      <div className="flex items-center justify-end gap-2.5 flex-wrap">
           <button
             onClick={() => loadMiniAdmins()}
             className="p-2.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl border border-slate-200 transition-colors flex items-center gap-1.5 text-xs font-bold cursor-pointer"
@@ -366,7 +346,6 @@ export const AdminMiniAdminsPage: React.FC = () => {
             <span>Create Mini Admin</span>
           </button>
         </div>
-      </div>
 
       {/* Security Architecture Notice */}
       <div className="bg-gradient-to-r from-blue-50/70 via-indigo-50/40 to-amber-50/40 border border-blue-200/80 rounded-2xl p-4.5">

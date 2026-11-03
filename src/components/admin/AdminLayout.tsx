@@ -561,19 +561,19 @@ export const AdminLayout: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#F5F8FC] text-[#111827] flex font-sans antialiased">
       {/* Desktop Sidebar (240px) */}
-      <aside className="hidden lg:flex w-60 bg-white border-r border-[#D9E4F2] flex-col flex-shrink-0 z-30">
+      <aside className={`hidden lg:flex w-60 bg-white border-r ${isMiniAdmin ? 'mini-sidebar-water shadow-md shadow-sky-500/5' : 'border-[#D9E4F2]'} flex-col flex-shrink-0 z-30 transition-all`}>
         {/* Brand Header */}
         <div className="h-16 border-b border-[#D9E4F2] px-6 flex items-center justify-between bg-white">
           <Link to="/adminpanal/dashboard" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#2563EB] flex items-center justify-center text-white shadow-sm shadow-[#2563EB]/30">
+            <div className={`w-8 h-8 rounded-lg bg-[#2563EB] flex items-center justify-center text-white shadow-sm shadow-[#2563EB]/30 ${isMiniAdmin ? 'mini-water-ripple-cyan' : ''}`}>
               <Shield className="w-4 h-4" />
             </div>
             <div>
               <span className="font-bold text-sm tracking-tight text-[#111827] block">
                 ROYAL ADMIN
               </span>
-              <span className="text-[10px] text-[#6B7280] font-medium block -mt-1">
-                Management Portal
+              <span className={`text-[10px] font-medium block -mt-1 ${isMiniAdmin ? 'text-sky-600 font-bold' : 'text-[#6B7280]'}`}>
+                {isMiniAdmin ? 'Mini Admin Desk' : 'Management Portal'}
               </span>
             </div>
           </Link>
@@ -591,12 +591,16 @@ export const AdminLayout: React.FC = () => {
                 to={item.path}
                 className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
                   isActive
-                    ? 'bg-[#EAF2FF] text-[#2563EB]'
+                    ? isMiniAdmin
+                      ? 'bg-gradient-to-r from-sky-500/15 via-blue-500/10 to-teal-500/15 text-[#0284c7] border border-sky-400/40 shadow-xs mini-water-surface'
+                      : 'bg-[#EAF2FF] text-[#2563EB]'
+                    : isMiniAdmin
+                    ? 'text-[#4B5563] hover:bg-sky-50/60 hover:text-sky-900 mini-water-table-row'
                     : 'text-[#4B5563] hover:bg-[#F8FAFD] hover:text-[#111827]'
                 }`}
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <item.icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-[#2563EB]' : 'text-[#6B7280]'}`} />
+                  <item.icon className={`w-4 h-4 flex-shrink-0 ${isActive ? (isMiniAdmin ? 'text-sky-600' : 'text-[#2563EB]') : 'text-[#6B7280]'}`} />
                   <span className="truncate">{item.label}</span>
                 </div>
                 {count > 0 && (
