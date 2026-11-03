@@ -21,6 +21,9 @@ import {
   X,
   Shield,
   ChevronRight,
+  ChevronDown,
+  ChevronUp,
+  MoreHorizontal,
   Bell,
   Ticket,
   KeyRound,
@@ -503,7 +506,7 @@ export const AdminLayout: React.FC = () => {
 
   const isMiniAdmin = admin?.role === 'MINI_ADMIN';
 
-  const menuItems = isMiniAdmin
+  const primaryMenuItems = isMiniAdmin
     ? [
         { label: 'Dashboard', path: '/adminpanal/dashboard', icon: LayoutDashboard },
         { label: 'Submissions', path: '/adminpanal/submissions', icon: FileCheck2 },
@@ -519,6 +522,11 @@ export const AdminLayout: React.FC = () => {
         { label: 'Invitation Codes', path: '/adminpanal/referral-codes', icon: Ticket },
         { label: 'Mini Admins', path: '/adminpanal/mini-admins', icon: ShieldCheck },
         { label: 'Unlock Levels', path: '/adminpanal/level-approvals', icon: KeyRound },
+      ];
+
+  const moreMenuItems = isMiniAdmin
+    ? []
+    : [
         { label: 'Levels', path: '/adminpanal/levels', icon: Layers },
         { label: 'Tasks', path: '/adminpanal/tasks', icon: CheckSquare },
         { label: 'Balance Adjustments', path: '/adminpanal/wallets', icon: Wallet },
@@ -528,6 +536,22 @@ export const AdminLayout: React.FC = () => {
         { label: 'Website Settings', path: '/adminpanal/settings', icon: Settings },
         { label: 'Audit Logs', path: '/adminpanal/activity-logs', icon: HistoryIcon },
       ];
+
+  const isMoreRouteActive = moreMenuItems.some(
+    (item) =>
+      location.pathname === item.path ||
+      (item.path !== '/adminpanal/dashboard' && location.pathname.startsWith(item.path))
+  );
+
+  const [moreOpen, setMoreOpen] = useState(isMoreRouteActive);
+
+  useEffect(() => {
+    if (isMoreRouteActive) {
+      setMoreOpen(true);
+    }
+  }, [isMoreRouteActive]);
+
+  const moreItemsCount = moreMenuItems.reduce((acc, item) => acc + getItemCount(item.path), 0);
 
   const handleLogout = () => {
     adminLogout();
@@ -557,7 +581,7 @@ export const AdminLayout: React.FC = () => {
 
         {/* Navigation Menu */}
         <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
-          {menuItems.map((item) => {
+          {primaryMenuItems.map((item) => {
             const isActive = location.pathname === item.path || (item.path !== '/adminpanal/dashboard' && location.pathname.startsWith(item.path));
             const count = getItemCount(item.path);
 
@@ -586,6 +610,70 @@ export const AdminLayout: React.FC = () => {
               </Link>
             );
           })}
+
+          {!isMiniAdmin && moreMenuItems.length > 0 && (
+            <div className="pt-2 border-t border-[#E5EBF4] mt-2">
+              <button
+                type="button"
+                onClick={() => setMoreOpen(!moreOpen)}
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                  isMoreRouteActive
+                    ? 'text-[#2563EB] bg-[#F0F5FF]'
+                    : 'text-[#4B5563] hover:bg-[#F8FAFD] hover:text-[#111827]'
+                }`}
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <MoreHorizontal className="w-4 h-4 flex-shrink-0 text-[#6B7280]" />
+                  <span className="truncate font-semibold">More Options</span>
+                </div>
+                <div className="flex items-center gap-1.5 ml-auto flex-shrink-0">
+                  {!moreOpen && moreItemsCount > 0 && (
+                    <span className="min-w-[18px] h-[18px] px-1 flex items-center justify-center text-[10px] font-black text-white bg-red-600 rounded-full shadow-sm leading-none">
+                      {moreItemsCount}
+                    </span>
+                  )}
+                  {moreOpen ? (
+                    <ChevronUp className="w-4 h-4 text-[#6B7280]" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4 text-[#6B7280]" />
+                  )}
+                </div>
+              </button>
+
+              {moreOpen && (
+                <div className="mt-1 space-y-1 pl-2 border-l-2 border-[#D9E4F2] ml-3.5 pt-0.5">
+                  {moreMenuItems.map((item) => {
+                    const isActive = location.pathname === item.path || (item.path !== '/adminpanal/dashboard' && location.pathname.startsWith(item.path));
+                    const count = getItemCount(item.path);
+
+                    return (
+                      <Link
+                        key={item.path}
+                        to={item.path}
+                        className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                          isActive
+                            ? 'bg-[#EAF2FF] text-[#2563EB]'
+                            : 'text-[#4B5563] hover:bg-[#F8FAFD] hover:text-[#111827]'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <item.icon className={`w-3.5 h-3.5 flex-shrink-0 ${isActive ? 'text-[#2563EB]' : 'text-[#6B7280]'}`} />
+                          <span className="truncate">{item.label}</span>
+                        </div>
+                        {count > 0 && (
+                          <span className="flex items-center gap-1 ml-auto flex-shrink-0">
+                            <span className="min-w-[16px] h-[16px] px-1 flex items-center justify-center text-[9px] font-black text-white bg-red-600 rounded-full shadow-sm leading-none">
+                              {count}
+                            </span>
+                          </span>
+                        )}
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
         </nav>
 
         {/* Admin User Footer Profile */}
@@ -631,7 +719,7 @@ export const AdminLayout: React.FC = () => {
               </button>
             </div>
             <nav className="flex-1 overflow-y-auto px-4 py-4 space-y-1">
-              {menuItems.map((item) => {
+              {primaryMenuItems.map((item) => {
                 const isActive = location.pathname === item.path || (item.path !== '/adminpanal/dashboard' && location.pathname.startsWith(item.path));
                 const count = getItemCount(item.path);
 
@@ -659,6 +747,69 @@ export const AdminLayout: React.FC = () => {
                   </Link>
                 );
               })}
+
+              {!isMiniAdmin && moreMenuItems.length > 0 && (
+                <div className="pt-2 border-t border-[#E5EBF4] mt-2">
+                  <button
+                    type="button"
+                    onClick={() => setMoreOpen(!moreOpen)}
+                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                      isMoreRouteActive
+                        ? 'text-[#2563EB] bg-[#F0F5FF]'
+                        : 'text-[#4B5563] hover:bg-[#F8FAFD]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <MoreHorizontal className="w-4 h-4 flex-shrink-0 text-[#6B7280]" />
+                      <span className="truncate font-semibold">More Options</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 ml-auto flex-shrink-0">
+                      {!moreOpen && moreItemsCount > 0 && (
+                        <span className="min-w-[18px] h-[18px] px-1 flex items-center justify-center text-[10px] font-black text-white bg-red-600 rounded-full shadow-sm leading-none">
+                          {moreItemsCount}
+                        </span>
+                      )}
+                      {moreOpen ? (
+                        <ChevronUp className="w-4 h-4 text-[#6B7280]" />
+                      ) : (
+                        <ChevronDown className="w-4 h-4 text-[#6B7280]" />
+                      )}
+                    </div>
+                  </button>
+
+                  {moreOpen && (
+                    <div className="mt-1 space-y-1 pl-2 border-l-2 border-[#D9E4F2] ml-3.5 pt-0.5">
+                      {moreMenuItems.map((item) => {
+                        const isActive = location.pathname === item.path || (item.path !== '/adminpanal/dashboard' && location.pathname.startsWith(item.path));
+                        const count = getItemCount(item.path);
+
+                        return (
+                          <Link
+                            key={item.path}
+                            to={item.path}
+                            onClick={() => setSidebarOpen(false)}
+                            className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold ${
+                              isActive ? 'bg-[#EAF2FF] text-[#2563EB]' : 'text-[#4B5563] hover:bg-[#F8FAFD]'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <item.icon className="w-3.5 h-3.5 flex-shrink-0" />
+                              <span className="truncate">{item.label}</span>
+                            </div>
+                            {count > 0 && (
+                              <span className="flex items-center gap-1 ml-auto flex-shrink-0">
+                                <span className="min-w-[16px] h-[16px] px-1 flex items-center justify-center text-[9px] font-black text-white bg-red-600 rounded-full shadow-sm leading-none">
+                                  {count}
+                                </span>
+                              </span>
+                            )}
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
             </nav>
             <div className="p-4 border-t border-[#D9E4F2]">
               <button

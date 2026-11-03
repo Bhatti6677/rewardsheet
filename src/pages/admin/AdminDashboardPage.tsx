@@ -92,271 +92,339 @@ export const AdminDashboardPage: React.FC = () => {
 
     return (
       <div className="space-y-6">
-        {/* Top Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-[#111827] flex items-center gap-2">
-              <span>Mini Admin Performance Dashboard</span>
-              <span className="text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-800 border border-blue-200 px-2 py-0.5 rounded-full">
-                Delegated View
-              </span>
-            </h1>
-            <p className="text-xs text-[#6B7280] mt-0.5">
-              Track your Telegram invitation code performance, date-wise registrations, and pending task reviews.
-            </p>
-          </div>
+        {/* Top Header with Liquid Water Accent & Moving Beam */}
+        <div className="mini-beam-card">
+          <div className="mini-beam-inner p-4 sm:p-5 mini-water-surface relative">
+            <div className="mini-water-caustic" />
+            <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h1 className="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2.5">
+                  <span className="bg-gradient-to-r from-blue-700 via-sky-600 to-teal-600 bg-clip-text text-transparent">
+                    Mini Admin Performance Dashboard
+                  </span>
+                  <span className="text-[10px] font-black uppercase tracking-wider bg-sky-500/15 text-sky-700 border border-sky-400/30 px-2.5 py-0.5 rounded-full mini-water-ripple-cyan shadow-xs">
+                    Live Stream
+                  </span>
+                </h1>
+                <p className="text-xs text-slate-600 mt-1 font-medium">
+                  Track your Telegram invitation code performance, date-wise registrations, and pending task reviews.
+                </p>
+              </div>
 
-          <button
-            onClick={() => loadData(true)}
-            disabled={reloading}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#D9E4F2] bg-white hover:bg-[#F8FAFD] text-[#2563EB] font-bold text-xs transition-all h-9 disabled:opacity-60 shadow-xs cursor-pointer self-start sm:self-auto"
-            title="Refresh Performance Data"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${reloading ? 'animate-spin' : ''}`} />
-            <span>{reloading ? 'Refreshing...' : 'Refresh Stats'}</span>
-          </button>
+              <button
+                onClick={() => loadData(true)}
+                disabled={reloading}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-sky-300 bg-white/90 hover:bg-sky-50 text-blue-700 font-bold text-xs transition-all h-9 disabled:opacity-60 shadow-sm cursor-pointer self-start sm:self-auto mini-water-ripple-cyan"
+                title="Refresh Performance Data"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${reloading ? 'animate-spin' : ''}`} />
+                <span>{reloading ? 'Refreshing...' : 'Refresh Stats'}</span>
+              </button>
+            </div>
+            <div className="mini-water-wave-bar mt-3.5 rounded-full" />
+          </div>
         </div>
 
         {/* Telegram Account Info Banner */}
         {tg ? (
-          <div className="p-4 bg-gradient-to-r from-sky-50 via-blue-50 to-indigo-50 border border-sky-200 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-sky-500 text-white flex items-center justify-center flex-shrink-0 shadow-sm shadow-sky-500/20">
-                <Send className="w-5 h-5" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-bold text-slate-900 text-sm">
-                    {tg.username ? `@${tg.username}` : tg.firstName || 'Telegram User'}
-                  </span>
-                  <span className="text-[10px] font-mono bg-white px-2 py-0.5 rounded-md border border-sky-200 text-sky-800">
-                    Chat ID: {tg.chatId}
-                  </span>
+          <div className="mini-beam-card mini-beam-card-cyan">
+            <div className="mini-beam-inner p-4 sm:p-5 mini-water-surface relative">
+              <div className="mini-water-caustic" />
+              <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-3.5">
+                  <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sky-500 via-blue-600 to-teal-400 text-white flex items-center justify-center flex-shrink-0 shadow-md shadow-sky-500/30 mini-water-ripple-cyan">
+                    <Send className="w-5 h-5 -rotate-12 translate-x-0.5" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-black text-slate-900 text-sm sm:text-base">
+                        {tg.username ? `@${tg.username}` : tg.firstName || 'Telegram User'}
+                      </span>
+                      <span className="text-[10px] font-mono bg-white/90 px-2 py-0.5 rounded-md border border-sky-300 text-sky-800 font-bold shadow-xs">
+                        Chat ID: {tg.chatId}
+                      </span>
+                      <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100/90 border border-emerald-300 px-2 py-0.5 rounded-md flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping inline-block" />
+                        Connected
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-600 mt-1 font-medium">
+                      Linked Telegram invitation account generating real-time referral codes.
+                    </p>
+                  </div>
                 </div>
-                <p className="text-xs text-slate-600 mt-0.5">
-                  Linked Telegram invitation account generating referral codes.
-                </p>
-              </div>
-            </div>
 
-            <div className="flex items-center gap-3 text-xs">
-              <div className="bg-white/90 border border-sky-200 rounded-xl px-4 py-2 shadow-xs">
-                <span className="text-[10px] text-slate-500 block uppercase font-bold tracking-wider">Available Codes</span>
-                <span className="font-black text-sky-700 text-base">
-                  {tg.availableCodes ?? 0}
-                </span>
+                <div className="flex items-center gap-3 text-xs">
+                  <div className="bg-white/95 border border-sky-200/90 rounded-xl px-4 py-2.5 shadow-sm min-w-[130px] text-right sm:text-left">
+                    <span className="text-[10px] text-slate-500 block uppercase font-bold tracking-wider">Available Codes</span>
+                    <span className="font-black text-sky-600 text-xl block mt-0.5 font-mono">
+                      {tg.availableCodes ?? 0}
+                    </span>
+                  </div>
+                </div>
               </div>
+              <div className="mini-water-wave-bar mt-3 rounded-full" />
             </div>
           </div>
         ) : (
-          <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl flex items-center gap-3 text-amber-900 text-xs">
-            <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0" />
-            <div>
-              <span className="font-bold block">No Telegram Invitation Account Linked</span>
-              <p className="text-amber-800 mt-0.5">
-                Please ask administration to link or merge your Telegram account. Once linked, users registering through your codes will be tracked here.
-              </p>
+          <div className="mini-beam-card">
+            <div className="mini-beam-inner p-4 bg-amber-50/90 border border-amber-200/80 rounded-2xl flex items-center gap-3 text-amber-900 text-xs">
+              <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0" />
+              <div>
+                <span className="font-bold block">No Telegram Invitation Account Linked</span>
+                <p className="text-amber-800 mt-0.5">
+                  Please ask administration to link or merge your Telegram account. Once linked, users registering through your codes will be tracked here.
+                </p>
+              </div>
             </div>
           </div>
         )}
 
-        {/* 4 Performance Stat Cards */}
+        {/* 4 Performance Stat Cards with Moving Laser Lines & Fluid Water Effects */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="admin-card p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-[#6B7280]">Total Users Invited</span>
-              <Users className="w-4 h-4 text-blue-600" />
+          {/* Card 1: Total Users Invited */}
+          <div className="mini-beam-card">
+            <div className="mini-beam-inner p-5 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-600">Total Users Invited</span>
+                  <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center mini-water-ripple-cyan">
+                    <Users className="w-4 h-4" />
+                  </div>
+                </div>
+                <span className="text-2xl sm:text-3xl font-black text-slate-900 block mt-2 tracking-tight">
+                  {(perf.totalInvited || 0).toLocaleString()}
+                </span>
+              </div>
+              <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500 font-medium">
+                <span>Via your official codes</span>
+                <span className="w-2 h-2 rounded-full bg-blue-500" />
+              </div>
+              <div className="mini-water-wave-bar mt-3 -mx-5 -mb-5" />
             </div>
-            <span className="text-2xl font-black text-[#111827] block mt-1">
-              {(perf.totalInvited || 0).toLocaleString()}
-            </span>
-            <span className="text-[11px] text-slate-500 mt-1 block">
-              Registered via your invitation codes
-            </span>
           </div>
 
-          <div className="admin-card p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-[#6B7280]">Invited Today</span>
-              <TrendingUp className="w-4 h-4 text-emerald-600" />
+          {/* Card 2: Invited Today */}
+          <div className="mini-beam-card mini-beam-card-emerald">
+            <div className="mini-beam-inner p-5 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-600">Invited Today</span>
+                  <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mini-water-ripple-emerald">
+                    <TrendingUp className="w-4 h-4" />
+                  </div>
+                </div>
+                <span className="text-2xl sm:text-3xl font-black text-emerald-600 block mt-2 tracking-tight">
+                  {(perf.invitedToday || 0).toLocaleString()}
+                </span>
+              </div>
+              <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-emerald-700 font-semibold">
+                <span>Last 24 hours</span>
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+              </div>
+              <div className="mini-water-wave-bar mt-3 -mx-5 -mb-5" />
             </div>
-            <span className="text-2xl font-black text-emerald-600 block mt-1">
-              {(perf.invitedToday || 0).toLocaleString()}
-            </span>
-            <span className="text-[11px] text-emerald-700 font-semibold mt-1 block">
-              New signups in the last 24 hours
-            </span>
           </div>
 
-          <div className="admin-card p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-[#6B7280]">Invited This Week</span>
-              <Calendar className="w-4 h-4 text-indigo-600" />
+          {/* Card 3: Invited This Week */}
+          <div className="mini-beam-card mini-beam-card-indigo">
+            <div className="mini-beam-inner p-5 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-600">Invited This Week</span>
+                  <div className="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center mini-water-ripple-indigo">
+                    <Calendar className="w-4 h-4" />
+                  </div>
+                </div>
+                <span className="text-2xl sm:text-3xl font-black text-indigo-600 block mt-2 tracking-tight">
+                  {(perf.invitedThisWeek || 0).toLocaleString()}
+                </span>
+              </div>
+              <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500 font-medium">
+                <span>Past 7 days volume</span>
+                <span className="w-2 h-2 rounded-full bg-indigo-500" />
+              </div>
+              <div className="mini-water-wave-bar mt-3 -mx-5 -mb-5" />
             </div>
-            <span className="text-2xl font-black text-indigo-600 block mt-1">
-              {(perf.invitedThisWeek || 0).toLocaleString()}
-            </span>
-            <span className="text-[11px] text-slate-500 mt-1 block">
-              Signups across the past 7 days
-            </span>
           </div>
 
-          <Link to="/adminpanal/submissions" className="admin-card p-5 hover:border-[#2563EB] transition-colors group">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-[#6B7280]">Pending Submissions</span>
-              <FileCheck2 className="w-4 h-4 text-[#2563EB]" />
+          {/* Card 4: Pending Submissions */}
+          <Link to="/adminpanal/submissions" className="mini-beam-card mini-beam-card-cyan group cursor-pointer block">
+            <div className="mini-beam-inner p-5 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-600">Pending Submissions</span>
+                  <div className="w-8 h-8 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center mini-water-ripple-cyan group-hover:scale-110 transition-transform">
+                    <FileCheck2 className="w-4 h-4" />
+                  </div>
+                </div>
+                <span className="text-2xl sm:text-3xl font-black text-sky-600 block mt-2 tracking-tight">
+                  {perf.pendingSubmissions || 0}
+                </span>
+              </div>
+              <div className="mt-3 pt-2.5 border-t border-slate-100 text-[11px] text-sky-700 font-bold flex items-center justify-between group-hover:text-blue-700">
+                <span className="flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                  Review Level 1 & 2 <ChevronRight className="w-3.5 h-3.5" />
+                </span>
+                <span className="w-2 h-2 rounded-full bg-sky-500 animate-pulse" />
+              </div>
+              <div className="mini-water-wave-bar mt-3 -mx-5 -mb-5" />
             </div>
-            <span className="text-2xl font-black text-[#2563EB] block mt-1">
-              {perf.pendingSubmissions || 0}
-            </span>
-            <span className="text-[11px] text-[#2563EB] font-bold flex items-center gap-1 mt-1 group-hover:translate-x-0.5 transition-transform">
-              Review Level 1 & 2 Proofs <ChevronRight className="w-3.5 h-3.5" />
-            </span>
           </Link>
         </div>
 
         {/* Date-wise Breakdown Section */}
-        <div className="admin-card p-5 space-y-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-sm font-bold text-[#111827] flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-[#2563EB]" />
-                <span>Invited Users on Each Date</span>
-              </h2>
-              <p className="text-xs text-[#6B7280] mt-0.5">
-                Summary of how many users were invited on which dates.
-              </p>
-            </div>
-            <span className="text-xs font-bold text-slate-500">
-              {dateBreakdown.length} Active Date{dateBreakdown.length === 1 ? '' : 's'}
-            </span>
-          </div>
-
-          {dateBreakdown.length === 0 ? (
-            <div className="p-8 text-center text-xs text-slate-400 bg-[#F8FAFD] rounded-xl border border-dashed border-[#D9E4F2]">
-              No invitations recorded yet.
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-              {dateBreakdown.map((item, idx) => (
-                <div key={idx} className="p-3.5 bg-[#F8FAFD] border border-[#D9E4F2] rounded-xl space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-[#111827] flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-blue-600" />
-                      {item.date}
-                    </span>
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 border border-blue-200">
-                      {item.count} {item.count === 1 ? 'user' : 'users'}
-                    </span>
+        <div className="mini-beam-card">
+          <div className="mini-beam-inner p-5 space-y-4">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <div>
+                <h2 className="text-sm sm:text-base font-black text-slate-900 flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center mini-water-ripple-cyan">
+                    <Calendar className="w-4 h-4" />
                   </div>
-
-                  {item.names && item.names.length > 0 && (
-                    <div className="flex flex-wrap gap-1 pt-1 border-t border-slate-200/60">
-                      {item.names.slice(0, 3).map((name: string, nIdx: number) => (
-                        <span
-                          key={nIdx}
-                          className="px-2 py-0.5 rounded bg-white text-slate-700 border border-slate-200 text-[10px] font-medium truncate max-w-[120px]"
-                        >
-                          {name}
-                        </span>
-                      ))}
-                      {item.names.length > 3 && (
-                        <span className="text-[10px] text-slate-400 self-center">
-                          +{item.names.length - 3} more
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
-              ))}
+                  <span>Invited Users on Each Date</span>
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5 font-medium">
+                  Summary of registrations generated by your assigned codes across dates.
+                </p>
+              </div>
+              <span className="text-xs font-bold text-sky-700 bg-sky-50 border border-sky-200 px-3 py-1 rounded-full shadow-xs">
+                {dateBreakdown.length} Active Date{dateBreakdown.length === 1 ? '' : 's'}
+              </span>
             </div>
-          )}
+
+            {dateBreakdown.length === 0 ? (
+              <div className="p-8 text-center text-xs text-slate-400 bg-slate-50/80 rounded-xl border border-dashed border-slate-200">
+                No invitations recorded yet.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                {dateBreakdown.map((item, idx) => (
+                  <div key={idx} className="p-3.5 bg-gradient-to-br from-white via-sky-50/40 to-blue-50/30 border border-sky-200/80 rounded-xl space-y-2.5 shadow-xs hover:border-sky-400 hover:shadow-sm transition-all">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                        <Calendar className="w-3.5 h-3.5 text-blue-600" />
+                        {item.date}
+                      </span>
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-blue-100 text-blue-800 border border-blue-200 shadow-xs">
+                        {item.count} {item.count === 1 ? 'user' : 'users'}
+                      </span>
+                    </div>
+
+                    {item.names && item.names.length > 0 && (
+                      <div className="flex flex-wrap gap-1 pt-1.5 border-t border-slate-200/60">
+                        {item.names.slice(0, 3).map((name: string, nIdx: number) => (
+                          <span
+                            key={nIdx}
+                            className="px-2 py-0.5 rounded-md bg-white text-slate-800 border border-slate-200 text-[10px] font-semibold truncate max-w-[120px] shadow-2xs"
+                          >
+                            {name}
+                          </span>
+                        ))}
+                        {item.names.length > 3 && (
+                          <span className="text-[10px] text-sky-700 font-bold self-center">
+                            +{item.names.length - 3} more
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+            <div className="mini-water-wave-bar -mx-5 -mb-5" />
+          </div>
         </div>
 
         {/* Invited Users Registry (Name & Date ONLY - Strict Privacy) */}
-        <div className="admin-card overflow-hidden">
-          <div className="p-4 border-b border-[#D9E4F2] flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#FAFCFF]">
-            <div>
-              <h2 className="text-sm font-bold text-[#111827] flex items-center gap-2">
-                <UserCheck className="w-4 h-4 text-emerald-600" />
-                <span>Invited Members Registry</span>
-                <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
-                  {invitedUsers.length} Total
-                </span>
-              </h2>
-              <p className="text-[11px] text-[#6B7280] mt-0.5 flex items-center gap-1">
-                <ShieldCheck className="w-3 h-3 text-emerald-600 inline" />
-                <span>Privacy Mode: Showing only member names and registration dates.</span>
-              </p>
+        <div className="mini-beam-card">
+          <div className="mini-beam-inner overflow-hidden">
+            <div className="p-4 sm:p-5 border-b border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-gradient-to-r from-slate-50 via-sky-50/30 to-white">
+              <div>
+                <h2 className="text-sm sm:text-base font-black text-slate-900 flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center mini-water-ripple-emerald">
+                    <UserCheck className="w-4 h-4" />
+                  </div>
+                  <span>Invited Members Registry</span>
+                  <span className="text-[10px] font-black bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                    {invitedUsers.length} Total
+                  </span>
+                </h2>
+                <p className="text-[11px] text-slate-500 mt-1 flex items-center gap-1 font-medium">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 inline" />
+                  <span>Privacy Mode: Showing only member names and registration dates.</span>
+                </p>
+              </div>
+
+              {/* Search Input by Name */}
+              <div className="relative min-w-[220px] max-w-xs">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type="text"
+                  placeholder="Search by user name..."
+                  value={userSearch}
+                  onChange={(e) => setUserSearch(e.target.value)}
+                  className="w-full bg-white border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-900 focus:outline-none placeholder:text-slate-400 h-9 transition-all"
+                />
+              </div>
             </div>
 
-            {/* Search Input by Name */}
-            <div className="relative min-w-[220px] max-w-xs">
-              <Search className="w-3.5 h-3.5 text-[#6B7280] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-              <input
-                type="text"
-                placeholder="Search by user name..."
-                value={userSearch}
-                onChange={(e) => setUserSearch(e.target.value)}
-                className="w-full bg-white border border-[#D9E4F2] focus:border-[#2563EB] rounded-lg pl-8 pr-3 py-1.5 text-xs text-[#111827] focus:outline-none placeholder:text-[#9CA3AF] h-8"
-              />
-            </div>
-          </div>
-
-          {filteredUsers.length === 0 ? (
-            <div className="p-12 text-center text-xs text-slate-400">
-              {userSearch
-                ? `No invited members found matching "${userSearch}".`
-                : 'No users have registered with your invitation codes yet.'}
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs admin-table">
-                <thead>
-                  <tr className="bg-[#F8FAFD] border-b border-[#E2E8F0] text-[11px] font-bold text-slate-600">
-                    <th className="py-2.5 px-4 w-12 text-center">#</th>
-                    <th className="py-2.5 px-4">Member Name</th>
-                    <th className="py-2.5 px-4">Registration Date & Time</th>
-                    <th className="py-2.5 px-4 text-right">Invite Code Used</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#E2E8F0]">
-                  {filteredUsers.map((user, idx) => (
-                    <tr key={idx} className="hover:bg-blue-50/20 transition-colors">
-                      <td className="py-2.5 px-4 text-center text-slate-400 font-mono text-[11px]">
-                        {idx + 1}
-                      </td>
-                      <td className="py-2.5 px-4">
-                        <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs flex-shrink-0">
-                            {(user.name || 'U').charAt(0).toUpperCase()}
-                          </div>
-                          <span className="font-bold text-slate-900">{user.name}</span>
-                        </div>
-                      </td>
-                      <td className="py-2.5 px-4 text-slate-600 font-mono text-[11px] whitespace-nowrap">
-                        {user.date
-                          ? `${new Date(user.date).toLocaleDateString('en-US', {
-                              year: 'numeric',
-                              month: 'short',
-                              day: 'numeric',
-                            })} at ${new Date(user.date).toLocaleTimeString([], {
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            })}`
-                          : 'N/A'}
-                      </td>
-                      <td className="py-2.5 px-4 text-right">
-                        <span className="font-mono text-[11px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-800 border border-slate-200">
-                          {user.code || 'N/A'}
-                        </span>
-                      </td>
+            {filteredUsers.length === 0 ? (
+              <div className="p-12 text-center text-xs text-slate-400">
+                {userSearch
+                  ? `No invited members found matching "${userSearch}".`
+                  : 'No users have registered with your invitation codes yet.'}
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead>
+                    <tr className="bg-slate-50/90 border-b border-slate-200 text-[11px] font-bold text-slate-600">
+                      <th className="py-3 px-4 w-12 text-center">#</th>
+                      <th className="py-3 px-4">Member Name</th>
+                      <th className="py-3 px-4">Registration Date & Time</th>
+                      <th className="py-3 px-4 text-right">Invite Code Used</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {filteredUsers.map((user, idx) => (
+                      <tr key={idx} className="hover:bg-sky-50/50 transition-colors">
+                        <td className="py-3 px-4 text-center text-slate-400 font-mono text-[11px]">
+                          {idx + 1}
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="flex items-center gap-2.5">
+                            <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-blue-600 to-sky-400 text-white font-black flex items-center justify-center text-xs flex-shrink-0 shadow-xs mini-water-ripple-cyan">
+                              {(user.name || 'U').charAt(0).toUpperCase()}
+                            </div>
+                            <span className="font-bold text-slate-900">{user.name}</span>
+                          </div>
+                        </td>
+                        <td className="py-3 px-4 text-slate-600 font-mono text-[11px] whitespace-nowrap">
+                          {user.date
+                            ? `${new Date(user.date).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                              })} at ${new Date(user.date).toLocaleTimeString([], {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              })}`
+                            : 'N/A'}
+                        </td>
+                        <td className="py-3 px-4 text-right">
+                          <span className="font-mono text-[11px] font-bold px-2.5 py-1 rounded-md bg-sky-50 text-sky-800 border border-sky-200 shadow-2xs">
+                            {user.code || 'N/A'}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+            <div className="mini-water-wave-bar -mx-0 -mb-0" />
+          </div>
         </div>
       </div>
     );

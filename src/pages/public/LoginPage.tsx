@@ -89,7 +89,7 @@ export const LoginPage: React.FC = () => {
                   type="tel"
                   required
                   autoComplete="tel"
-                  placeholder="e.g. 03001234567"
+                  placeholder="Phone Number"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   className="w-full bg-[#060A14] border border-slate-800 focus:border-amber-400/80 focus:ring-1 focus:ring-amber-400/20 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none transition-all"
