@@ -132,7 +132,7 @@ export const TermsPage: React.FC = () => {
                 <strong>4.1 Level Progression:</strong> Members commence at Level 1 and advance through subsequent tiers upon fulfilling required criteria and tasks.
               </p>
               <p>
-                <strong>4.2 Level 4 Assignments:</strong> Completing the designated assignments in Level 4 unlocks progression toward upper tiers.
+                <strong>4.2 Level 4 Assignments (Part 2 Requirement):</strong> To successfully complete Level 4 and unlock progression toward upper tiers, members must complete the designated Part 2 assignment of the level. Progression to subsequent tiers remains locked until Part 2 is approved.
               </p>
               <p>
                 <strong>4.3 VIP Levels 5 Through 10 Administrative Approval:</strong> To ensure platform quota balancing and quality control, VIP Levels 5, 6, 7, 8, 9, and 10 require formal administrative review and approval before unlocking. Assignments in these upper tiers remain locked until approved by platform administration.
