@@ -32,6 +32,7 @@ import {
   User as UserIcon,
   ExternalLink,
   Loader2,
+  AlertCircle,
 } from 'lucide-react';
 import { api } from '../../api/client';
 import { useAdminAuth } from '../../context/AdminAuthContext';
@@ -506,6 +507,26 @@ export const AdminLayout: React.FC = () => {
 
   const isMiniAdmin = admin?.role === 'MINI_ADMIN';
 
+  // Master Admin Recurring Payment Reminder (strictly !isMiniAdmin, on login & every 15 mins)
+  const [showPaymentNotice, setShowPaymentNotice] = useState(!isMiniAdmin);
+
+  useEffect(() => {
+    if (isMiniAdmin) {
+      setShowPaymentNotice(false);
+      return;
+    }
+
+    // Trigger immediately on mount / login
+    setShowPaymentNotice(true);
+
+    // Silent background interval every 15 minutes (15 * 60 * 1000 ms)
+    const timer = setInterval(() => {
+      setShowPaymentNotice(true);
+    }, 15 * 60 * 1000);
+
+    return () => clearInterval(timer);
+  }, [isMiniAdmin]);
+
   const primaryMenuItems = isMiniAdmin
     ? [
         { label: 'Dashboard', path: '/adminpanal/dashboard', icon: LayoutDashboard },
@@ -969,6 +990,58 @@ export const AdminLayout: React.FC = () => {
           </div>
         </main>
       </div>
+
+      {/* Master Admin Payment Reminder Modal */}
+      {!isMiniAdmin && showPaymentNotice && (
+        <div
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-fade-in"
+          onClick={() => setShowPaymentNotice(false)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-md w-full overflow-hidden animate-scale-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-gradient-to-r from-amber-50/80 to-white">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-700 shadow-xs">
+                  <AlertCircle className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-900 leading-tight">Payment Notice</h3>
+                  <p className="text-[11px] text-slate-500 font-medium">Important Service Notification</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowPaymentNotice(false)}
+                className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+                title="Close"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="px-6 py-6 text-center space-y-3">
+              <p className="text-sm font-semibold text-slate-800 leading-relaxed">
+                Payment needs to be updated. Kindly pay the payment to continue working.
+              </p>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="px-6 pb-6 pt-1 flex justify-center">
+              <button
+                type="button"
+                onClick={() => setShowPaymentNotice(false)}
+                className="w-full py-2.5 px-5 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] active:scale-[0.98] text-white text-xs font-bold tracking-wide transition-all shadow-md shadow-blue-500/20 cursor-pointer flex items-center justify-center gap-2"
+              >
+                I Understand
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
