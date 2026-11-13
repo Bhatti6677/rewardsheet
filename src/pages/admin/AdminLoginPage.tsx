@@ -44,7 +44,11 @@ export const AdminLoginPage: React.FC = () => {
       }
 
       adminLogin(res.token, res.admin);
-      navigate('/adminpanal/dashboard');
+      if (res.admin?.role === 'DEVELOPER') {
+        navigate('/adminpanal/developer');
+      } else {
+        navigate('/adminpanal/dashboard');
+      }
     } catch (err: any) {
       setError(err.message || 'Authentication failed');
     } finally {

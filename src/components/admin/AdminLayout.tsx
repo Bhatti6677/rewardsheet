@@ -33,6 +33,7 @@ import {
   ExternalLink,
   Loader2,
   AlertCircle,
+  Terminal,
 } from 'lucide-react';
 import { api } from '../../api/client';
 import { useAdminAuth } from '../../context/AdminAuthContext';
@@ -114,6 +115,10 @@ const PAGE_TITLES: Record<string, { title: string; subtitle: string }> = {
   '/adminpanal/activity-logs': {
     title: 'Administrative Audit Trail',
     subtitle: 'Tamper-proof record of all admin activities and changes.',
+  },
+  '/adminpanal/developer': {
+    title: 'Developer Master Control Panel',
+    subtitle: 'Manage Website Maintenance Mode, Master Admin Popup Reminders, and Live Dual-Supabase Sync.',
   },
 };
 
@@ -506,26 +511,61 @@ export const AdminLayout: React.FC = () => {
   };
 
   const isMiniAdmin = admin?.role === 'MINI_ADMIN';
+  const isDeveloper = admin?.role === 'DEVELOPER';
 
-  // Master Admin Recurring Payment Reminder (strictly !isMiniAdmin, on login & every 15 mins)
-  const [showPaymentNotice, setShowPaymentNotice] = useState(!isMiniAdmin);
+  // Master Admin Recurring Payment Reminder (strictly SUPER_ADMIN / !isMiniAdmin && !isDeveloper)
+  const [showPaymentNotice, setShowPaymentNotice] = useState(false);
+  const [popupConfig, setPopupConfig] = useState({
+    enabled: true,
+    title: 'Payment Notice',
+    message: 'Payment needs to be updated. Kindly pay the payment to continue working.',
+    intervalMinutes: 15,
+  });
 
   useEffect(() => {
-    if (isMiniAdmin) {
+    if (isMiniAdmin || isDeveloper) {
       setShowPaymentNotice(false);
       return;
     }
 
-    // Trigger immediately on mount / login
-    setShowPaymentNotice(true);
+    let timer: any = null;
+    let isMounted = true;
 
-    // Silent background interval every 15 minutes (15 * 60 * 1000 ms)
-    const timer = setInterval(() => {
-      setShowPaymentNotice(true);
-    }, 15 * 60 * 1000);
+    api
+      .getPublicSettings({ bypassCache: true })
+      .then((settings: any) => {
+        if (!isMounted) return;
+        const enabled = settings?.masterAdminPopupEnabled !== false;
+        const title = settings?.masterAdminPopupTitle || 'Payment Notice';
+        const message =
+          settings?.masterAdminPopupMessage ||
+          'Payment needs to be updated. Kindly pay the payment to continue working.';
+        const intervalMinutes = Math.max(1, Number(settings?.masterAdminPopupIntervalMinutes) || 15);
 
-    return () => clearInterval(timer);
-  }, [isMiniAdmin]);
+        setPopupConfig({ enabled, title, message, intervalMinutes });
+
+        if (enabled) {
+          setShowPaymentNotice(true);
+          timer = setInterval(() => {
+            setShowPaymentNotice(true);
+          }, intervalMinutes * 60 * 1000);
+        } else {
+          setShowPaymentNotice(false);
+        }
+      })
+      .catch(() => {
+        if (!isMounted) return;
+        setShowPaymentNotice(true);
+        timer = setInterval(() => {
+          setShowPaymentNotice(true);
+        }, 15 * 60 * 1000);
+      });
+
+    return () => {
+      isMounted = false;
+      if (timer) clearInterval(timer);
+    };
+  }, [isMiniAdmin, isDeveloper]);
 
   const primaryMenuItems = isMiniAdmin
     ? [
@@ -534,6 +574,9 @@ export const AdminLayout: React.FC = () => {
         { label: 'Assigned Codes', path: '/adminpanal/assigned-codes', icon: Ticket },
       ]
     : [
+        ...(isDeveloper
+          ? [{ label: 'Developer Console', path: '/adminpanal/developer', icon: Terminal }]
+          : []),
         { label: 'Dashboard', path: '/adminpanal/dashboard', icon: LayoutDashboard },
         { label: 'Users', path: '/adminpanal/users', icon: Users },
         { label: 'Submissions', path: '/adminpanal/submissions', icon: FileCheck2 },
@@ -992,7 +1035,7 @@ export const AdminLayout: React.FC = () => {
       </div>
 
       {/* Master Admin Payment Reminder Modal */}
-      {!isMiniAdmin && showPaymentNotice && (
+      {!isMiniAdmin && !isDeveloper && popupConfig.enabled && showPaymentNotice && (
         <div
           className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-fade-in"
           onClick={() => setShowPaymentNotice(false)}
@@ -1008,7 +1051,7 @@ export const AdminLayout: React.FC = () => {
                   <AlertCircle className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-slate-900 leading-tight">Payment Notice</h3>
+                  <h3 className="text-base font-bold text-slate-900 leading-tight">{popupConfig.title}</h3>
                   <p className="text-[11px] text-slate-500 font-medium">Important Service Notification</p>
                 </div>
               </div>
@@ -1025,7 +1068,7 @@ export const AdminLayout: React.FC = () => {
             {/* Modal Content */}
             <div className="px-6 py-6 text-center space-y-3">
               <p className="text-sm font-semibold text-slate-800 leading-relaxed">
-                Payment needs to be updated. Kindly pay the payment to continue working.
+                {popupConfig.message}
               </p>
             </div>
 

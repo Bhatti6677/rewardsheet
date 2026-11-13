@@ -489,4 +489,13 @@ export const api = {
     request(`/admin/mini-admins/${id}/logout`, { method: 'POST' }, true),
   deleteAdminMiniAdmin: (id: string) =>
     request(`/admin/mini-admins/${id}`, { method: 'DELETE' }, true),
+
+  // Developer Control Panel (role === 'DEVELOPER')
+  getDeveloperConfig: () => request('/admin/developer/config', { bypassCache: true }, true),
+  updateDeveloperConfig: (payload: any) =>
+    request('/admin/developer/config', { method: 'PUT', body: JSON.stringify(payload) }, true),
+  syncDeveloperDatabases: (payload?: { direction?: 'PRIMARY_TO_SECONDARY' | 'SECONDARY_TO_PRIMARY'; secondaryDatabaseUrl?: string }) =>
+    request('/admin/developer/sync-databases', { method: 'POST', body: JSON.stringify(payload || {}), timeoutMs: 120000 } as any, true),
+  wipeDeveloperDatabase: (payload: { target: 'SECONDARY' | 'PRIMARY'; confirmText: string }) =>
+    request('/admin/developer/wipe-database', { method: 'POST', body: JSON.stringify(payload), timeoutMs: 60000 } as any, true),
 };

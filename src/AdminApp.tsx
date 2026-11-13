@@ -24,6 +24,7 @@ import { AdminReportsPage } from './pages/admin/AdminReportsPage';
 import { AdminSettingsPage } from './pages/admin/AdminSettingsPage';
 import { AdminActivityLogsPage } from './pages/admin/AdminActivityLogsPage';
 import { AdminMiniAdminsPage } from './pages/admin/AdminMiniAdminsPage';
+import { AdminDeveloperPage } from './pages/admin/AdminDeveloperPage';
 
 const ProtectedAdminRoute: React.FC = () => {
   const { admin, loading: isLoading } = useAdminAuth();
@@ -45,7 +46,7 @@ const ProtectedAdminRoute: React.FC = () => {
 
 export const AdminApp: React.FC = () => {
   const { admin } = useAdminAuth();
-  const defaultRoute = '/adminpanal/dashboard';
+  const defaultRoute = admin?.role === 'DEVELOPER' ? '/adminpanal/developer' : '/adminpanal/dashboard';
 
   const adminRoutes = (
     <>
@@ -54,6 +55,10 @@ export const AdminApp: React.FC = () => {
 
       {/* Admin Protected Routes */}
       <Route element={<ProtectedAdminRoute />}>
+        <Route
+          path="developer"
+          element={admin?.role === 'DEVELOPER' ? <AdminDeveloperPage /> : <Navigate to="/adminpanal/dashboard" replace />}
+        />
         <Route path="dashboard" element={<AdminDashboardPage />} />
         <Route
           path="users"
