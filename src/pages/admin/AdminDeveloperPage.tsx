@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Terminal,
   Database,
@@ -16,6 +17,10 @@ import {
   Server,
   Clock,
   Activity,
+  Lock,
+  Unlock,
+  Settings,
+  CreditCard,
 } from 'lucide-react';
 import { api } from '../../api/client';
 
@@ -26,15 +31,23 @@ export const AdminDeveloperPage: React.FC = () => {
   const [wiping, setWiping] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  // 1. Maintenance Mode State
+  // 1. Maintenance Mode State (Applies to Frontend AND Master/Mini Admin after login)
   const [maintenanceEnabled, setMaintenanceEnabled] = useState(false);
-  const [maintenanceTitle, setMaintenanceTitle] = useState('System Maintenance in Progress');
+  const [maintenanceTitle, setMaintenanceTitle] = useState('Website is Under Maintenance');
   const [maintenanceMessage, setMaintenanceMessage] = useState(
-    'We are currently performing scheduled maintenance to optimize system performance. Service will resume shortly. All account data and balances are secure.'
+    'Website is under maintenance, you cannot work right now. Please wait until the developer completes maintenance.'
   );
   const [maintenanceExpectedEnd, setMaintenanceExpectedEnd] = useState('');
 
-  // 2. Master Admin Popup Notification State
+  // 2. Master Admin & Mini Admin Access Lock State
+  const [masterAdminBlocked, setMasterAdminBlocked] = useState(false);
+  const [miniAdminBlocked, setMiniAdminBlocked] = useState(false);
+  const [adminBlockTitle, setAdminBlockTitle] = useState('Administrator Access Locked');
+  const [adminBlockMessage, setAdminBlockMessage] = useState(
+    'Your administrator panel has been temporarily locked by the Developer. Please clear any pending developer payment or contact the Developer to restore access.'
+  );
+
+  // 3. Master Admin Popup Notification State
   const [popupEnabled, setPopupEnabled] = useState(true);
   const [popupTitle, setPopupTitle] = useState('Payment Notice');
   const [popupMessage, setPopupMessage] = useState(
@@ -43,7 +56,7 @@ export const AdminDeveloperPage: React.FC = () => {
   const [popupIntervalMinutes, setPopupIntervalMinutes] = useState(15);
   const [previewPopupOpen, setPreviewPopupOpen] = useState(false);
 
-  // 3. Dual-Supabase Database State
+  // 4. Dual-Supabase Database State
   const [primaryUrlMasked, setPrimaryUrlMasked] = useState('');
   const [secondaryUrl, setSecondaryUrl] = useState('');
   const [dualSyncEnabled, setDualSyncEnabled] = useState(true);
@@ -58,9 +71,21 @@ export const AdminDeveloperPage: React.FC = () => {
       const res: any = await api.getDeveloperConfig();
       if (res?.maintenance) {
         setMaintenanceEnabled(Boolean(res.maintenance.enabled));
-        setMaintenanceTitle(res.maintenance.title || 'System Maintenance in Progress');
-        setMaintenanceMessage(res.maintenance.message || '');
+        setMaintenanceTitle(res.maintenance.title || 'Website is Under Maintenance');
+        setMaintenanceMessage(
+          res.maintenance.message ||
+            'Website is under maintenance, you cannot work right now. Please wait until the developer completes maintenance.'
+        );
         setMaintenanceExpectedEnd(res.maintenance.expectedEnd || '');
+      }
+      if (res?.adminBlock) {
+        setMasterAdminBlocked(Boolean(res.adminBlock.masterBlocked));
+        setMiniAdminBlocked(Boolean(res.adminBlock.miniBlocked));
+        setAdminBlockTitle(res.adminBlock.title || 'Administrator Access Locked');
+        setAdminBlockMessage(
+          res.adminBlock.message ||
+            'Your administrator panel has been temporarily locked by the Developer. Please clear any pending developer payment or contact the Developer to restore access.'
+        );
       }
       if (res?.masterAdminPopup) {
         setPopupEnabled(Boolean(res.masterAdminPopup.enabled));
@@ -88,6 +113,8 @@ export const AdminDeveloperPage: React.FC = () => {
 
   const handleSaveAll = async (overrides?: {
     maintenanceEnabled?: boolean;
+    masterAdminBlocked?: boolean;
+    miniAdminBlocked?: boolean;
     popupEnabled?: boolean;
     dualSyncEnabled?: boolean;
   }) => {
@@ -100,6 +127,12 @@ export const AdminDeveloperPage: React.FC = () => {
           title: maintenanceTitle.trim(),
           message: maintenanceMessage.trim(),
           expectedEnd: maintenanceExpectedEnd.trim(),
+        },
+        adminBlock: {
+          masterBlocked: overrides?.masterAdminBlocked ?? masterAdminBlocked,
+          miniBlocked: overrides?.miniAdminBlocked ?? miniAdminBlocked,
+          title: adminBlockTitle.trim(),
+          message: adminBlockMessage.trim(),
         },
         masterAdminPopup: {
           enabled: overrides?.popupEnabled ?? popupEnabled,
@@ -128,7 +161,7 @@ export const AdminDeveloperPage: React.FC = () => {
     if (!secondaryUrl.trim()) {
       setMessage({
         type: 'error',
-        text: 'Please paste the Secondary / Old Supabase PostgreSQL Connection URL first.',
+        text: 'Please paste the Secondary / Linked Supabase PostgreSQL Connection URL first.',
       });
       return;
     }
@@ -154,7 +187,7 @@ export const AdminDeveloperPage: React.FC = () => {
 
   const handleWipeSecondary = async () => {
     if (wipeConfirmText.trim() !== 'DELETE') {
-      setMessage({ type: 'error', text: 'Please type DELETE to confirm wiping the Secondary/Old database.' });
+      setMessage({ type: 'error', text: 'Please type DELETE to confirm wiping the Secondary/Linked database.' });
       return;
     }
     setWiping(true);
@@ -170,7 +203,7 @@ export const AdminDeveloperPage: React.FC = () => {
       setWipeConfirmText('');
       setMessage({
         type: 'success',
-        text: res?.message || 'Old / Secondary Supabase database wiped cleanly!',
+        text: res?.message || 'Linked Supabase database wiped cleanly!',
       });
     } catch (err: any) {
       setMessage({ type: 'error', text: err.message || 'Failed to wipe database' });
@@ -219,11 +252,18 @@ export const AdminDeveloperPage: React.FC = () => {
               </span>
             </div>
             <p className="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed">
-              Full root control over Website Maintenance Mode, the Master Admin Payment Reminder Popup, and Live Dual-Supabase Database Synchronization & Cutover.
+              Exclusive Developer authority over Website & Admin Maintenance Mode, Master Admin / Mini Admin Access Blocking, Payment Reminder Popups, Payment Methods, and Live Dual-Supabase Sync.
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2 self-end sm:self-center">
+        <div className="flex flex-wrap items-center gap-2 self-end sm:self-center">
+          <Link
+            to="/adminpanal/settings"
+            className="px-3.5 py-2 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-200 border border-blue-400/30 text-xs font-bold flex items-center gap-1.5 transition-all"
+          >
+            <CreditCard className="w-3.5 h-3.5" />
+            Payment Methods & Site Settings
+          </Link>
           <button
             type="button"
             onClick={fetchDeveloperConfig}
@@ -231,7 +271,7 @@ export const AdminDeveloperPage: React.FC = () => {
             className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-            Refresh Status
+            Refresh
           </button>
           <button
             type="button"
@@ -272,9 +312,98 @@ export const AdminDeveloperPage: React.FC = () => {
         </div>
       )}
 
+      {/* CARD 0: ADMIN ACCESS LOCK / SAFETY BLOCK (BLOCK MASTER ADMIN & MINI ADMIN) */}
+      <div className="bg-white rounded-2xl border border-[#D9E4F2] shadow-xs overflow-hidden">
+        <div className="px-6 py-4 border-b border-[#E5EBF4] flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-gradient-to-r from-red-50/70 via-[#F8FAFD] to-[#F8FAFD]">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-red-100 border border-red-200 text-red-600 flex items-center justify-center">
+              <Lock className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-[#111827]">Admin Safety Lock & Access Blocking</h3>
+              <p className="text-[11px] text-[#6B7280]">
+                Instantly block Master Admin or Mini Admins after login so they see your lock screen and cannot perform any actions
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                const nextVal = !masterAdminBlocked;
+                setMasterAdminBlocked(nextVal);
+                handleSaveAll({ masterAdminBlocked: nextVal });
+              }}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
+                masterAdminBlocked
+                  ? 'bg-red-600 text-white shadow-sm shadow-red-500/30'
+                  : 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+              }`}
+            >
+              {masterAdminBlocked ? <Lock className="w-3.5 h-3.5" /> : <Unlock className="w-3.5 h-3.5" />}
+              {masterAdminBlocked ? 'MASTER ADMIN: BLOCKED' : 'MASTER ADMIN: ALLOWED'}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                const nextVal = !miniAdminBlocked;
+                setMiniAdminBlocked(nextVal);
+                handleSaveAll({ miniAdminBlocked: nextVal });
+              }}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
+                miniAdminBlocked
+                  ? 'bg-red-600 text-white shadow-sm shadow-red-500/30'
+                  : 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+              }`}
+            >
+              {miniAdminBlocked ? <Lock className="w-3.5 h-3.5" /> : <Unlock className="w-3.5 h-3.5" />}
+              {miniAdminBlocked ? 'MINI ADMINS: BLOCKED' : 'MINI ADMINS: ALLOWED'}
+            </button>
+          </div>
+        </div>
+
+        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+          <div>
+            <label className="block text-xs font-bold text-slate-700 mb-1">Admin Lock Screen Headline</label>
+            <input
+              type="text"
+              value={adminBlockTitle}
+              onChange={(e) => setAdminBlockTitle(e.target.value)}
+              placeholder="Administrator Access Locked"
+              className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs font-medium text-slate-900 focus:outline-none focus:border-blue-600"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-bold text-slate-700 mb-1">
+              Message Shown to Blocked Master / Mini Admin After Login
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={adminBlockMessage}
+                onChange={(e) => setAdminBlockMessage(e.target.value)}
+                placeholder="Website is under maintenance / Please clear developer payment to continue working..."
+                className="flex-1 px-3.5 py-2 rounded-xl border border-slate-300 text-xs font-medium text-slate-900 focus:outline-none focus:border-blue-600"
+              />
+              <button
+                type="button"
+                onClick={() => handleSaveAll()}
+                disabled={saving}
+                className="px-4 py-2 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-bold flex items-center gap-1.5 flex-shrink-0 cursor-pointer"
+              >
+                <Save className="w-3.5 h-3.5" />
+                Save Lock
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Grid for Maintenance Mode & Master Admin Popup */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* CARD 1: WEBSITE MAINTENANCE MODE */}
+        {/* CARD 1: WEBSITE & ADMIN MAINTENANCE MODE (DEVELOPER EXCLUSIVE) */}
         <div className="bg-white rounded-2xl border border-[#D9E4F2] shadow-xs overflow-hidden flex flex-col">
           <div className="px-6 py-4 border-b border-[#E5EBF4] flex items-center justify-between bg-[#F8FAFD]">
             <div className="flex items-center gap-2.5">
@@ -282,8 +411,10 @@ export const AdminDeveloperPage: React.FC = () => {
                 <Wrench className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-[#111827]">Website Maintenance Mode</h3>
-                <p className="text-[11px] text-[#6B7280]">Lock or unlock public & user access across the site</p>
+                <h3 className="text-sm font-bold text-[#111827]">Global Maintenance Mode (Developer Only)</h3>
+                <p className="text-[11px] text-[#6B7280]">
+                  Locks user frontend AND blocks Master Admin after login ("Cannot work right now")
+                </p>
               </div>
             </div>
 
@@ -306,24 +437,30 @@ export const AdminDeveloperPage: React.FC = () => {
           </div>
 
           <div className="p-6 space-y-4 flex-1">
+            <div className="p-3 rounded-xl bg-amber-50/80 border border-amber-200 text-[11px] text-amber-900 font-medium">
+              <strong>Developer Exclusive:</strong> Master Admin cannot turn Maintenance Mode on or off. When ON, both public users and Master Admins (after logging in) see the maintenance screen and cannot work until you turn it off.
+            </div>
+
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">Maintenance Headline Title</label>
               <input
                 type="text"
                 value={maintenanceTitle}
                 onChange={(e) => setMaintenanceTitle(e.target.value)}
-                placeholder="System Maintenance in Progress"
+                placeholder="Website is Under Maintenance"
                 className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs font-medium text-slate-900 focus:outline-none focus:border-blue-600"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Maintenance Message Shown to Users</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1">
+                Maintenance Message (Shown to Users & Master Admin After Login)
+              </label>
               <textarea
                 rows={3}
                 value={maintenanceMessage}
                 onChange={(e) => setMaintenanceMessage(e.target.value)}
-                placeholder="We are currently performing scheduled maintenance..."
+                placeholder="Website is under maintenance, you cannot work right now."
                 className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs font-medium text-slate-900 focus:outline-none focus:border-blue-600"
               />
             </div>
@@ -488,7 +625,7 @@ export const AdminDeveloperPage: React.FC = () => {
               <div className="flex items-center justify-between">
                 <span className="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
                   <Server className="w-3.5 h-3.5 text-blue-600" />
-                  Primary Supabase Database (Active)
+                  Primary Supabase Database (Main Source of Truth)
                 </span>
                 <span
                   className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
@@ -512,7 +649,7 @@ export const AdminDeveloperPage: React.FC = () => {
               <div className="flex items-center justify-between">
                 <span className="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
                   <Server className="w-3.5 h-3.5 text-indigo-600" />
-                  Secondary / Linked Supabase Database URL
+                  Secondary / Mirror Supabase Database URL
                 </span>
                 <span
                   className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
@@ -533,7 +670,7 @@ export const AdminDeveloperPage: React.FC = () => {
                   type="text"
                   value={secondaryUrl}
                   onChange={(e) => setSecondaryUrl(e.target.value)}
-                  placeholder="Paste Secondary / Old Supabase postgresql:// connection string here..."
+                  placeholder="Paste Secondary Supabase postgresql:// connection string here..."
                   className="flex-1 px-3 py-2 rounded-lg bg-white border border-slate-300 text-[11px] font-mono text-slate-900 focus:outline-none focus:border-blue-600"
                 />
                 <button
@@ -548,7 +685,7 @@ export const AdminDeveloperPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Action Bar: Full Clone & Wipe Old Database */}
+          {/* Action Bar: Full Clone & Wipe Linked Database */}
           <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-xl bg-[#F8FAFD] border border-[#E5EBF4]">
             <div className="flex flex-wrap items-center gap-2.5">
               <button
@@ -558,7 +695,7 @@ export const AdminDeveloperPage: React.FC = () => {
                 className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-xs font-bold flex items-center gap-2 shadow-sm transition-all cursor-pointer"
               >
                 {syncing ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRightLeft className="w-4 h-4" />}
-                Clone All 25 Tables (Primary → Secondary)
+                Clone All 25 Tables (Main → Secondary)
               </button>
 
               <button
@@ -568,7 +705,7 @@ export const AdminDeveloperPage: React.FC = () => {
                 className="px-4 py-2.5 rounded-xl bg-white hover:bg-slate-100 disabled:opacity-50 text-slate-800 border border-slate-300 text-xs font-bold flex items-center gap-2 transition-all cursor-pointer"
               >
                 {syncing ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRightLeft className="w-4 h-4" />}
-                Pull All Data (Secondary → Primary)
+                Pull All Data (Secondary → Main)
               </button>
             </div>
 
@@ -579,7 +716,7 @@ export const AdminDeveloperPage: React.FC = () => {
               className="px-4 py-2.5 rounded-xl bg-red-50 hover:bg-red-100 disabled:opacity-50 text-red-700 border border-red-200 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
             >
               <Trash2 className="w-4 h-4" />
-              Wipe / Delete Linked Old Database
+              Wipe / Reset Secondary Database
             </button>
           </div>
 
@@ -607,11 +744,11 @@ export const AdminDeveloperPage: React.FC = () => {
                       {table}
                     </p>
                     <div className="mt-1.5 flex items-center justify-between text-[11px]">
-                      <span className="text-slate-500">Primary:</span>
+                      <span className="text-slate-500">Main:</span>
                       <span className="font-mono font-bold text-slate-900">{pCount}</span>
                     </div>
                     <div className="flex items-center justify-between text-[11px]">
-                      <span className="text-slate-500">Linked:</span>
+                      <span className="text-slate-500">Mirror:</span>
                       <span className="font-mono font-bold text-indigo-700">
                         {secondaryStats?.connected ? sCount : '—'}
                       </span>
@@ -678,9 +815,9 @@ export const AdminDeveloperPage: React.FC = () => {
                 <ShieldAlert className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-base font-extrabold">Wipe Linked Old Database?</h3>
+                <h3 className="text-base font-extrabold">Wipe Linked Database?</h3>
                 <p className="text-xs text-slate-500">
-                  This will pause Dual-Sync and truncate all 25 tables in the Secondary/Old database while keeping your Primary database untouched.
+                  This will pause Dual-Sync and truncate all 25 tables in the Secondary database while keeping your Main database untouched.
                 </p>
               </div>
             </div>

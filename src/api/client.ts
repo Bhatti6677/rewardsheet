@@ -173,6 +173,9 @@ async function request<T = any>(
         if (res.status === 503 && data?.maintenance) {
           window.dispatchEvent(new CustomEvent('royal_maintenance_triggered', { detail: data }));
         }
+        if (res.status === 423 && (data?.adminBlocked || data?.adminMaintenance)) {
+          window.dispatchEvent(new CustomEvent('royal_admin_locked', { detail: data }));
+        }
         if (res.status === 401 && isAdmin && !endpoint.includes('/admin/login')) {
           localStorage.removeItem('royal_admin_token');
           window.dispatchEvent(new CustomEvent('royal_admin_session_terminated', { detail: data }));

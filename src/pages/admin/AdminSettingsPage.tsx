@@ -14,8 +14,11 @@ import {
   PlusCircle,
 } from 'lucide-react';
 import { api } from '../../api/client';
+import { useAdminAuth } from '../../context/AdminAuthContext';
 
 export const AdminSettingsPage: React.FC = () => {
+  const { admin } = useAdminAuth();
+  const isDeveloper = admin?.role === 'DEVELOPER';
   const [settingsList, setSettingsList] = useState<any[]>([]);
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
@@ -218,7 +221,8 @@ export const AdminSettingsPage: React.FC = () => {
       )}
 
       <form onSubmit={handleSave} className="space-y-6">
-        {/* Maintenance Mode Controller Card */}
+        {/* Maintenance Mode Controller Card - Restricted Exclusively to Developer Account */}
+        {isDeveloper && (
         <div
           className={`admin-card p-6 space-y-5 border-2 transition-all rounded-xl ${
             formData.maintenance_mode === 'true'
@@ -468,6 +472,7 @@ export const AdminSettingsPage: React.FC = () => {
             </div>
           </div>
         </div>
+        )}
 
         {/* General & Support Section */}
         <div className="admin-card p-6 space-y-4">

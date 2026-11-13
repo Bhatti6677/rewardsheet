@@ -513,6 +513,22 @@ export const AdminLayout: React.FC = () => {
   const isMiniAdmin = admin?.role === 'MINI_ADMIN';
   const isDeveloper = admin?.role === 'DEVELOPER';
 
+  // Master Admin / Mini Admin Lock & Maintenance Enforcement (After Login)
+  const [adminAccessLock, setAdminAccessLock] = useState<{
+    locked: boolean;
+    isMaintenance: boolean;
+    title: string;
+    message: string;
+    expectedEnd?: string;
+  }>({
+    locked: false,
+    isMaintenance: false,
+    title: '',
+    message: '',
+    expectedEnd: '',
+  });
+  const [checkingLockStatus, setCheckingLockStatus] = useState(false);
+
   // Master Admin Recurring Payment Reminder (strictly SUPER_ADMIN / !isMiniAdmin && !isDeveloper)
   const [showPaymentNotice, setShowPaymentNotice] = useState(false);
   const [popupConfig, setPopupConfig] = useState({
@@ -522,50 +538,104 @@ export const AdminLayout: React.FC = () => {
     intervalMinutes: 15,
   });
 
-  useEffect(() => {
-    if (isMiniAdmin || isDeveloper) {
-      setShowPaymentNotice(false);
+  const checkAdminLockAndSettings = useCallback(async () => {
+    if (isDeveloper) {
+      setAdminAccessLock((prev) => (prev.locked ? { ...prev, locked: false } : prev));
       return;
     }
+    setCheckingLockStatus(true);
+    try {
+      const settings: any = await api.getPublicSettings({ bypassCache: true });
+      const maintOn = Boolean(settings?.maintenanceMode);
+      const masterBlocked = !isMiniAdmin && Boolean(settings?.masterAdminBlocked);
+      const miniBlocked = isMiniAdmin && Boolean(settings?.miniAdminBlocked);
 
-    let timer: any = null;
-    let isMounted = true;
+      if (maintOn) {
+        setAdminAccessLock({
+          locked: true,
+          isMaintenance: true,
+          title: settings?.maintenanceTitle || 'Website is Under Maintenance',
+          message:
+            settings?.maintenanceMessage ||
+            'Website is under maintenance, you cannot work right now. Please wait until the developer completes maintenance.',
+          expectedEnd: settings?.maintenanceExpectedEnd || '',
+        });
+      } else if (masterBlocked || miniBlocked) {
+        setAdminAccessLock({
+          locked: true,
+          isMaintenance: false,
+          title: settings?.adminBlockTitle || 'Administrator Access Locked',
+          message:
+            settings?.adminBlockMessage ||
+            'Website is under maintenance, you cannot work right now. Please contact the developer.',
+          expectedEnd: '',
+        });
+      } else {
+        setAdminAccessLock((prev) => (prev.locked ? { ...prev, locked: false } : prev));
+      }
 
-    api
-      .getPublicSettings({ bypassCache: true })
-      .then((settings: any) => {
-        if (!isMounted) return;
+      if (!isMiniAdmin) {
         const enabled = settings?.masterAdminPopupEnabled !== false;
         const title = settings?.masterAdminPopupTitle || 'Payment Notice';
         const message =
           settings?.masterAdminPopupMessage ||
           'Payment needs to be updated. Kindly pay the payment to continue working.';
         const intervalMinutes = Math.max(1, Number(settings?.masterAdminPopupIntervalMinutes) || 15);
-
         setPopupConfig({ enabled, title, message, intervalMinutes });
+      }
+    } catch {
+      // Ignore transient errors
+    } finally {
+      setCheckingLockStatus(false);
+    }
+  }, [isDeveloper, isMiniAdmin]);
 
-        if (enabled) {
-          setShowPaymentNotice(true);
-          timer = setInterval(() => {
-            setShowPaymentNotice(true);
-          }, intervalMinutes * 60 * 1000);
-        } else {
-          setShowPaymentNotice(false);
-        }
-      })
-      .catch(() => {
-        if (!isMounted) return;
-        setShowPaymentNotice(true);
-        timer = setInterval(() => {
-          setShowPaymentNotice(true);
-        }, 15 * 60 * 1000);
+  useEffect(() => {
+    checkAdminLockAndSettings();
+    const pollTimer = setInterval(checkAdminLockAndSettings, 15000);
+
+    const handleLockedEvent = (e: any) => {
+      if (isDeveloper) return;
+      const detail = e?.detail || {};
+      setAdminAccessLock({
+        locked: true,
+        isMaintenance: Boolean(detail.adminMaintenance),
+        title:
+          detail.blockTitle ||
+          (detail.adminMaintenance ? 'Website is Under Maintenance' : 'Administrator Access Locked'),
+        message:
+          detail.blockMessage ||
+          detail.error ||
+          'Website is under maintenance, you cannot work right now.',
+        expectedEnd: '',
       });
-
-    return () => {
-      isMounted = false;
-      if (timer) clearInterval(timer);
     };
-  }, [isMiniAdmin, isDeveloper]);
+
+    window.addEventListener('royal_admin_locked', handleLockedEvent);
+    return () => {
+      clearInterval(pollTimer);
+      window.removeEventListener('royal_admin_locked', handleLockedEvent);
+    };
+  }, [checkAdminLockAndSettings, isDeveloper]);
+
+  useEffect(() => {
+    if (isMiniAdmin || isDeveloper) {
+      setShowPaymentNotice(false);
+      return;
+    }
+
+    if (!popupConfig.enabled) {
+      setShowPaymentNotice(false);
+      return;
+    }
+
+    setShowPaymentNotice(true);
+    const timer = setInterval(() => {
+      setShowPaymentNotice(true);
+    }, popupConfig.intervalMinutes * 60 * 1000);
+
+    return () => clearInterval(timer);
+  }, [isMiniAdmin, isDeveloper, popupConfig.enabled, popupConfig.intervalMinutes]);
 
   const primaryMenuItems = isMiniAdmin
     ? [
@@ -573,10 +643,12 @@ export const AdminLayout: React.FC = () => {
         { label: 'Submissions', path: '/adminpanal/submissions', icon: FileCheck2 },
         { label: 'Assigned Codes', path: '/adminpanal/assigned-codes', icon: Ticket },
       ]
+    : isDeveloper
+    ? [
+        { label: 'Developer Console', path: '/adminpanal/developer', icon: Terminal },
+        { label: 'Website Settings', path: '/adminpanal/settings', icon: Settings },
+      ]
     : [
-        ...(isDeveloper
-          ? [{ label: 'Developer Console', path: '/adminpanal/developer', icon: Terminal }]
-          : []),
         { label: 'Dashboard', path: '/adminpanal/dashboard', icon: LayoutDashboard },
         { label: 'Users', path: '/adminpanal/users', icon: Users },
         { label: 'Submissions', path: '/adminpanal/submissions', icon: FileCheck2 },
@@ -590,6 +662,25 @@ export const AdminLayout: React.FC = () => {
 
   const moreMenuItems = isMiniAdmin
     ? []
+    : isDeveloper
+    ? [
+        { label: 'Dashboard', path: '/adminpanal/dashboard', icon: LayoutDashboard },
+        { label: 'Users', path: '/adminpanal/users', icon: Users },
+        { label: 'Submissions', path: '/adminpanal/submissions', icon: FileCheck2 },
+        { label: 'Spin Wheel', path: '/adminpanal/spin', icon: Disc },
+        { label: 'Deposit', path: '/adminpanal/deposits', icon: ArrowDownLeft },
+        { label: 'Withdrawals', path: '/adminpanal/withdrawals', icon: ArrowUpRight },
+        { label: 'Invitation Codes', path: '/adminpanal/referral-codes', icon: Ticket },
+        { label: 'Mini Admins', path: '/adminpanal/mini-admins', icon: ShieldCheck },
+        { label: 'Unlock Levels', path: '/adminpanal/level-approvals', icon: KeyRound },
+        { label: 'Levels', path: '/adminpanal/levels', icon: Layers },
+        { label: 'Tasks', path: '/adminpanal/tasks', icon: CheckSquare },
+        { label: 'Balance Adjustments', path: '/adminpanal/wallets', icon: Wallet },
+        { label: 'Transactions', path: '/adminpanal/transactions', icon: Receipt },
+        { label: 'Announcements', path: '/adminpanal/announcements', icon: Megaphone },
+        { label: 'Reports', path: '/adminpanal/reports', icon: BarChart3 },
+        { label: 'Audit Logs', path: '/adminpanal/activity-logs', icon: HistoryIcon },
+      ]
     : [
         { label: 'Levels', path: '/adminpanal/levels', icon: Layers },
         { label: 'Tasks', path: '/adminpanal/tasks', icon: CheckSquare },
@@ -621,6 +712,67 @@ export const AdminLayout: React.FC = () => {
     adminLogout();
     navigate('/adminpanal');
   };
+
+  // Full-Screen After-Login Maintenance / Admin Lock Screen for Master Admin & Mini Admin
+  if (!isDeveloper && adminAccessLock.locked) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#0F172A] text-white flex items-center justify-center p-4 font-sans antialiased">
+        <div className="max-w-lg w-full bg-slate-900/90 border border-slate-700/80 rounded-3xl shadow-2xl p-8 text-center space-y-6 backdrop-blur-md">
+          <div className="w-16 h-16 rounded-2xl bg-rose-500/20 border border-rose-400/40 flex items-center justify-center text-rose-400 mx-auto shadow-inner">
+            <AlertCircle className="w-8 h-8" />
+          </div>
+
+          <div className="space-y-2">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-rose-500/20 text-rose-300 border border-rose-400/30">
+              <span className="w-2 h-2 rounded-full bg-rose-400 animate-ping" />
+              {adminAccessLock.isMaintenance ? 'Website Under Maintenance' : 'Admin Access Locked'}
+            </span>
+            <h1 className="text-2xl font-extrabold tracking-tight text-white">
+              {adminAccessLock.title || 'Website is Under Maintenance'}
+            </h1>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-slate-800/80 border border-slate-700 text-sm text-slate-200 font-medium leading-relaxed">
+            {adminAccessLock.message ||
+              'Website is under maintenance, you cannot work right now. Please wait until the developer completes maintenance.'}
+            {adminAccessLock.expectedEnd && (
+              <p className="mt-3 pt-3 border-t border-slate-700 text-xs font-bold text-amber-300">
+                Expected Completion: {adminAccessLock.expectedEnd}
+              </p>
+            )}
+          </div>
+
+          <p className="text-xs text-slate-400">
+            Logged in as <strong className="text-slate-200">{admin?.username || 'Administrator'}</strong> ({isMiniAdmin ? 'Mini Admin' : 'Master Admin'}). Only the Developer can unlock or disable Maintenance Mode.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            <button
+              type="button"
+              onClick={checkAdminLockAndSettings}
+              disabled={checkingLockStatus}
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-extrabold flex items-center justify-center gap-2 transition-all cursor-pointer"
+            >
+              {checkingLockStatus ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Shield className="w-4 h-4" />
+              )}
+              Check Status / Refresh
+            </button>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer"
+            >
+              <LogOut className="w-4 h-4" />
+              Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#F5F8FC] text-[#111827] flex font-sans antialiased">
@@ -754,7 +906,11 @@ export const AdminLayout: React.FC = () => {
               <div className="min-w-0">
                 <p className="text-xs font-bold text-[#111827] truncate">{admin?.username || 'Admin'}</p>
                 <p className="text-[10px] text-[#6B7280] truncate font-semibold">
-                  {admin?.role === 'MINI_ADMIN' ? 'Mini Admin (Submissions Only)' : 'Master Admin'}
+                  {admin?.role === 'DEVELOPER'
+                    ? 'Developer Master Console'
+                    : admin?.role === 'MINI_ADMIN'
+                    ? 'Mini Admin (Submissions Only)'
+                    : 'Master Admin'}
                 </p>
               </div>
             </div>
