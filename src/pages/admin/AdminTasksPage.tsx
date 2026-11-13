@@ -43,9 +43,48 @@ export const AdminTasksPage: React.FC = () => {
     loadTasks();
   };
 
+  const syncTaskPricingText = (draft: any) => {
+    const feeNum = Math.max(0, parseFloat(draft.unlockFee) || 0);
+    const rewardNum = Math.max(0, parseFloat(draft.rewardAmount) || 0);
+    const feeStr = feeNum.toLocaleString('en-US');
+    const rewardStr = rewardNum.toLocaleString('en-US');
+
+    let nextTitle = String(draft.title || '');
+    let nextDesc = String(draft.description || '');
+    let nextInstr = String(draft.instructions || '');
+
+    if (draft.isPaid) {
+      if (/\(\s*PKR\s*[\d,]+(?:\.\d+)?\s*\)/i.test(nextTitle)) {
+        nextTitle = nextTitle.replace(/\(\s*PKR\s*[\d,]+(?:\.\d+)?\s*\)/gi, `(PKR ${feeStr})`);
+      } else if (/^Prepaid VIP Task/i.test(nextTitle)) {
+        nextTitle = `${nextTitle.trim()} (PKR ${feeStr})`;
+      } else {
+        nextTitle = `${nextTitle.replace(/\s*\(\s*PKR\s*[\d,]+(?:\.\d+)?\s*\)/gi, '').trim()} (PKR ${feeStr})`;
+      }
+      nextDesc = nextDesc
+        .replace(/unlock fee of PKR\s*[\d,]+(?:\.\d+)?/gi, `unlock fee of PKR ${feeStr}`)
+        .replace(/commission of PKR\s*[\d,]+(?:\.\d+)?/gi, `commission of PKR ${rewardStr}`)
+        .replace(/to earn PKR\s*[\d,]+(?:\.\d+)?/gi, `to earn PKR ${rewardStr}`);
+      nextInstr = nextInstr.replace(/deposit PKR\s*[\d,]+(?:\.\d+)?/gi, `deposit PKR ${feeStr}`);
+    } else {
+      nextTitle = nextTitle.replace(/\s*\(\s*PKR\s*[\d,]+(?:\.\d+)?\s*\)/gi, '').trim();
+      nextDesc = nextDesc
+        .replace(/commission of PKR\s*[\d,]+(?:\.\d+)?/gi, `commission of PKR ${rewardStr}`)
+        .replace(/to earn PKR\s*[\d,]+(?:\.\d+)?/gi, `to earn PKR ${rewardStr}`);
+    }
+
+    return {
+      ...draft,
+      title: nextTitle,
+      description: nextDesc,
+      instructions: nextInstr,
+    };
+  };
+
   const handleOpenEdit = (task: any) => {
     setEditingTask({
       id: task.id,
+      taskNumber: task.taskNumber,
       title: task.title,
       description: task.description,
       taskType: task.taskType,
@@ -70,10 +109,11 @@ export const AdminTasksPage: React.FC = () => {
     setMessage(null);
 
     try {
+      const synced = syncTaskPricingText(editingTask);
       const res = await api.updateAdminTask(editingTask.id, {
-        ...editingTask,
-        rewardAmount: parseFloat(editingTask.rewardAmount),
-        unlockFee: parseFloat(editingTask.unlockFee || 0),
+        ...synced,
+        rewardAmount: parseFloat(synced.rewardAmount),
+        unlockFee: parseFloat(synced.unlockFee || 0),
       });
       // Update only this task directly without reloading the whole table!
       setTasks((prev) =>
@@ -81,9 +121,10 @@ export const AdminTasksPage: React.FC = () => {
           t.id === editingTask.id
             ? {
                 ...t,
-                ...editingTask,
-                rewardAmount: parseFloat(editingTask.rewardAmount),
-                unlockFee: parseFloat(editingTask.unlockFee || 0),
+                ...synced,
+                ...(res.task || {}),
+                rewardAmount: parseFloat(synced.rewardAmount),
+                unlockFee: parseFloat(synced.unlockFee || 0),
               }
             : t
         )
@@ -330,13 +371,30 @@ export const AdminTasksPage: React.FC = () => {
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
-                      <label className="block font-semibold text-[#374151] mb-1">Reward in PKR *</label>
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="block font-semibold text-[#374151]">Reward in PKR *</label>
+                        {editingTask.isPaid && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const fee = Math.max(0, parseFloat(editingTask.unlockFee) || 0);
+                              const comm20 = Math.round(fee * 0.2);
+                              setEditingTask(syncTaskPricingText({ ...editingTask, rewardAmount: comm20 }));
+                            }}
+                            className="text-[10px] font-bold text-[#2563EB] hover:underline"
+                          >
+                            Auto 20%
+                          </button>
+                        )}
+                      </div>
                       <input
                         type="number"
                         required
                         min="0"
                         value={editingTask.rewardAmount}
-                        onChange={(e) => setEditingTask({ ...editingTask, rewardAmount: e.target.value })}
+                        onChange={(e) =>
+                          setEditingTask(syncTaskPricingText({ ...editingTask, rewardAmount: e.target.value }))
+                        }
                         className="w-full border border-[#D9E4F2] focus:border-[#2563EB] rounded-lg p-2.5 text-xs text-[#111827] focus:outline-none font-bold"
                       />
                     </div>
@@ -349,7 +407,9 @@ export const AdminTasksPage: React.FC = () => {
                             type="radio"
                             name="isPaid"
                             checked={!editingTask.isPaid}
-                            onChange={() => setEditingTask({ ...editingTask, isPaid: false, unlockFee: 0 })}
+                            onChange={() =>
+                              setEditingTask(syncTaskPricingText({ ...editingTask, isPaid: false, unlockFee: 0 }))
+                            }
                           />
                           <span>Free Task</span>
                         </label>
@@ -358,7 +418,15 @@ export const AdminTasksPage: React.FC = () => {
                             type="radio"
                             name="isPaid"
                             checked={editingTask.isPaid}
-                            onChange={() => setEditingTask({ ...editingTask, isPaid: true, unlockFee: editingTask.unlockFee || 5000 })}
+                            onChange={() =>
+                              setEditingTask(
+                                syncTaskPricingText({
+                                  ...editingTask,
+                                  isPaid: true,
+                                  unlockFee: editingTask.unlockFee || 5000,
+                                })
+                              )
+                            }
                           />
                           <span className="font-bold text-amber-700">Paid Task</span>
                         </label>
@@ -372,7 +440,9 @@ export const AdminTasksPage: React.FC = () => {
                         disabled={!editingTask.isPaid}
                         min="0"
                         value={editingTask.unlockFee}
-                        onChange={(e) => setEditingTask({ ...editingTask, unlockFee: e.target.value })}
+                        onChange={(e) =>
+                          setEditingTask(syncTaskPricingText({ ...editingTask, unlockFee: e.target.value }))
+                        }
                         className="w-full border border-[#D9E4F2] focus:border-[#2563EB] rounded-lg p-2.5 text-xs text-[#111827] focus:outline-none disabled:bg-slate-100 font-bold"
                       />
                     </div>
