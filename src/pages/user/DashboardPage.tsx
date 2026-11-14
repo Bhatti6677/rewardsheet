@@ -260,9 +260,104 @@ export const DashboardPage: React.FC = () => {
             ======================================================== */}
         <main className="flex-1 w-full min-w-0 space-y-6">
           {/* ========================================================
-              C. USER PROFILE SUMMARY & TOP HEADER CONTROLS
+              MOBILE UNIFIED EXECUTIVE CARD (Covers Profile, Balance & Credit Points in 1 Box)
               ======================================================== */}
-          <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-[#140C10] via-[#0F0B0E] to-[#0A0A0D] border border-red-900/45 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative overflow-hidden">
+          <div className="sm:hidden rounded-3xl bg-gradient-to-br from-[#1A0B10] via-[#100B0E] to-[#08080B] border border-red-900/50 shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-red-500/80 to-transparent" />
+            <div className="absolute -top-10 -right-10 w-36 h-36 bg-red-600/15 rounded-full blur-2xl pointer-events-none" />
+
+            {/* Top Row: Avatar + Name + ID + Level + My Profile */}
+            <div className="p-4 flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="relative shrink-0">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-red-600 via-rose-500 to-amber-400 p-0.5 shadow-md shadow-red-600/20">
+                    <div className="w-full h-full bg-[#09090C] rounded-[14px] flex items-center justify-center font-black text-white text-base">
+                      {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                    </div>
+                  </div>
+                  <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-md bg-red-600 border-2 border-[#09090C] flex items-center justify-center text-white">
+                    <Crown className="w-2.5 h-2.5" />
+                  </div>
+                </div>
+
+                <div className="min-w-0 space-y-0.5">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <h1 className="text-sm font-black text-white tracking-tight truncate">
+                      {user?.name || 'Executive Member'}
+                    </h1>
+                    <span className="text-[9px] font-bold text-red-400 bg-red-500/15 border border-red-500/30 px-1.5 py-0.5 rounded-full shrink-0">
+                      Verified
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-zinc-400 font-mono font-medium truncate">
+                    ID: <span className="text-red-400 font-bold">{memberId}</span>
+                  </p>
+                  <div className="flex items-center gap-1 text-[11px] text-amber-400 font-bold">
+                    <Crown className="w-3 h-3 text-red-500 shrink-0" />
+                    <span>Level {currentLevelNumber}</span>
+                    <span className="text-zinc-500 font-normal truncate">• {levelTitle}</span>
+                  </div>
+                </div>
+              </div>
+
+              <Link
+                to="/app/profile"
+                className="shrink-0 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#161014] border border-red-900/50 text-[11px] font-semibold text-zinc-300 hover:text-white hover:border-red-500 transition-all"
+              >
+                <UserIcon className="w-3 h-3 text-red-400" />
+                <span>Profile</span>
+              </Link>
+            </div>
+
+            {/* Middle Row: Total Balance & Credit Points Side-by-Side */}
+            <div className="grid grid-cols-2 border-t border-red-900/35 bg-[#0C090C]/60">
+              <div className="p-3.5 space-y-1">
+                <span className="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider">
+                  Total Balance
+                </span>
+                <p className="text-lg font-black text-amber-400 tracking-tight leading-tight">
+                  PKR {availableBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </p>
+                <span className="block text-[10px] text-zinc-500 font-medium">
+                  Available Wallet
+                </span>
+              </div>
+
+              <div className="p-3.5 space-y-1 border-l border-red-900/35">
+                <span className="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider">
+                  Credit Points
+                </span>
+                <p className="text-lg font-black text-white tracking-tight leading-tight">
+                  {creditPoints.toLocaleString()} <span className="text-xs font-bold text-red-400">Pts</span>
+                </p>
+                <span className="block text-[10px] text-emerald-400 font-semibold truncate">
+                  100 CPs on joining • Tier {currentLevelNumber}
+                </span>
+              </div>
+            </div>
+
+            {/* Bottom Action Bar: Withdraw & Deposit */}
+            <div className="px-4 py-2.5 border-t border-red-900/35 flex items-center justify-between bg-[#09070A]/80 text-xs">
+              <Link
+                to="/app/withdrawals"
+                className="font-bold text-red-400 hover:text-white transition-colors flex items-center gap-1"
+              >
+                <span>Withdraw Funds</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </Link>
+              <Link
+                to="/app/deposits"
+                className="px-3 py-1 rounded-xl bg-red-600/20 border border-red-500/40 font-bold text-red-300 hover:bg-red-600 hover:text-white transition-all"
+              >
+                Deposit
+              </Link>
+            </div>
+          </div>
+
+          {/* ========================================================
+              C. USER PROFILE SUMMARY & TOP HEADER CONTROLS (Desktop/Tablet)
+              ======================================================== */}
+          <div className="hidden sm:flex p-5 rounded-3xl bg-gradient-to-r from-[#140C10] via-[#0F0B0E] to-[#0A0A0D] border border-red-900/45 shadow-xl flex-row items-center justify-between gap-4 relative overflow-hidden">
             <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-red-500/70 to-transparent" />
             {/* User Avatar + Name + ID + Level */}
             <div className="flex items-center gap-3.5">
@@ -310,9 +405,9 @@ export const DashboardPage: React.FC = () => {
           </div>
 
           {/* ========================================================
-              D. BALANCE AND CREDIT POINTS (Two Summary Cards)
+              D. BALANCE AND CREDIT POINTS (Two Summary Cards - Desktop/Tablet)
               ======================================================== */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="hidden sm:grid grid-cols-2 gap-4">
             {/* Total Balance Card */}
             <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-[#1C0B10] via-[#110B0E] to-[#0A0A0D] border border-red-900/50 shadow-xl relative overflow-hidden group">
               <div className="absolute top-0 right-0 w-32 h-32 bg-red-600/15 rounded-full blur-2xl pointer-events-none group-hover:bg-red-600/25 transition-all" />
