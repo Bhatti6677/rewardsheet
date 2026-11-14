@@ -27,9 +27,9 @@ const DEFAULT_FALLBACK_PRIZES = [
   { id: 'p1', displayLabel: 'PKR 50', name: 'PKR 50', prizeType: 'CASH', monetaryValue: 50, color: '#1459E8' },
   { id: 'p2', displayLabel: 'PKR 100', name: 'PKR 100', prizeType: 'CASH', monetaryValue: 100, color: '#792BFF' },
   { id: 'p3', displayLabel: 'Alto Car', name: 'Suzuki Alto Car', prizeType: 'PHYSICAL', monetaryValue: 2500000, color: '#059669', icon: 'car' },
-  { id: 'p4', displayLabel: 'PKR 500', name: 'PKR 500', prizeType: 'CASH', monetaryValue: 500, color: '#DC2626' },
+  { id: 'p4', displayLabel: 'PKR 3,000', name: 'PKR 3,000', prizeType: 'CASH', monetaryValue: 3000, color: '#DC2626' },
   { id: 'p5', displayLabel: 'PKR 1,000', name: 'PKR 1,000', prizeType: 'CASH', monetaryValue: 1000, color: '#0284C7' },
-  { id: 'p6', displayLabel: 'PKR 5,000 Mega', name: 'PKR 5,000', prizeType: 'CASH', monetaryValue: 500, color: '#D97706' },
+  { id: 'p6', displayLabel: 'PKR 5,000 Mega', name: 'PKR 5,000', prizeType: 'CASH', monetaryValue: 5000, color: '#D97706' },
   { id: 'p7', displayLabel: 'Expensive Watch', name: 'Expensive Watch', prizeType: 'PHYSICAL', monetaryValue: 45000, color: '#4F46E5', icon: 'watch' },
   { id: 'p8', displayLabel: 'iPhone 15 Pro', name: 'iPhone 15 Pro', prizeType: 'PHYSICAL', monetaryValue: 350000, color: '#EAB308', icon: 'smartphone' },
 ];
@@ -711,7 +711,7 @@ export const SpinPage: React.FC = () => {
                   <span>Instant Cash Rewards &amp; Wallet Crediting</span>
                 </h4>
                 <p className="text-slate-300 pl-7 leading-relaxed">
-                  Wheel se jeete gaye tamam cash amounts (<strong>PKR 50, PKR 100, PKR 500, PKR 1,000, aur PKR 5,000</strong>) spin mukammal hone ke foran baad <strong>sath sath aap ke account wallet balance mein add</strong> kar diye jaate hain. Cash rewards ke liye kisi qisam ki manual claim ya lambay intizar ki zaroorat nahi hoti; raqam foran aap ke balance mein show ho jaati hai aur platform withdrawal quota ke mutabiq withdrawable hoti hai.
+                  Wheel se jeete gaye tamam cash amounts (<strong>PKR 50, PKR 100, PKR 1,000, PKR 3,000, aur PKR 5,000</strong>) spin mukammal hone ke foran baad <strong>sath sath aap ke account wallet balance mein add</strong> kar diye jaate hain. Cash rewards ke liye kisi qisam ki manual claim ya lambay intizar ki zaroorat nahi hoti; raqam foran aap ke balance mein show ho jaati hai aur platform withdrawal quota ke mutabiq withdrawable hoti hai.
                 </p>
               </div>
 
