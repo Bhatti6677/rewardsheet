@@ -925,13 +925,6 @@ export const AdminLayout: React.FC = () => {
                 </p>
               </div>
             </div>
-            <button
-              onClick={handleLogout}
-              className="p-1.5 text-[#6B7280] hover:text-red-600 rounded-md hover:bg-white transition-colors"
-              title="Sign Out"
-            >
-              <LogOut className="w-4 h-4" />
-            </button>
           </div>
         </div>
       </aside>
@@ -1046,15 +1039,6 @@ export const AdminLayout: React.FC = () => {
                 </div>
               )}
             </nav>
-            <div className="p-4 border-t border-[#D9E4F2]">
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg bg-red-50 text-red-600 font-semibold text-xs border border-red-200"
-              >
-                <LogOut className="w-4 h-4" />
-                Sign Out
-              </button>
-            </div>
           </div>
         </div>
       )}
@@ -1183,13 +1167,15 @@ export const AdminLayout: React.FC = () => {
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               <span className="font-semibold text-[#111827]">Live Synchronized</span>
             </div>
-            <Link
-              to="/app"
-              target="_blank"
-              className="text-xs font-semibold text-[#2563EB] hover:underline flex items-center gap-1"
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 border border-red-200 text-xs font-bold transition-all cursor-pointer shadow-2xs"
+              title="Log Out"
             >
-              View User App <ChevronRight className="w-3.5 h-3.5" />
-            </Link>
+              <LogOut className="w-3.5 h-3.5" />
+              <span>Logout</span>
+            </button>
           </div>
         </header>
 
