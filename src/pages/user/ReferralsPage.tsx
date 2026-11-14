@@ -100,12 +100,12 @@ export const ReferralsPage: React.FC = () => {
         </div>
 
         {/* Notice Strip */}
-        <div className="p-3.5 bg-gradient-to-r from-blue-900/40 via-[#0B2248] to-[#04132F] border border-[#2478FF]/30 rounded-xl text-xs text-slate-300 space-y-1">
+        <div className="p-3.5 bg-gradient-to-r from-red-950/40 via-[#140B0F] to-[#08080B] border border-red-500/30 rounded-xl text-xs text-zinc-300 space-y-1">
           <div className="flex items-center gap-2 text-white font-bold text-xs">
-            <Ticket className="w-4 h-4 text-[#FFD45A]" />
+            <Ticket className="w-4 h-4 text-red-400" />
             <span>Exclusive Admin Referral Invitation Only</span>
           </div>
-          <p className="text-[11.5px] leading-relaxed text-slate-300">
+          <p className="text-[11.5px] leading-relaxed text-zinc-300">
             Personal member invitation links are disabled. New member registrations strictly require an official invitation code provided directly by administration.
           </p>
         </div>

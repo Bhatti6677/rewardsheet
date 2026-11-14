@@ -222,26 +222,26 @@ export const TaskDetailPage: React.FC = () => {
         {/* Header & Badges */}
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-xs font-bold text-[#FFD45A]">
+            <span className="text-xs font-bold text-amber-400">
               Level {level?.levelNumber}: {level?.title}
             </span>
-            <span className="text-slate-500">•</span>
-            <span className="text-xs font-semibold text-[#22D3EE]">
+            <span className="text-zinc-500">•</span>
+            <span className="text-xs font-semibold text-red-400">
               Task #{task?.taskNumber}
             </span>
             {!isLocked && task?.taskType && (
               <>
-                <span className="text-slate-500">•</span>
-                <span className="text-xs text-slate-300 font-medium">
+                <span className="text-zinc-500">•</span>
+                <span className="text-xs text-zinc-300 font-medium">
                   {task?.taskType}
                 </span>
               </>
             )}
             {!isLocked && task?.isPaid && (
               <>
-                <span className="text-slate-500">•</span>
-                <span className="text-xs font-bold text-[#FFD45A] flex items-center gap-1">
-                  <Zap className="w-3 h-3 text-[#FFD45A]" /> Prepaid
+                <span className="text-zinc-500">•</span>
+                <span className="text-xs font-bold text-amber-400 flex items-center gap-1">
+                  <Zap className="w-3 h-3 text-amber-400" /> Prepaid
                 </span>
               </>
             )}
@@ -250,7 +250,7 @@ export const TaskDetailPage: React.FC = () => {
           {/* Status Indicator */}
           <div>
             {isLocked && (
-              <span className="bg-amber-500/15 border border-amber-500/40 text-amber-400 font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 text-xs">
+              <span className="bg-red-500/15 border border-red-500/40 text-red-400 font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 text-xs">
                 <Lock className="w-3.5 h-3.5" /> Locked
               </span>
             )}
@@ -260,7 +260,7 @@ export const TaskDetailPage: React.FC = () => {
               </span>
             )}
             {isPending && (
-              <span className="bg-blue-500/15 border border-blue-500/40 text-blue-400 font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 text-xs">
+              <span className="bg-amber-500/15 border border-amber-500/40 text-amber-400 font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 text-xs">
                 <Clock className="w-3.5 h-3.5" /> Pending Verification
               </span>
             )}
@@ -282,7 +282,7 @@ export const TaskDetailPage: React.FC = () => {
           <h1 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
             {isLocked ? (
               <>
-                <Lock className="w-5 h-5 text-amber-400 flex-shrink-0" />
+                <Lock className="w-5 h-5 text-red-400 flex-shrink-0" />
                 <span>Locked Task #{task?.taskNumber}</span>
               </>
             ) : (
@@ -290,7 +290,7 @@ export const TaskDetailPage: React.FC = () => {
             )}
           </h1>
           {!isLocked && task?.description && (
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
               {task?.description}
             </p>
           )}
@@ -301,8 +301,8 @@ export const TaskDetailPage: React.FC = () => {
           <div className="flex items-center gap-5 sm:gap-8 flex-wrap pt-1 pb-1">
             {task?.isPaid ? (
               <div>
-                <span className="text-[10px] text-slate-400 uppercase font-semibold block tracking-wider">Prepaid Price</span>
-                <span className="text-sm sm:text-base font-black text-[#FFD45A]">
+                <span className="text-[10px] text-zinc-400 uppercase font-semibold block tracking-wider">Prepaid Price</span>
+                <span className="text-sm sm:text-base font-black text-amber-400">
                   PKR {unlockFee.toLocaleString()}
                 </span>
               </div>
@@ -315,10 +315,10 @@ export const TaskDetailPage: React.FC = () => {
               </div>
             )}
             <div>
-              <span className="text-[10px] text-slate-400 uppercase font-semibold block tracking-wider">
+              <span className="text-[10px] text-zinc-400 uppercase font-semibold block tracking-wider">
                 {task?.isPaid ? 'Commission' : 'Reward / Prize'}
               </span>
-              <span className="text-sm sm:text-base font-black text-[#10D6A0]">
+              <span className="text-sm sm:text-base font-black text-emerald-400">
                 {task?.rewardAmount > 0 ? `PKR ${task?.rewardAmount?.toLocaleString()}` : 'Free Task'}
               </span>
             </div>
@@ -328,18 +328,18 @@ export const TaskDetailPage: React.FC = () => {
         {/* Locked Notice (if task is locked) */}
         {isLocked && (
           <div className="pt-4 border-t border-white/10 space-y-3">
-            <div className="p-6 rounded-2xl border border-amber-500/30 bg-[#071B3A]/90 text-center space-y-3 shadow-md">
-              <div className="w-12 h-12 rounded-xl bg-[#061633] border border-[#173C73] flex items-center justify-center mx-auto text-[#FFD45A]">
-                <Lock className="w-6 h-6 text-[#FFD45A]" />
+            <div className="p-6 rounded-2xl border border-red-500/30 bg-[#140B0F]/90 text-center space-y-3 shadow-md">
+              <div className="w-12 h-12 rounded-xl bg-[#09090C] border border-red-900/50 flex items-center justify-center mx-auto text-red-500">
+                <Lock className="w-6 h-6 text-red-500" />
               </div>
               <div className="space-y-1 max-w-md mx-auto">
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold mb-1">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-red-500/15 border border-red-500/30 text-red-300 text-xs font-bold mb-1">
                   <span>Task Locked</span>
                 </div>
                 <h3 className="text-base font-bold text-white">
                   This Task Is Locked
                 </h3>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-zinc-300 leading-relaxed">
                   {task?.lockMessage ||
                     task?.description ||
                     `Task #${task?.taskNumber || ''} is locked. Please complete your current level tasks first to unlock this task.`}
@@ -348,7 +348,7 @@ export const TaskDetailPage: React.FC = () => {
               <div className="pt-1">
                 <Link
                   to={`/app/tasks?level=${level?.levelNumber || 1}`}
-                  className="inline-flex items-center gap-1.5 bg-[#1264F5] hover:bg-[#168BFF] text-white text-xs font-semibold px-4 py-2 rounded-lg shadow transition-all"
+                  className="inline-flex items-center gap-1.5 bg-gradient-to-r from-red-600 to-rose-600 hover:brightness-110 text-white text-xs font-semibold px-4 py-2 rounded-lg shadow transition-all"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>Back to Level {level?.levelNumber || 1}</span>
@@ -362,20 +362,20 @@ export const TaskDetailPage: React.FC = () => {
           {task?.isPaid && isAvailable && (
             <div className="pt-3 border-t border-white/10 space-y-2">
               <div className="flex items-center justify-between text-xs flex-wrap gap-2">
-                <span className="text-slate-300 flex items-center gap-1.5 font-medium">
-                  <Zap className="w-4 h-4 text-[#FFD45A]" />
+                <span className="text-zinc-300 flex items-center gap-1.5 font-medium">
+                  <Zap className="w-4 h-4 text-amber-400" />
                   <span>Prepaid Task Balance Requirement (Zero fee deducted, funds remain in wallet)</span>
                 </span>
-                <span className="text-slate-400">
-                  Required: <strong className="text-white">PKR {unlockFee.toLocaleString()}</strong> • Your Balance: <strong className={hasSufficientBalance ? 'text-[#10D6A0]' : 'text-[#FFD45A]'}>PKR {userBalance.toLocaleString()}</strong>
+                <span className="text-zinc-400">
+                  Required: <strong className="text-white">PKR {unlockFee.toLocaleString()}</strong> • Your Balance: <strong className={hasSufficientBalance ? 'text-emerald-400' : 'text-amber-400'}>PKR {userBalance.toLocaleString()}</strong>
                 </span>
               </div>
               {!hasSufficientBalance && (
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-1 text-xs text-[#FFD45A]">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-1 text-xs text-amber-400">
                   <span>Please deposit PKR {remainingNeeded.toLocaleString()} to complete the required PKR {unlockFee.toLocaleString()} balance.</span>
                   <Link
                     to={`/app/deposits?amount=${remainingNeeded}`}
-                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#1264F5] to-[#168BFF] text-white font-bold rounded-lg shadow-sm"
+                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-gradient-to-r from-red-600 to-rose-600 text-white font-bold rounded-lg shadow-sm"
                   >
                     <ArrowDownLeft className="w-3.5 h-3.5" />
                     <span>Deposit PKR {remainingNeeded.toLocaleString()}</span>
@@ -388,10 +388,10 @@ export const TaskDetailPage: React.FC = () => {
           {/* Assignment Instructions (Simple Clean Typography, No Box) */}
           {task?.instructions && (
             <div className="pt-3 border-t border-white/10 space-y-1.5">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-zinc-400">
                 Assignment Instructions
               </h2>
-              <p className="text-xs sm:text-sm text-slate-200 leading-relaxed whitespace-pre-line">
+              <p className="text-xs sm:text-sm text-zinc-200 leading-relaxed whitespace-pre-line">
                 {task?.instructions}
               </p>
             </div>
@@ -402,7 +402,7 @@ export const TaskDetailPage: React.FC = () => {
             <div className="pt-1">
               {isPrepaid && !hasSufficientBalance ? (
                 <div
-                  className="inline-flex items-center gap-2 bg-slate-800/80 border border-slate-700/60 text-slate-400 text-xs font-semibold px-4 py-2.5 rounded-xl cursor-not-allowed select-none"
+                  className="inline-flex items-center gap-2 bg-zinc-900/80 border border-zinc-700/60 text-zinc-400 text-xs font-semibold px-4 py-2.5 rounded-xl cursor-not-allowed select-none"
                   title={`Deposit PKR ${remainingNeeded.toLocaleString()} to access this assignment link`}
                 >
                   <Lock className="w-3.5 h-3.5 text-amber-400" />
@@ -413,7 +413,7 @@ export const TaskDetailPage: React.FC = () => {
                   href={task.protectedUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 bg-[#1459E8] hover:bg-[#2478FF] text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-md transition-all active:scale-95"
+                  className="inline-flex items-center gap-2 bg-gradient-to-r from-red-600 to-rose-600 hover:brightness-110 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-md transition-all active:scale-95"
                 >
                   <span>Open Task Assignment Link</span>
                   <ExternalLink className="w-3.5 h-3.5" />
@@ -428,7 +428,7 @@ export const TaskDetailPage: React.FC = () => {
               {task?.isPaid && !hasSufficientBalance ? (
                 <Link
                   to={`/app/deposits?amount=${remainingNeeded}`}
-                  className="w-full py-3 bg-gradient-to-r from-[#1264F5] to-[#168BFF] hover:from-[#168BFF] hover:to-[#1264F5] text-white font-bold text-xs sm:text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
+                  className="w-full py-3 bg-gradient-to-r from-red-600 to-rose-600 hover:brightness-110 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
                 >
                   <ArrowDownLeft className="w-4 h-4" />
                   <span>Deposit PKR {remainingNeeded.toLocaleString()} to Complete Task</span>
@@ -441,15 +441,15 @@ export const TaskDetailPage: React.FC = () => {
                     disabled={submitting}
                     className={`w-full py-3 font-bold text-xs sm:text-sm rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer active:scale-98 ${
                       task?.isPaid
-                        ? 'bg-gradient-to-r from-[#10D6A0] to-emerald-400 hover:from-emerald-400 hover:to-[#10D6A0] text-[#020B20] font-black'
-                        : 'bg-gradient-to-r from-[#1459E8] to-[#2478FF] hover:from-[#2478FF] hover:to-[#1459E8] text-white'
+                        ? 'bg-gradient-to-r from-emerald-500 to-emerald-400 hover:brightness-110 text-slate-950 font-black'
+                        : 'bg-gradient-to-r from-red-600 to-rose-600 hover:brightness-110 text-white'
                     }`}
                   >
                     {submitting ? (
                       <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     ) : task?.isPaid ? (
                       <>
-                        <Zap className="w-4 h-4 text-[#020B20]" />
+                        <Zap className="w-4 h-4 text-slate-950" />
                         <span>Complete Prepaid Task (+PKR {task?.rewardAmount?.toLocaleString() || 80} Reward)</span>
                       </>
                     ) : (
@@ -460,11 +460,11 @@ export const TaskDetailPage: React.FC = () => {
                     )}
                   </button>
 
-                  <p className="text-xs text-slate-400 text-center mt-2.5 select-none">
+                  <p className="text-xs text-zinc-400 text-center mt-2.5 select-none">
                     By submitting this task, I agree to the{' '}
                     <Link
                       to="/terms"
-                      className="text-amber-400 hover:text-amber-300 font-semibold underline underline-offset-2 transition-colors cursor-pointer"
+                      className="text-red-400 hover:text-red-300 font-semibold underline underline-offset-2 transition-colors cursor-pointer"
                     >
                       Terms and Conditions
                     </Link>

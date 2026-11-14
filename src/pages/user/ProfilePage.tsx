@@ -68,27 +68,27 @@ export const ProfilePage: React.FC = () => {
       {/* Account Identity Card */}
       <div className="royal-card p-6 sm:p-8 rounded-3xl space-y-4">
         <h2 className="text-sm font-bold text-white flex items-center gap-2">
-          <ShieldCheck className="w-4 h-4 text-[#22D3EE]" /> Verified Member Credentials
+          <ShieldCheck className="w-4 h-4 text-red-500" /> Verified Member Credentials
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="p-3.5 bg-[#020B20] border border-[#214B91] rounded-2xl text-xs">
-            <span className="text-slate-400 block text-[10px] uppercase font-semibold">Full Name</span>
+          <div className="p-3.5 bg-[#08080B] border border-zinc-800 rounded-2xl text-xs">
+            <span className="text-zinc-400 block text-[10px] uppercase font-semibold">Full Name</span>
             <span className="font-bold text-white text-sm mt-0.5 block">{user?.name}</span>
           </div>
 
-          <div className="p-3.5 bg-[#020B20] border border-[#214B91] rounded-2xl text-xs">
-            <span className="text-slate-400 block text-[10px] uppercase font-semibold">Registered Phone</span>
-            <span className="font-bold text-[#22D3EE] font-mono text-sm mt-0.5 block">{user?.phone}</span>
+          <div className="p-3.5 bg-[#08080B] border border-zinc-800 rounded-2xl text-xs">
+            <span className="text-zinc-400 block text-[10px] uppercase font-semibold">Registered Phone</span>
+            <span className="font-bold text-red-400 font-mono text-sm mt-0.5 block">{user?.phone}</span>
           </div>
 
-          <div className="p-3.5 bg-[#020B20] border border-[#214B91] rounded-2xl text-xs">
-            <span className="text-slate-400 block text-[10px] uppercase font-semibold">VIP Status</span>
-            <span className="font-bold text-[#FFD45A] text-sm mt-0.5 block">Official Member</span>
+          <div className="p-3.5 bg-[#08080B] border border-zinc-800 rounded-2xl text-xs">
+            <span className="text-zinc-400 block text-[10px] uppercase font-semibold">VIP Status</span>
+            <span className="font-bold text-amber-400 text-sm mt-0.5 block">Official Member</span>
           </div>
 
-          <div className="p-3.5 bg-[#020B20] border border-[#214B91] rounded-2xl text-xs">
-            <span className="text-slate-400 block text-[10px] uppercase font-semibold">Account Status</span>
+          <div className="p-3.5 bg-[#08080B] border border-zinc-800 rounded-2xl text-xs">
+            <span className="text-zinc-400 block text-[10px] uppercase font-semibold">Account Status</span>
             <span className="font-bold text-emerald-400 text-sm mt-0.5 block">{user?.accountStatus}</span>
           </div>
         </div>
@@ -97,12 +97,12 @@ export const ProfilePage: React.FC = () => {
       {/* Change Password Form */}
       <div className="royal-card p-6 sm:p-8 rounded-3xl space-y-4">
         <h2 className="text-sm font-bold text-white flex items-center gap-2">
-          <KeyRound className="w-4 h-4 text-[#FFD45A]" /> Change Account Password
+          <KeyRound className="w-4 h-4 text-red-500" /> Change Account Password
         </h2>
 
         <form onSubmit={handleUpdatePassword} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+            <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
               Current Password
             </label>
             <input
@@ -111,12 +111,12 @@ export const ProfilePage: React.FC = () => {
               placeholder="Enter existing password"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              className="w-full bg-[#020B20] border border-[#214B91] focus:border-[#2478FF] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none"
+              className="w-full bg-[#08080B] border border-zinc-800 focus:border-red-500 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+            <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
               New Password (min 6 characters)
             </label>
             <input
@@ -125,12 +125,12 @@ export const ProfilePage: React.FC = () => {
               placeholder="Enter new password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full bg-[#020B20] border border-[#214B91] focus:border-[#2478FF] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none"
+              className="w-full bg-[#08080B] border border-zinc-800 focus:border-red-500 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+            <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
               Confirm New Password
             </label>
             <input
@@ -139,14 +139,14 @@ export const ProfilePage: React.FC = () => {
               placeholder="Re-enter new password"
               value={confirmNewPassword}
               onChange={(e) => setConfirmNewPassword(e.target.value)}
-              className="w-full bg-[#020B20] border border-[#214B91] focus:border-[#2478FF] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none"
+              className="w-full bg-[#08080B] border border-zinc-800 focus:border-red-500 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-gradient-to-r from-[#1459E8] to-[#2478FF] hover:from-[#2478FF] hover:to-[#1459E8] text-white font-bold text-xs rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+            className="w-full py-3 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-red-600/25 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
           >
             {loading ? (
               <span className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
@@ -163,7 +163,7 @@ export const ProfilePage: React.FC = () => {
       <div className="text-center pt-3 pb-6">
         <Link
           to="/terms"
-          className="text-xs text-slate-400 hover:text-amber-300 underline underline-offset-4 transition-colors"
+          className="text-xs text-zinc-400 hover:text-red-400 underline underline-offset-4 transition-colors"
         >
           Terms and Conditions
         </Link>

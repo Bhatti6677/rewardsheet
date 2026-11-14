@@ -270,9 +270,9 @@ export const NotificationsPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-2.5">
-            <Bell className="w-7 h-7 text-[#FFD45A]" /> Notifications
+            <Bell className="w-7 h-7 text-red-500" /> Notifications
           </h1>
-          <p className="text-xs text-slate-300 mt-1">
+          <p className="text-xs text-zinc-300 mt-1">
             Official updates regarding your deposit approvals, withdrawals, and platform announcements.
           </p>
         </div>
@@ -280,9 +280,9 @@ export const NotificationsPage: React.FC = () => {
         {notifications.some((n) => !n.isRead && isAllowedNotification(n)) && (
           <button
             onClick={handleMarkAllRead}
-            className="self-start sm:self-auto flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-[#214B91] text-xs font-semibold text-slate-200 transition-colors"
+            className="self-start sm:self-auto flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-red-900/50 text-xs font-semibold text-zinc-200 transition-colors"
           >
-            <CheckCheck className="w-4 h-4 text-[#22D3EE]" /> Mark All as Read
+            <CheckCheck className="w-4 h-4 text-red-400" /> Mark All as Read
           </button>
         )}
       </div>
@@ -293,8 +293,8 @@ export const NotificationsPage: React.FC = () => {
           onClick={() => setActiveTab('ALL')}
           className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
             activeTab === 'ALL'
-              ? 'bg-[#2563EB] text-white shadow-sm'
-              : 'bg-white/5 text-slate-300 hover:bg-white/10 border border-white/5'
+              ? 'bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-sm'
+              : 'bg-white/5 text-zinc-300 hover:bg-white/10 border border-white/5'
           }`}
         >
           <span>All</span>
@@ -307,8 +307,8 @@ export const NotificationsPage: React.FC = () => {
           onClick={() => setActiveTab('DEPOSITS')}
           className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
             activeTab === 'DEPOSITS'
-              ? 'bg-[#2563EB] text-white shadow-sm'
-              : 'bg-white/5 text-slate-300 hover:bg-white/10 border border-white/5'
+              ? 'bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-sm'
+              : 'bg-white/5 text-zinc-300 hover:bg-white/10 border border-white/5'
           }`}
         >
           <span>Deposits</span>
@@ -321,8 +321,8 @@ export const NotificationsPage: React.FC = () => {
           onClick={() => setActiveTab('WITHDRAWALS')}
           className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
             activeTab === 'WITHDRAWALS'
-              ? 'bg-[#2563EB] text-white shadow-sm'
-              : 'bg-white/5 text-slate-300 hover:bg-white/10 border border-white/5'
+              ? 'bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-sm'
+              : 'bg-white/5 text-zinc-300 hover:bg-white/10 border border-white/5'
           }`}
         >
           <span>Withdrawals</span>
@@ -335,8 +335,8 @@ export const NotificationsPage: React.FC = () => {
           onClick={() => setActiveTab('ANNOUNCEMENTS')}
           className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
             activeTab === 'ANNOUNCEMENTS'
-              ? 'bg-[#2563EB] text-white shadow-sm'
-              : 'bg-white/5 text-slate-300 hover:bg-white/10 border border-white/5'
+              ? 'bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-sm'
+              : 'bg-white/5 text-zinc-300 hover:bg-white/10 border border-white/5'
           }`}
         >
           <span>Announcements</span>
@@ -347,7 +347,7 @@ export const NotificationsPage: React.FC = () => {
       </div>
 
       {loading ? (
-        <div className="py-16 text-center text-xs text-slate-400">Loading notifications...</div>
+        <div className="py-16 text-center text-xs text-zinc-400">Loading notifications...</div>
       ) : filteredNotifications.length > 0 ? (
         <div className="space-y-3">
           {filteredNotifications.map((n) => {
@@ -359,7 +359,7 @@ export const NotificationsPage: React.FC = () => {
                 key={n.id}
                 onClick={() => !n.isRead && handleMarkAsRead(n.id)}
                 className={`royal-card p-4 sm:p-5 rounded-2xl flex flex-col gap-3 transition-all cursor-pointer ${
-                  !n.isRead ? 'border-[#2478FF] bg-[#1459E8]/10' : 'opacity-85'
+                  !n.isRead ? 'border-red-500 bg-red-600/10' : 'opacity-85'
                 }`}
               >
                 <div className="flex items-start justify-between gap-3">
@@ -376,10 +376,10 @@ export const NotificationsPage: React.FC = () => {
                           {badgeText}
                         </span>
                         {!n.isRead && (
-                          <span className="w-2 h-2 rounded-full bg-[#FFD45A]" title="Unread" />
+                          <span className="w-2 h-2 rounded-full bg-red-500" title="Unread" />
                         )}
                       </div>
-                      <p className="text-xs text-slate-300 leading-relaxed pt-0.5 whitespace-pre-line">
+                      <p className="text-xs text-zinc-300 leading-relaxed pt-0.5 whitespace-pre-line">
                         {mainText}
                       </p>
                     </div>
@@ -392,29 +392,29 @@ export const NotificationsPage: React.FC = () => {
                         e.stopPropagation();
                         handleMarkAsRead(n.id);
                       }}
-                      className="p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition-colors flex-shrink-0"
+                      className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors flex-shrink-0"
                       title="Mark as read"
                     >
-                      <CheckCircle2 className="w-4 h-4 text-[#22D3EE]" />
+                      <CheckCircle2 className="w-4 h-4 text-red-400" />
                     </button>
                   )}
                 </div>
 
                 {/* Admin Comment Highlight Box */}
                 {adminComment && (
-                  <div className="ml-0 sm:ml-13 p-3 rounded-xl bg-black/40 border border-[#2563EB]/30 space-y-1">
-                    <div className="flex items-center gap-1.5 font-bold text-xs text-[#FFD45A]">
+                  <div className="ml-0 sm:ml-13 p-3 rounded-xl bg-black/40 border border-red-500/30 space-y-1">
+                    <div className="flex items-center gap-1.5 font-bold text-xs text-amber-400">
                       <MessageSquare className="w-3.5 h-3.5" />
                       <span>Admin Comment:</span>
                     </div>
-                    <p className="text-xs text-slate-200 leading-relaxed font-sans bg-white/[0.03] p-2.5 rounded-lg border border-white/5">
+                    <p className="text-xs text-zinc-200 leading-relaxed font-sans bg-white/[0.03] p-2.5 rounded-lg border border-white/5">
                       {adminComment}
                     </p>
                   </div>
                 )}
 
-                <div className="flex items-center gap-1 text-[10px] text-slate-400 pt-1 ml-0 sm:ml-13">
-                  <Clock className="w-3 h-3 text-slate-500" />
+                <div className="flex items-center gap-1 text-[10px] text-zinc-400 pt-1 ml-0 sm:ml-13">
+                  <Clock className="w-3 h-3 text-zinc-500" />
                   <span>{new Date(n.createdAt).toLocaleString()}</span>
                 </div>
               </div>
@@ -423,8 +423,8 @@ export const NotificationsPage: React.FC = () => {
         </div>
       ) : (
         <div className="royal-card p-12 text-center rounded-3xl space-y-2">
-          <Bell className="w-8 h-8 text-slate-500 mx-auto opacity-40" />
-          <p className="text-xs text-slate-400">You don't have any notifications right now.</p>
+          <Bell className="w-8 h-8 text-zinc-500 mx-auto opacity-40" />
+          <p className="text-xs text-zinc-400">You don't have any notifications right now.</p>
         </div>
       )}
     </div>

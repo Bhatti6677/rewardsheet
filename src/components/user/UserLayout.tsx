@@ -147,45 +147,45 @@ export const UserLayout: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#04132F] text-slate-100 flex flex-col selection:bg-[#1459E8] selection:text-white w-full max-w-full overflow-x-hidden">
+    <div className="min-h-screen bg-[#08080B] text-zinc-100 flex flex-col selection:bg-red-600 selection:text-white w-full max-w-full overflow-x-hidden">
       {/* Main Header */}
-      <header className="sticky top-0 z-40 bg-[#020B20]/95 backdrop-blur-md border-b border-[#214B91]/50 px-2 sm:px-5 lg:px-6 py-2 sm:py-2.5 w-full max-w-full overflow-hidden">
+      <header className="sticky top-0 z-40 bg-[#050507]/95 backdrop-blur-xl border-b border-red-950/60 px-2 sm:px-5 lg:px-6 py-2 sm:py-2.5 w-full max-w-full overflow-hidden shadow-lg shadow-black/50">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-1.5 sm:gap-2 w-full">
           {/* Logo & Brand */}
           <Link to="/app" className="flex items-center gap-1.5 sm:gap-2 group flex-shrink-0 min-w-0">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#1459E8] to-[#FFD45A] p-0.5 shadow-md shadow-[#1459E8]/20 group-hover:scale-105 transition-transform">
-              <div className="w-full h-full bg-[#04132F] rounded-[6px] flex items-center justify-center">
-                <Crown className="w-4 h-4 text-[#FFD45A]" />
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-red-700 via-red-500 to-amber-400 p-0.5 shadow-md shadow-red-600/25 group-hover:scale-105 transition-transform">
+              <div className="w-full h-full bg-[#0A0A0E] rounded-[6px] flex items-center justify-center">
+                <Crown className="w-4 h-4 text-red-500" />
               </div>
             </div>
             <div>
-              <span className="text-xs sm:text-sm font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-[#FFD45A] bg-clip-text text-transparent block leading-tight">
+              <span className="text-xs sm:text-sm font-extrabold tracking-tight bg-gradient-to-r from-white via-zinc-100 to-red-400 bg-clip-text text-transparent block leading-tight">
                 EARN STREET
               </span>
-              <span className="block text-[8px] sm:text-[9px] text-[#22D3EE] font-bold tracking-wider uppercase leading-none">
+              <span className="block text-[8px] sm:text-[9px] text-red-400 font-bold tracking-wider uppercase leading-none">
                 {user?.phone || 'Official'}
               </span>
             </div>
           </Link>
 
           {/* Center Desktop Quick Nav */}
-          <nav className="hidden lg:flex items-center gap-1 bg-[#04132F]/80 p-0.5 rounded-lg border border-[#214B91]/40">
+          <nav className="hidden lg:flex items-center gap-1 bg-[#100D10] p-1 rounded-xl border border-red-950/60">
             {navItems.slice(0, 5).map((item) => {
               const isActive = location.pathname === item.path || (item.path !== '/app' && location.pathname.startsWith(item.path));
               return (
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all flex items-center gap-1.5 ${
+                  className={`px-3 py-1 rounded-lg text-[11px] font-semibold transition-all flex items-center gap-1.5 ${
                     isActive
-                      ? 'bg-[#1459E8] text-white shadow-xs'
-                      : 'text-slate-300 hover:text-white hover:bg-white/5'
+                      ? 'bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-sm shadow-red-600/30'
+                      : 'text-zinc-400 hover:text-white hover:bg-white/5'
                   }`}
                 >
                   <item.icon className="w-3 h-3" />
                   {item.label}
                   {item.badge && (
-                    <span className="bg-[#FFD45A] text-[#020B20] text-[8px] font-bold px-1 py-0.2 rounded-full leading-none">
+                    <span className="bg-amber-400 text-[#050507] text-[8px] font-black px-1.5 py-0.2 rounded-full leading-none">
                       {item.badge}
                     </span>
                   )}
@@ -199,11 +199,11 @@ export const UserLayout: React.FC = () => {
             {/* Credit Points (CP) Box - Clean & compact */}
             <Link
               to="/app"
-              className="flex items-center gap-1 bg-[#061633] hover:bg-[#071B3A] border border-[#22D3EE]/30 hover:border-[#22D3EE]/60 rounded-lg px-1.5 sm:px-2.5 py-1 transition-all group shadow-2xs"
+              className="flex items-center gap-1 bg-[#120E12] hover:bg-[#191217] border border-red-500/30 hover:border-red-500/60 rounded-lg px-1.5 sm:px-2.5 py-1 transition-all group shadow-2xs"
               title="Credit Points (CP)"
             >
-              <span className="text-[8px] sm:text-[9px] text-[#A6C4FF] font-semibold uppercase">CP:</span>
-              <span className="text-[10px] sm:text-xs font-bold text-[#22D3EE]">
+              <span className="text-[8px] sm:text-[9px] text-zinc-400 font-semibold uppercase">CP:</span>
+              <span className="text-[10px] sm:text-xs font-bold text-red-400">
                 {(wallet?.creditPoints ?? 100).toLocaleString()}
               </span>
             </Link>
@@ -211,11 +211,11 @@ export const UserLayout: React.FC = () => {
             {/* Wallet Balance (PKR) Box - Clean & compact */}
             <Link
               to="/app/wallet"
-              className="flex items-center gap-1 bg-[#061633] hover:bg-[#071B3A] border border-[#FFD45A]/30 hover:border-[#FFD45A]/60 rounded-lg px-1.5 sm:px-2.5 py-1 transition-all group shadow-2xs"
+              className="flex items-center gap-1 bg-[#120E12] hover:bg-[#191217] border border-amber-500/30 hover:border-amber-500/60 rounded-lg px-1.5 sm:px-2.5 py-1 transition-all group shadow-2xs"
               title="PKR Available Balance"
             >
-              <span className="text-[8px] sm:text-[9px] text-slate-400 font-semibold uppercase">PKR:</span>
-              <span className="text-[10px] sm:text-xs font-bold text-[#FFD45A]">
+              <span className="text-[8px] sm:text-[9px] text-zinc-400 font-semibold uppercase">PKR:</span>
+              <span className="text-[10px] sm:text-xs font-bold text-amber-400">
                 {(wallet?.availableBalance || 0).toLocaleString()}
               </span>
             </Link>
@@ -224,12 +224,12 @@ export const UserLayout: React.FC = () => {
             <Link
               to="/app/notifications"
               onClick={() => setUnreadCount(0)}
-              className="relative p-1.5 rounded-lg bg-[#061633] border border-[#214B91]/50 text-slate-300 hover:text-white hover:border-[#2478FF] transition-all"
+              className="relative p-1.5 rounded-lg bg-[#120E12] border border-zinc-800 text-zinc-300 hover:text-white hover:border-red-500 transition-all"
               title="Notifications"
             >
               <Bell className="w-4 h-4" />
               {unreadCount > 0 && location.pathname !== '/app/notifications' && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#EF4444] text-white text-[9px] font-bold rounded-full flex items-center justify-center border-2 border-[#020B20] animate-bounce">
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-600 text-white text-[9px] font-bold rounded-full flex items-center justify-center border-2 border-[#050507] animate-bounce">
                   {unreadCount > 9 ? '9+' : unreadCount}
                 </span>
               )}
@@ -238,7 +238,7 @@ export const UserLayout: React.FC = () => {
             {/* User Logout Button */}
             <button
               onClick={() => logout()}
-              className="hidden sm:flex items-center gap-1 p-1.5 px-2 rounded-lg bg-[#061633] border border-[#214B91]/50 text-slate-300 hover:text-red-400 hover:border-red-500/50 transition-all text-[11px] font-medium"
+              className="hidden sm:flex items-center gap-1 p-1.5 px-2 rounded-lg bg-[#120E12] border border-zinc-800 text-zinc-300 hover:text-red-400 hover:border-red-500/50 transition-all text-[11px] font-medium"
               title="Logout"
             >
               <LogOut className="w-3.5 h-3.5" />
@@ -248,7 +248,7 @@ export const UserLayout: React.FC = () => {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-1.5 rounded-lg bg-[#061633] border border-[#214B91]/50 text-slate-300 hover:text-white"
+              className="md:hidden p-1.5 rounded-lg bg-[#120E12] border border-zinc-800 text-zinc-300 hover:text-white"
             >
               {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
@@ -259,18 +259,18 @@ export const UserLayout: React.FC = () => {
       {/* Mobile Slide-Out Drawer (Popup page with locked background scroll) */}
       {mobileMenuOpen && (
         <div
-          className="md:hidden fixed inset-0 z-50 bg-[#020B20]/95 backdrop-blur-xl flex flex-col p-4 sm:p-6 h-[100dvh] max-h-screen overflow-hidden overscroll-contain animate-in fade-in duration-200"
+          className="md:hidden fixed inset-0 z-50 bg-[#050507]/95 backdrop-blur-xl flex flex-col p-4 sm:p-6 h-[100dvh] max-h-screen overflow-hidden overscroll-contain animate-in fade-in duration-200"
           style={{ touchAction: 'pan-y' }}
         >
           {/* Drawer Top Bar */}
-          <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-[#214B91]/50 flex-shrink-0">
+          <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-red-950/60 flex-shrink-0">
             <div className="flex items-center gap-2.5">
-              <Crown className="w-6 h-6 text-[#FFD45A]" />
+              <Crown className="w-6 h-6 text-red-500" />
               <span className="font-extrabold text-lg text-white">EARN STREET</span>
             </div>
             <button
               onClick={() => setMobileMenuOpen(false)}
-              className="p-2 rounded-xl bg-white/5 border border-[#214B91]/40 text-slate-300 hover:text-white transition-colors cursor-pointer"
+              className="p-2 rounded-xl bg-white/5 border border-zinc-800 text-zinc-300 hover:text-white transition-colors cursor-pointer"
               aria-label="Close menu"
             >
               <X className="w-5 h-5" />
@@ -280,13 +280,13 @@ export const UserLayout: React.FC = () => {
           {/* Drawer Scrollable Content Area */}
           <div className="flex-1 overflow-y-auto overscroll-contain py-3 sm:py-4 space-y-3 min-h-0 pr-1 select-none">
             {/* User Profile Card */}
-            <div className="p-3 bg-[#04132F] rounded-xl border border-[#214B91]">
-              <p className="text-xs text-slate-400">Logged in as</p>
+            <div className="p-3 bg-[#110D10] rounded-xl border border-red-500/30">
+              <p className="text-xs text-zinc-400">Logged in as</p>
               <p className="font-bold text-white text-base">{user?.name}</p>
-              <p className="text-xs text-[#22D3EE] font-mono">{user?.phone}</p>
-              <div className="mt-2 pt-2 border-t border-[#214B91]/50 flex justify-between items-center text-xs">
-                <span className="text-slate-300">Wallet Balance:</span>
-                <span className="text-[#FFD45A] font-bold text-sm">
+              <p className="text-xs text-red-400 font-mono">{user?.phone}</p>
+              <div className="mt-2 pt-2 border-t border-zinc-800 flex justify-between items-center text-xs">
+                <span className="text-zinc-300">Wallet Balance:</span>
+                <span className="text-amber-400 font-bold text-sm">
                   PKR {(wallet?.availableBalance || 0).toLocaleString()}
                 </span>
               </div>
@@ -304,22 +304,22 @@ export const UserLayout: React.FC = () => {
                       setUnreadCount(0);
                     }
                   }}
-                  className="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 border border-transparent hover:border-[#214B91]/50 text-slate-200 transition-all active:scale-[0.98]"
+                  className="flex items-center justify-between p-3 rounded-xl hover:bg-red-500/10 border border-transparent hover:border-red-500/30 text-zinc-200 transition-all active:scale-[0.98]"
                 >
                   <div className="flex items-center gap-3">
-                    <item.icon className="w-5 h-5 text-[#2478FF]" />
+                    <item.icon className="w-5 h-5 text-red-500" />
                     <span className="font-medium text-sm">{item.label}</span>
                   </div>
                   {item.badge ? (
-                    <span className="bg-[#FFD45A] text-[#020B20] text-[10px] font-black px-2 py-0.5 rounded-full">
+                    <span className="bg-amber-400 text-[#050507] text-[10px] font-black px-2 py-0.5 rounded-full">
                       {item.badge}
                     </span>
                   ) : item.badgeCount && item.badgeCount > 0 ? (
-                    <span className="bg-[#EF4444] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    <span className="bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
                       {item.badgeCount}
                     </span>
                   ) : (
-                    <ChevronRight className="w-4 h-4 text-slate-500" />
+                    <ChevronRight className="w-4 h-4 text-zinc-500" />
                   )}
                 </Link>
               ))}
@@ -327,13 +327,13 @@ export const UserLayout: React.FC = () => {
           </div>
 
           {/* Drawer Footer Actions */}
-          <div className="pt-3 sm:pt-4 border-t border-[#214B91]/50 flex-shrink-0">
+          <div className="pt-3 sm:pt-4 border-t border-zinc-800 flex-shrink-0">
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
                 logout();
               }}
-              className="w-full flex items-center justify-center gap-2 py-2.5 sm:py-3 rounded-xl bg-red-500/10 text-red-400 border border-red-500/30 font-semibold text-sm hover:bg-red-500/20 active:scale-[0.98] transition-all cursor-pointer"
+              className="w-full flex items-center justify-center gap-2 py-2.5 sm:py-3 rounded-xl bg-red-600/15 text-red-400 border border-red-500/30 font-semibold text-sm hover:bg-red-600/25 active:scale-[0.98] transition-all cursor-pointer"
             >
               <LogOut className="w-4 h-4" />
               Sign Out
@@ -351,7 +351,7 @@ export const UserLayout: React.FC = () => {
 
       {/* Mobile Bottom Navigation Bar */}
       <nav
-        className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#020B20]/95 backdrop-blur-lg border-t border-[#214B91]/60 px-2 py-2 flex items-center justify-around shadow-2xl select-none"
+        className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#050507]/95 backdrop-blur-xl border-t border-red-950/70 px-2 py-2 flex items-center justify-around shadow-2xl select-none"
         style={{ touchAction: 'manipulation' }}
       >
         {bottomNavItems.map((item) => {
@@ -365,13 +365,13 @@ export const UserLayout: React.FC = () => {
               onDoubleClick={(e) => handleBottomNavDoubleClick(item.path, e)}
               title="Tap to open • Double tap to reload & update data"
               className={`flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all relative active:scale-95 cursor-pointer ${
-                isActive ? 'text-[#FFD45A]' : 'text-slate-400 hover:text-slate-200'
+                isActive ? 'text-red-500' : 'text-zinc-400 hover:text-zinc-200'
               }`}
             >
               {isActive && (
-                <span className="absolute -top-1 w-8 h-1 bg-[#FFD45A] rounded-full shadow-sm shadow-[#FFD45A]" />
+                <span className="absolute -top-1 w-8 h-1 bg-red-500 rounded-full shadow-sm shadow-red-500" />
               )}
-              <item.icon className={`w-5 h-5 transition-transform ${isRefreshing ? 'animate-spin text-[#22D3EE]' : isActive ? 'scale-110' : ''}`} />
+              <item.icon className={`w-5 h-5 transition-transform ${isRefreshing ? 'animate-spin text-red-400' : isActive ? 'scale-110' : ''}`} />
               <span className="text-[10px] font-medium mt-1">
                 {isRefreshing ? 'Updating...' : item.label}
               </span>

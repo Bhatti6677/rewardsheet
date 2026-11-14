@@ -313,8 +313,8 @@ export const TasksPage: React.FC = () => {
   if (loading && levels.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-3">
-        <div className="w-10 h-10 border-4 border-[#1459E8]/30 border-t-[#FFD45A] rounded-full animate-spin" />
-        <p className="text-xs text-[#B7C6E4] font-medium">Loading Tasks & Levels...</p>
+        <div className="w-10 h-10 border-4 border-red-600/30 border-t-red-500 rounded-full animate-spin" />
+        <p className="text-xs text-zinc-400 font-medium">Loading Tasks & Levels...</p>
       </div>
     );
   }
@@ -406,7 +406,7 @@ export const TasksPage: React.FC = () => {
       {/* ========================================================
           1. CLEAN LEVEL TABS (Fast & Simple 10-Level Switcher)
           ======================================================== */}
-      <section className="bg-[#05142B] border border-[#16386E]/70 p-1.5 sm:p-2 rounded-2xl shadow-lg">
+      <section className="bg-[#0E0B0E] border border-red-900/45 p-1.5 sm:p-2 rounded-2xl shadow-lg">
         <div
           ref={tabsScrollRef}
           className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-none py-0.5"
@@ -427,23 +427,23 @@ export const TasksPage: React.FC = () => {
                 onClick={() => handleSelectLevel(lvl.levelNumber)}
                 className={`flex-1 min-w-[74px] sm:min-w-[84px] py-2 px-2 rounded-xl font-bold text-xs transition-all flex flex-col items-center gap-1 cursor-pointer ${
                   isSelected
-                    ? 'bg-gradient-to-r from-[#1459E8] to-[#1264F5] text-white shadow-md ring-2 ring-[#FFD45A]/70 scale-[1.02]'
+                    ? 'bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-md ring-2 ring-amber-400/70 scale-[1.02]'
                     : isCompleted
-                    ? 'bg-[#06242B] text-emerald-400 border border-emerald-500/30 hover:bg-[#08333D]'
+                    ? 'bg-[#091F18] text-emerald-400 border border-emerald-500/30 hover:bg-[#0D2B22]'
                     : isPreviewOnly
-                    ? 'bg-[#061838] text-sky-300 border border-sky-500/30 hover:bg-[#09224E]'
+                    ? 'bg-[#160F14] text-rose-300 border border-rose-500/30 hover:bg-[#1F151C]'
                     : isLocked
-                    ? 'bg-[#030E22]/60 text-slate-500 border border-[#102447]/60 hover:bg-[#051530]'
-                    : 'bg-[#071D42] text-amber-300 border border-amber-500/30 hover:bg-[#0A275A]'
+                    ? 'bg-[#08080B]/80 text-zinc-500 border border-zinc-800/80 hover:bg-[#101015]'
+                    : 'bg-[#180E12] text-amber-300 border border-red-500/30 hover:bg-[#221319]'
                 }`}
               >
                 <div className="flex items-center gap-1 text-[11px] sm:text-xs">
                   {isCompleted ? (
                     <Check className="w-3.5 h-3.5 text-emerald-400" />
                   ) : isPreviewOnly ? (
-                    <Sparkles className="w-3.5 h-3.5 text-sky-400" />
+                    <Sparkles className="w-3.5 h-3.5 text-rose-400" />
                   ) : isLocked ? (
-                    <Lock className="w-3.5 h-3.5 text-slate-500" />
+                    <Lock className="w-3.5 h-3.5 text-zinc-500" />
                   ) : (
                     <Clock className="w-3.5 h-3.5 text-amber-400" />
                   )}
@@ -452,13 +452,13 @@ export const TasksPage: React.FC = () => {
                 <span
                   className={`text-[9px] font-semibold ${
                     isSelected
-                      ? 'text-[#FFD45A]'
+                      ? 'text-amber-300'
                       : isCompleted
                       ? 'text-emerald-400/80'
                       : isPreviewOnly
-                      ? 'text-sky-300/80'
+                      ? 'text-rose-300/80'
                       : isLocked
-                      ? 'text-slate-500'
+                      ? 'text-zinc-500'
                       : 'text-amber-400/80'
                   }`}
                 >
@@ -474,19 +474,19 @@ export const TasksPage: React.FC = () => {
           2. ACTIVE LEVEL SUMMARY CARD (Crisp & Informative)
           Everything in one unified card: Icon, Name, Progress & Rewards
           ======================================================== */}
-      <section className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#061B3D] via-[#082452] to-[#04122A] border border-[#184282]/80 shadow-xl space-y-4">
+      <section className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#180B10] via-[#120B0F] to-[#0A0A0D] border border-red-900/55 shadow-xl space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           {/* Left: Icon & Level Details */}
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-[#1264F5] to-[#FFD45A] p-0.5 shadow-md flex-shrink-0">
-              <div className="w-full h-full bg-[#030E24] rounded-[14px] flex items-center justify-center">
-                <LevelIcon className="w-6 h-6 sm:w-7 sm:h-7 text-[#FFD45A]" />
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-red-600 to-amber-500 p-0.5 shadow-md flex-shrink-0">
+              <div className="w-full h-full bg-[#09090C] rounded-[14px] flex items-center justify-center">
+                <LevelIcon className="w-6 h-6 sm:w-7 sm:h-7 text-red-500" />
               </div>
             </div>
 
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-[10px] uppercase font-black tracking-wider text-[#FFD45A] bg-[#FFD45A]/15 border border-[#FFD45A]/35 px-2 py-0.5 rounded-md">
+                <span className="text-[10px] uppercase font-black tracking-wider text-amber-400 bg-amber-500/15 border border-amber-500/35 px-2 py-0.5 rounded-md">
                   Level {activeLevelNumber}
                 </span>
                 <span
@@ -494,8 +494,8 @@ export const TasksPage: React.FC = () => {
                     isSelectedLevelCompleted
                       ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-400/40'
                       : isSelectedLevelLocked
-                      ? 'bg-slate-800 text-slate-400 border border-slate-700'
-                      : 'bg-amber-500/20 text-amber-400 border border-amber-400/40'
+                      ? 'bg-zinc-900 text-zinc-400 border border-zinc-800'
+                      : 'bg-red-500/20 text-red-400 border border-red-500/40'
                   }`}
                 >
                   {isSelectedLevelCompleted
@@ -513,12 +513,12 @@ export const TasksPage: React.FC = () => {
 
           {/* Right: Total Tasks Capsule */}
           <div className="flex items-center gap-2 self-start sm:self-auto">
-            <div className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#030E24]/90 border border-[#214B91]/50 shadow-sm backdrop-blur-md">
-              <div className="w-6 h-6 rounded-lg bg-[#1459E8]/20 border border-[#1459E8]/40 flex items-center justify-center flex-shrink-0">
-                <Layers className="w-3.5 h-3.5 text-[#22D3EE]" />
+            <div className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#09090C]/90 border border-red-900/50 shadow-sm backdrop-blur-md">
+              <div className="w-6 h-6 rounded-lg bg-red-600/20 border border-red-500/40 flex items-center justify-center flex-shrink-0">
+                <Layers className="w-3.5 h-3.5 text-red-400" />
               </div>
               <div className="text-left leading-tight">
-                <span className="text-[8px] sm:text-[9px] text-slate-400 font-bold uppercase tracking-wider block">Level Tasks</span>
+                <span className="text-[8px] sm:text-[9px] text-zinc-400 font-bold uppercase tracking-wider block">Level Tasks</span>
                 <span className="text-xs sm:text-sm font-black text-white">
                   {totalTasksCount} Tasks
                 </span>
@@ -528,10 +528,10 @@ export const TasksPage: React.FC = () => {
         </div>
 
         {/* Clean Progress Bar */}
-        <div className="space-y-1.5 pt-1 border-t border-[#16386E]/60">
+        <div className="space-y-1.5 pt-1 border-t border-zinc-800/80">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-[#A6BCD9] font-medium flex items-center gap-1.5">
-              <Target className="w-3.5 h-3.5 text-[#FFD45A]" />
+            <span className="text-zinc-300 font-medium flex items-center gap-1.5">
+              <Target className="w-3.5 h-3.5 text-red-500" />
               Progress
             </span>
             <span className="font-bold text-white text-xs">
@@ -541,9 +541,9 @@ export const TasksPage: React.FC = () => {
             </span>
           </div>
 
-          <div className="w-full bg-[#030D1E] rounded-full h-2.5 overflow-hidden border border-[#16386E]/50">
+          <div className="w-full bg-[#07070A] rounded-full h-2.5 overflow-hidden border border-zinc-800">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-[#1459E8] via-[#22D3EE] to-emerald-400 transition-all duration-300"
+              className="h-full rounded-full bg-gradient-to-r from-red-600 via-rose-500 to-amber-400 transition-all duration-300"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
@@ -551,15 +551,15 @@ export const TasksPage: React.FC = () => {
 
         {/* Notice if locked */}
         {isSelectedLevelLocked && (
-          <div className="p-3.5 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-between gap-3 text-xs">
-            <span className="text-slate-200">
+          <div className="p-3.5 rounded-xl bg-red-950/30 border border-red-500/30 flex items-center justify-between gap-3 text-xs">
+            <span className="text-zinc-200">
               {selectedLevelSummary?.lockReason ||
                 `Level ${activeLevelNumber} is locked. Please complete Level ${userCurrentLevelNumber} first to unlock Level ${activeLevelNumber}.`}
             </span>
             {userCurrentLevelNumber !== activeLevelNumber && (
               <button
                 onClick={() => handleSelectLevel(userCurrentLevelNumber)}
-                className="text-[#FFD45A] font-bold hover:underline flex-shrink-0 cursor-pointer"
+                className="text-red-400 font-bold hover:underline flex-shrink-0 cursor-pointer"
               >
                 Active Lvl {userCurrentLevelNumber} →
               </button>
@@ -569,7 +569,7 @@ export const TasksPage: React.FC = () => {
 
         {/* Notice for Level 4 if user completed their 1 task */}
         {activeLevelNumber === 4 && (selectedLevelSummary?.approvedTaskCount ?? 0) >= 1 && (
-          <div className="p-3.5 rounded-xl bg-gradient-to-r from-emerald-500/15 via-[#07242B] to-emerald-500/15 border border-emerald-400/40 flex items-center justify-between gap-3 text-xs">
+          <div className="p-3.5 rounded-xl bg-gradient-to-r from-emerald-500/15 via-[#0A1814] to-emerald-500/15 border border-emerald-400/40 flex items-center justify-between gap-3 text-xs">
             <div className="flex items-center gap-2.5 text-emerald-300">
               <Sparkles className="w-4 h-4 text-emerald-400 flex-shrink-0" />
               <span>
@@ -589,14 +589,14 @@ export const TasksPage: React.FC = () => {
 
         {/* Notice for Level 5 requiring Level 4 Task */}
         {activeLevelNumber === 5 && !isSelectedLevelLocked && tasks && tasks.length > 0 && tasks[0]?.userStatus === 'LOCKED' && (
-          <div className="p-3.5 rounded-xl bg-gradient-to-r from-amber-500/15 via-[#071F42] to-amber-500/15 border border-amber-400/40 flex items-center justify-between gap-3 text-xs">
-            <div className="flex items-center gap-2.5 text-amber-300">
-              <Sparkles className="w-4 h-4 text-amber-400 flex-shrink-0" />
+          <div className="p-3.5 rounded-xl bg-gradient-to-r from-red-500/15 via-[#180B10] to-red-500/15 border border-red-500/40 flex items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2.5 text-red-300">
+              <Sparkles className="w-4 h-4 text-red-400 flex-shrink-0" />
               <span>{tasks[0]?.lockMessage || 'Complete any one Level 4 prepaid task to unlock Level 5 task participation.'}</span>
             </div>
             <button
               onClick={() => handleSelectLevel(4)}
-              className="px-3 py-1.5 rounded-lg bg-[#FFD45A] hover:bg-amber-400 text-slate-950 font-bold text-xs flex-shrink-0 cursor-pointer transition-all shadow-sm"
+              className="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white font-bold text-xs flex-shrink-0 cursor-pointer transition-all shadow-sm"
             >
               Go to Level 4 →
             </button>
@@ -606,18 +606,18 @@ export const TasksPage: React.FC = () => {
 
       {/* Unlock Level Button (if unlocked & ready to activate) */}
       {selectedLevelSummary && !isSelectedLevelLocked && !isLevelUnlockedByUser(selectedLevelSummary) && (
-        <div className="p-4 rounded-2xl bg-gradient-to-r from-[#FFD45A]/20 via-[#071D42] to-emerald-500/20 border-2 border-[#FFD45A]/60 flex items-center justify-between gap-4">
+        <div className="p-4 rounded-2xl bg-gradient-to-r from-red-600/20 via-[#140B0E] to-amber-500/20 border-2 border-red-500/60 flex items-center justify-between gap-4">
           <div className="space-y-0.5">
             <h4 className="text-sm font-black text-white flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-[#FFD45A]" />
+              <Sparkles className="w-4 h-4 text-amber-400" />
               Level {activeLevelNumber} Ready for Activation!
             </h4>
-            <p className="text-xs text-[#A6BCD9]">Click to activate your {totalTasksCount} new assignments.</p>
+            <p className="text-xs text-zinc-300">Click to activate your {totalTasksCount} new assignments.</p>
           </div>
           <button
             onClick={() => handleUnlockLevelAction(selectedLevelSummary)}
             disabled={unlockingLevel}
-            className="py-2.5 px-5 rounded-xl bg-gradient-to-r from-[#FFD45A] to-amber-400 hover:brightness-110 text-slate-950 font-black text-xs shadow-md transition-all cursor-pointer flex-shrink-0"
+            className="py-2.5 px-5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:brightness-110 text-white font-black text-xs shadow-md transition-all cursor-pointer flex-shrink-0"
           >
             {unlockingLevel ? 'Activating...' : `Unlock Level ${activeLevelNumber} 🎉`}
           </button>
@@ -625,24 +625,21 @@ export const TasksPage: React.FC = () => {
       )}
 
       {/* ========================================================
-          3. STANDALONE TASK CARDS (Clean, Easy & Direct)
-          ======================================================== */}
-      {/* ========================================================
           3. STANDALONE TASK ROWS (Compact, Clean & Direct)
           ======================================================== */}
       <section ref={tasksSectionRef} className="space-y-2">
         <div className="flex items-center justify-between px-1 mb-1">
           <h3 className="text-sm sm:text-base font-black text-white flex items-center gap-2">
-            <Layers className="w-4 h-4 text-[#22D3EE]" />
+            <Layers className="w-4 h-4 text-red-500" />
             <span>Tasks in Level {activeLevelNumber}</span>
           </h3>
-          <span className="text-xs text-[#A6BCD9] font-medium">
+          <span className="text-xs text-zinc-400 font-medium">
             {approvedTaskCount} of {totalTasksCount} Approved
           </span>
         </div>
 
         {/* Desktop column header labels */}
-        <div className="hidden sm:flex items-center justify-between px-4 py-1 text-[11px] font-bold uppercase tracking-wider text-[#7E96BF]/80">
+        <div className="hidden sm:flex items-center justify-between px-4 py-1 text-[11px] font-bold uppercase tracking-wider text-zinc-500">
           <div className="flex-1">Task Assignment</div>
           <div className="flex items-center gap-5">
             <span className="w-24 text-right">Reward</span>
@@ -652,8 +649,8 @@ export const TasksPage: React.FC = () => {
 
         {tasksLoading && (!tasks || tasks.length === 0) ? (
           <div className="py-12 text-center space-y-2">
-            <div className="w-8 h-8 border-3 border-[#1264F5]/30 border-t-[#FFD45A] rounded-full animate-spin mx-auto" />
-            <p className="text-xs text-[#8194B7]">Loading tasks...</p>
+            <div className="w-8 h-8 border-3 border-red-600/30 border-t-red-500 rounded-full animate-spin mx-auto" />
+            <p className="text-xs text-zinc-400">Loading tasks...</p>
           </div>
         ) : tasks && tasks.length > 0 ? (
           <div className="space-y-2">
@@ -665,8 +662,6 @@ export const TasksPage: React.FC = () => {
               );
               const unlockFee = task.unlockFee || 0;
 
-              // Level completion check: past levels remain fully openable.
-              // Task 1 of any unlocked level is always openable.
               const isPastCompletedLevel =
                 activeLevelNumber === 4
                   ? (selectedLevelSummary?.approvedTaskCount ?? 0) >= 1
@@ -684,8 +679,6 @@ export const TasksPage: React.FC = () => {
                 !isSelectedLevelLocked &&
                 task.userStatus === 'REJECTED';
 
-              // For ALL Levels (1 to 10): if a task is locked, hide its task name, free/paid status, and commission!
-              // Clicking on the locked task opens the locked notice instructing the user to complete the current level/task first.
               const isHiddenLockedTask = isTaskLocked;
 
               return (
@@ -697,16 +690,16 @@ export const TasksPage: React.FC = () => {
                   }}
                   className={`flex items-center justify-between gap-3 p-2.5 sm:px-4 sm:py-3 rounded-xl border transition-all duration-150 ${
                     isHiddenLockedTask
-                      ? 'bg-[#040E24]/60 border-[#142C56]/50 opacity-80 hover:border-amber-500/40 cursor-pointer'
+                      ? 'bg-[#0B090C]/80 border-zinc-800/70 opacity-80 hover:border-red-500/40 cursor-pointer'
                       : isTaskLocked
-                      ? 'bg-[#040E24]/60 border-[#142C56]/40 opacity-85 hover:border-amber-500/40 cursor-pointer'
+                      ? 'bg-[#0B090C]/80 border-zinc-800/70 opacity-85 hover:border-red-500/40 cursor-pointer'
                       : isApproved
-                      ? 'bg-[#06242B]/75 border-emerald-500/35 hover:border-emerald-400 cursor-pointer'
+                      ? 'bg-[#081C15]/80 border-emerald-500/35 hover:border-emerald-400 cursor-pointer'
                       : isPending
-                      ? 'bg-[#08224C]/75 border-[#168BFF]/40 hover:border-[#22D3EE] cursor-pointer'
+                      ? 'bg-[#190D12]/80 border-red-500/40 hover:border-red-400 cursor-pointer'
                       : isPrepaid
-                      ? 'bg-gradient-to-r from-[#142C58] to-[#07193A] border-[#FFD45A]/70 hover:border-[#FFD45A] cursor-pointer'
-                      : 'bg-[#071E44]/80 border-[#1A4580]/70 hover:border-[#22D3EE] cursor-pointer'
+                      ? 'bg-gradient-to-r from-[#240B11] to-[#11090C] border-amber-400/70 hover:border-amber-400 cursor-pointer'
+                      : 'bg-[#130C10]/90 border-red-900/50 hover:border-red-500 cursor-pointer'
                   }`}
                 >
                   {/* Left: Task Number & Task Name */}
@@ -716,12 +709,12 @@ export const TasksPage: React.FC = () => {
                         isApproved
                           ? 'bg-emerald-500/20 text-emerald-400'
                           : isPending
-                          ? 'bg-[#1264F5]/25 text-[#22D3EE]'
+                          ? 'bg-red-500/25 text-red-400'
                           : isTaskLocked
-                          ? 'bg-slate-800 text-slate-400'
+                          ? 'bg-zinc-900 text-zinc-500 border border-zinc-800'
                           : isPrepaid
-                          ? 'bg-[#FFD45A] text-slate-950 font-black'
-                          : 'bg-[#1459E8]/30 text-white'
+                          ? 'bg-amber-400 text-slate-950 font-black'
+                          : 'bg-red-600/25 text-red-400 border border-red-500/30'
                       }`}
                     >
                       #{task.taskNumber < 10 ? `0${task.taskNumber}` : task.taskNumber}
@@ -729,8 +722,8 @@ export const TasksPage: React.FC = () => {
 
                     <div className="min-w-0 flex items-center gap-2 flex-wrap">
                       {isHiddenLockedTask ? (
-                        <h4 className="text-xs sm:text-sm font-bold text-slate-400 flex items-center gap-1.5 truncate">
-                          <Lock className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
+                        <h4 className="text-xs sm:text-sm font-bold text-zinc-400 flex items-center gap-1.5 truncate">
+                          <Lock className="w-3.5 h-3.5 text-zinc-500 flex-shrink-0" />
                           <span>Locked Task #{task.taskNumber}</span>
                         </h4>
                       ) : (
@@ -755,14 +748,13 @@ export const TasksPage: React.FC = () => {
 
                   {/* Right: PKR Reward & Action */}
                   <div className="flex items-center gap-2.5 sm:gap-5 flex-shrink-0">
-                    {/* PKR Reward (Hidden for locked tasks in Levels 1-3) */}
                     {isHiddenLockedTask ? (
-                      <span className="text-xs font-bold text-slate-500 whitespace-nowrap min-w-[65px] sm:min-w-[75px] text-right flex items-center justify-end gap-1">
+                      <span className="text-xs font-bold text-zinc-500 whitespace-nowrap min-w-[65px] sm:min-w-[75px] text-right flex items-center justify-end gap-1">
                         <Lock className="w-3 h-3" />
                         <span>Locked</span>
                       </span>
                     ) : (
-                      <span className="text-xs sm:text-sm font-black text-[#FFD45A] whitespace-nowrap min-w-[65px] sm:min-w-[75px] text-right">
+                      <span className="text-xs sm:text-sm font-black text-amber-400 whitespace-nowrap min-w-[65px] sm:min-w-[75px] text-right">
                         {task.rewardAmount > 0 ? `PKR ${task.rewardAmount?.toLocaleString()}` : 'Free Task'}
                       </span>
                     )}
@@ -776,9 +768,9 @@ export const TasksPage: React.FC = () => {
                             e.stopPropagation();
                             navigate(`/app/tasks/${task.id}`);
                           }}
-                          className="px-2.5 py-1.5 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white text-xs font-semibold flex items-center gap-1 cursor-pointer transition-all"
+                          className="px-2.5 py-1.5 rounded-lg bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-700/80 text-zinc-300 hover:text-white text-xs font-semibold flex items-center gap-1 cursor-pointer transition-all"
                         >
-                          <Lock className="w-3 h-3 text-amber-400" />
+                          <Lock className="w-3 h-3 text-red-400" />
                           <span>Open</span>
                         </button>
                       ) : (
@@ -792,10 +784,10 @@ export const TasksPage: React.FC = () => {
                             isApproved
                               ? 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/40'
                               : isPending
-                              ? 'bg-[#1264F5]/20 hover:bg-[#1264F5]/30 text-[#22D3EE] border border-[#168BFF]/40'
+                              ? 'bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/40'
                               : isPrepaid
-                              ? 'bg-gradient-to-r from-[#FFD45A] to-amber-400 text-slate-950 hover:brightness-110'
-                              : 'bg-[#1459E8] hover:bg-[#1264F5] text-white'
+                              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 hover:brightness-110'
+                              : 'bg-gradient-to-r from-red-600 to-rose-600 hover:brightness-110 text-white'
                           }`}
                         >
                           <span>Open</span>
@@ -813,8 +805,8 @@ export const TasksPage: React.FC = () => {
             })}
           </div>
         ) : (
-          <div className="p-8 text-center rounded-2xl bg-[#071B3A] border border-[#173C73]">
-            <p className="text-[#8194B7] text-xs">No tasks found for this tier.</p>
+          <div className="p-8 text-center rounded-2xl bg-[#110C0F] border border-red-900/40">
+            <p className="text-zinc-400 text-xs">No tasks found for this tier.</p>
           </div>
         )}
       </section>

@@ -195,7 +195,7 @@ export const WithdrawalsPage: React.FC = () => {
             )}
           </div>
 
-          <p className="text-[11px] text-[#A6C4FF] mt-2 leading-relaxed">
+          <p className="text-[11px] text-zinc-300 mt-2 leading-relaxed">
             💡 {withdrawalQuota?.withdrawalNotice || (isAdminLocked ? 'Withdrawals are currently locked by administration.' : 'Complete Level 1 to unlock the withdrawal panel for the withdrawal')}
           </p>
         </div>
@@ -204,7 +204,7 @@ export const WithdrawalsPage: React.FC = () => {
           isAdminLocked ? (
             <Link
               to="/app/profile"
-              className="self-start sm:self-center px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs flex items-center gap-2 border border-slate-700 shadow-md transition-all"
+              className="self-start sm:self-center px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs flex items-center gap-2 border border-zinc-700 shadow-md transition-all"
             >
               <span>View Profile</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -212,7 +212,7 @@ export const WithdrawalsPage: React.FC = () => {
           ) : (
             <Link
               to="/app/tasks"
-              className="self-start sm:self-center px-4 py-2 rounded-xl bg-gradient-to-r from-[#1459E8] to-[#2478FF] hover:from-[#2478FF] hover:to-[#1459E8] text-white font-bold text-xs flex items-center gap-2 shadow-md transition-all"
+              className="self-start sm:self-center px-4 py-2 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:brightness-110 text-white font-bold text-xs flex items-center gap-2 shadow-md transition-all"
             >
               <span>Complete Tasks</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -224,7 +224,7 @@ export const WithdrawalsPage: React.FC = () => {
       {/* Main Withdrawal Panel */}
       {isLocked ? (
         isAdminLocked ? (
-          <div className="royal-card p-8 rounded-3xl text-center space-y-4 border border-rose-500/30 bg-[#071936]/90 shadow-xl">
+          <div className="royal-card p-8 rounded-3xl text-center space-y-4 border border-rose-500/30 bg-[#140B0F]/90 shadow-xl">
             <div className="w-16 h-16 rounded-2xl bg-rose-500/15 border border-rose-500/40 flex items-center justify-center mx-auto text-rose-400 shadow-inner">
               <Lock className="w-8 h-8" />
             </div>
@@ -238,20 +238,20 @@ export const WithdrawalsPage: React.FC = () => {
                   {withdrawalQuota?.adminLockReason || withdrawalQuota?.withdrawalNotice || 'Withdrawal access has been locked by administration for your account.'}
                 </p>
               </div>
-              <p className="text-[11px] text-slate-400">
+              <p className="text-[11px] text-zinc-400">
                 If you have completed the required steps or believe this is in error, please contact Administration.
               </p>
             </div>
             <div className="pt-2 flex items-center justify-center gap-3">
               <Link
                 to="/app/profile"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 shadow transition-all"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs border border-zinc-700 shadow transition-all"
               >
                 <span>View Profile</span>
               </Link>
               <Link
                 to="/app/tasks"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#1459E8] hover:bg-[#2478FF] text-white font-bold text-xs shadow-lg transition-all"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:brightness-110 text-white font-bold text-xs shadow-lg transition-all"
               >
                 <span>Go to Task Panel</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -259,13 +259,13 @@ export const WithdrawalsPage: React.FC = () => {
             </div>
           </div>
         ) : (
-          <div className="royal-card p-8 rounded-3xl text-center space-y-4 border border-red-500/20 bg-[#071936]/80">
+          <div className="royal-card p-8 rounded-3xl text-center space-y-4 border border-red-500/20 bg-[#140B0F]/80">
             <div className="w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center justify-center mx-auto text-red-400">
               <Lock className="w-7 h-7" />
             </div>
             <div className="max-w-md mx-auto space-y-2">
               <h3 className="text-base font-bold text-white">Withdrawal Panel is Locked</h3>
-              <p className="text-xs text-slate-300 leading-relaxed">
+              <p className="text-xs text-zinc-300 leading-relaxed">
                 {withdrawalQuota?.withdrawalNotice ||
                   'Complete the current level tasks to unlock the withdrawal panel and withdraw your earnings.'}
               </p>
@@ -273,7 +273,7 @@ export const WithdrawalsPage: React.FC = () => {
             <div className="pt-2">
               <Link
                 to="/app/tasks"
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#1459E8] hover:bg-[#2478FF] text-white font-bold text-xs shadow-lg transition-all"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:brightness-110 text-white font-bold text-xs shadow-lg transition-all"
               >
                 <span>Go to Task Panel</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -283,10 +283,10 @@ export const WithdrawalsPage: React.FC = () => {
         )
       ) : (
         <div className="royal-card p-6 sm:p-8 rounded-3xl space-y-4">
-          <div className="flex items-center justify-between pb-2 border-b border-[#214B91]/40">
+          <div className="flex items-center justify-between pb-2 border-b border-zinc-800">
             <h2 className="text-sm font-bold text-white">Enter Payout Destination Details</h2>
             {isUnrestricted && (
-              <span className="text-[10px] font-bold text-[#10D6A0] bg-[#10D6A0]/15 border border-[#10D6A0]/30 px-2 py-0.5 rounded-md uppercase tracking-wider">
+              <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-md uppercase tracking-wider">
                 Unrestricted Mode
               </span>
             )}
@@ -294,7 +294,7 @@ export const WithdrawalsPage: React.FC = () => {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
                 Payout Channel
               </label>
               <div className="grid grid-cols-3 gap-3">
@@ -305,8 +305,8 @@ export const WithdrawalsPage: React.FC = () => {
                     onClick={() => setMethod(m)}
                     className={`py-2.5 px-3 rounded-xl text-xs font-bold transition-all border ${
                       method === m
-                        ? 'bg-[#1459E8] border-[#2478FF] text-white shadow-md'
-                        : 'bg-[#020B20] border-[#214B91] text-slate-400 hover:text-white'
+                        ? 'bg-gradient-to-r from-red-600 to-rose-600 border-red-500 text-white shadow-md'
+                        : 'bg-[#08080B] border-zinc-800 text-zinc-400 hover:text-white'
                     }`}
                   >
                     {m === 'BANK_TRANSFER' ? 'Bank Transfer' : m === 'EASYPAISA' ? 'Easypaisa' : 'JazzCash'}
@@ -317,7 +317,7 @@ export const WithdrawalsPage: React.FC = () => {
 
             {/* Withdrawal Amount Input */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
                 {isUnrestricted
                   ? 'Withdrawal Amount (PKR) *'
                   : 'Withdrawal Amount in PKR (Exact Available Balance) *'}
@@ -326,7 +326,7 @@ export const WithdrawalsPage: React.FC = () => {
               {isUnrestricted ? (
                 <div className="space-y-2">
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-[#FFD45A]">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-amber-400">
                       PKR
                     </span>
                     <input
@@ -338,10 +338,10 @@ export const WithdrawalsPage: React.FC = () => {
                       value={customAmount}
                       onChange={(e) => setCustomAmount(e.target.value)}
                       placeholder="Enter withdrawal amount according to instructions"
-                      className="w-full bg-[#020B20] border border-[#214B91] focus:border-[#2478FF] rounded-xl pl-14 pr-4 py-2.5 text-base font-black text-white focus:outline-none"
+                      className="w-full bg-[#08080B] border border-zinc-800 focus:border-red-500 rounded-xl pl-14 pr-4 py-2.5 text-base font-black text-white focus:outline-none"
                     />
                   </div>
-                  <p className="text-[11px] text-slate-400 mt-1">
+                  <p className="text-[11px] text-zinc-400 mt-1">
                     Enter the amount in PKR according to instructions (available balance: PKR {availableBalance.toLocaleString()}).
                   </p>
                 </div>
@@ -351,9 +351,9 @@ export const WithdrawalsPage: React.FC = () => {
                     type="text"
                     readOnly
                     value={`PKR ${exactAvailable.toLocaleString()}`}
-                    className="w-full bg-[#020B20]/90 border border-[#214B91] rounded-xl px-4 py-2.5 text-base font-black text-[#FFD45A] focus:outline-none cursor-not-allowed"
+                    className="w-full bg-[#08080B]/90 border border-zinc-800 rounded-xl px-4 py-2.5 text-base font-black text-amber-400 focus:outline-none cursor-not-allowed"
                   />
-                  <p className="text-[11px] text-slate-400 mt-1.5">
+                  <p className="text-[11px] text-zinc-400 mt-1.5">
                     {stage === 'LEVEL_1' && (
                       <>
                         Withdrawal requests for Level 1 are for your total account balance of{' '}
@@ -366,9 +366,9 @@ export const WithdrawalsPage: React.FC = () => {
                         Level 2 completion requires requesting your total account balance of{' '}
                         <strong className="text-white">PKR {exactAvailable.toLocaleString()}</strong>.
                         Upon admin approval, you will receive a{' '}
-                        <strong className="text-[#10D6A0]">10% payout (PKR {(exactAvailable * 0.1).toLocaleString()})</strong>{' '}
+                        <strong className="text-emerald-400">10% payout (PKR {(exactAvailable * 0.1).toLocaleString()})</strong>{' '}
                         and the remaining{' '}
-                        <strong className="text-[#FFD45A]">90% (PKR {(exactAvailable * 0.9).toLocaleString()})</strong>{' '}
+                        <strong className="text-amber-400">90% (PKR {(exactAvailable * 0.9).toLocaleString()})</strong>{' '}
                         will return to your balance.
                       </>
                     )}
@@ -378,7 +378,7 @@ export const WithdrawalsPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
                 Recipient Account Title / Name *
               </label>
               <input
@@ -386,12 +386,12 @@ export const WithdrawalsPage: React.FC = () => {
                 required
                 value={recipientName}
                 onChange={(e) => setRecipientName(e.target.value)}
-                className="w-full bg-[#020B20] border border-[#214B91] focus:border-[#2478FF] rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none"
+                className="w-full bg-[#08080B] border border-zinc-800 focus:border-red-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
                 {method === 'BANK_TRANSFER' ? 'Bank Name & Account / IBAN Number *' : 'Mobile Account Number *'}
               </label>
               <input
@@ -399,17 +399,17 @@ export const WithdrawalsPage: React.FC = () => {
                 required
                 value={recipientAccount}
                 onChange={(e) => setRecipientAccount(e.target.value)}
-                className="w-full bg-[#020B20] border border-[#214B91] focus:border-[#2478FF] rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none font-mono"
+                className="w-full bg-[#08080B] border border-zinc-800 focus:border-red-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:outline-none font-mono"
               />
             </div>
 
             <button
               type="submit"
               disabled={submitting || availableBalance <= 0}
-              className="w-full py-3 bg-gradient-to-r from-[#FFD45A] to-amber-400 hover:from-amber-400 hover:to-[#FFD45A] text-[#020B20] font-black text-sm rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full py-3 bg-gradient-to-r from-red-600 to-rose-600 hover:brightness-110 text-white font-black text-sm rounded-xl shadow-lg shadow-red-600/25 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {submitting ? (
-                <span className="w-5 h-5 border-2 border-slate-900 border-t-transparent rounded-full animate-spin" />
+                <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : isUnrestricted ? (
                 <>
                   <Send className="w-4 h-4" /> Withdraw Amount {customAmount && parseFloat(customAmount) > 0 ? `(PKR ${parseFloat(customAmount).toLocaleString()})` : ''}
@@ -435,7 +435,7 @@ export const WithdrawalsPage: React.FC = () => {
       {/* User Withdrawal Requests History */}
       <div className="royal-card p-6 rounded-3xl space-y-4">
         <h2 className="text-base font-bold text-white flex items-center gap-2">
-          <Clock className="w-4 h-4 text-[#2478FF]" /> Withdrawal History
+          <Clock className="w-4 h-4 text-red-500" /> Withdrawal History
         </h2>
 
         {historyLoading && withdrawals.length === 0 ? (

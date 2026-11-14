@@ -159,95 +159,95 @@ export const DashboardPage: React.FC = () => {
       <div className="flex flex-col lg:flex-row gap-6 items-start">
         {/* ========================================================
             A. LEFT SIDEBAR (Desktop Only: hidden on mobile)
-            Matches Option reference: Dark navy, active blue glow
+            Obsidian Black & Crimson Red Executive Sidebar
             ======================================================== */}
-        <aside className="hidden lg:flex flex-col w-64 shrink-0 rounded-3xl bg-[#03102B] border border-[#173C73] p-5 space-y-6 shadow-2xl sticky top-20">
-          {/* Royal Rewards Logo Branding */}
+        <aside className="hidden lg:flex flex-col w-64 shrink-0 rounded-3xl bg-[#0D0A0E] border border-red-900/40 p-5 space-y-6 shadow-2xl sticky top-20">
+          {/* Earn Street Logo Branding */}
           <div className="flex items-center gap-3 px-1">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#315BFF] to-[#FFD45A] p-0.5 shadow-lg shadow-[#315BFF]/30">
-              <div className="w-full h-full bg-[#04132F] rounded-[14px] flex items-center justify-center">
-                <Crown className="w-5 h-5 text-[#FFD45A]" />
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-red-600 to-amber-500 p-0.5 shadow-lg shadow-red-600/25">
+              <div className="w-full h-full bg-[#08080B] rounded-[14px] flex items-center justify-center">
+                <Crown className="w-5 h-5 text-red-500" />
               </div>
             </div>
             <div>
               <h2 className="text-base font-black tracking-tight text-white leading-none">
                 EARN STREET
               </h2>
-              <span className="text-[10px] font-bold text-[#22D3EE] tracking-wider uppercase">
-                Premier Platform
+              <span className="text-[10px] font-bold text-red-400 tracking-wider uppercase">
+                Executive Suite
               </span>
             </div>
           </div>
 
           {/* Navigation Links */}
           <nav className="space-y-1.5 flex-1">
-            {/* 1. Home (Active with bright blue & glow) */}
+            {/* 1. Home (Active with crimson glow) */}
             <Link
               to="/app"
-              className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-[#315BFF] text-white font-bold text-xs shadow-lg shadow-[#315BFF]/40 border border-[#3978FF] transition-all"
+              className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-bold text-xs shadow-lg shadow-red-600/35 border border-red-400/40 transition-all"
             >
               <Home className="w-4 h-4" />
-              <span>Home</span>
+              <span>Dashboard</span>
             </Link>
 
             {/* 2. Tasks */}
             <Link
               to="/app/tasks"
-              className="flex items-center gap-3 px-4 py-3 rounded-2xl text-[#B7C6E4] hover:text-white hover:bg-[#071B3A] font-semibold text-xs border border-transparent hover:border-[#173C73] transition-all group"
+              className="flex items-center gap-3 px-4 py-3 rounded-2xl text-zinc-400 hover:text-white hover:bg-[#171115] font-semibold text-xs border border-transparent hover:border-red-900/50 transition-all group"
             >
-              <CheckSquare className="w-4 h-4 text-[#3978FF] group-hover:scale-110 transition-transform" />
-              <span>Tasks</span>
+              <CheckSquare className="w-4 h-4 text-red-500 group-hover:scale-110 transition-transform" />
+              <span>Tasks & Levels</span>
             </Link>
 
             {/* 3. Spin */}
             <Link
               to="/app/spin"
-              className="flex items-center gap-3 px-4 py-3 rounded-2xl text-[#B7C6E4] hover:text-white hover:bg-[#071B3A] font-semibold text-xs border border-transparent hover:border-[#173C73] transition-all group"
+              className="flex items-center gap-3 px-4 py-3 rounded-2xl text-zinc-400 hover:text-white hover:bg-[#171115] font-semibold text-xs border border-transparent hover:border-red-900/50 transition-all group"
             >
-              <Disc className="w-4 h-4 text-[#592BFF] group-hover:scale-110 transition-transform" />
-              <span>Spin</span>
+              <Disc className="w-4 h-4 text-rose-500 group-hover:scale-110 transition-transform" />
+              <span>Fortune Spin</span>
             </Link>
 
             {/* 4. Withdraw */}
             <Link
               to="/app/withdrawals"
-              className="flex items-center gap-3 px-4 py-3 rounded-2xl text-[#B7C6E4] hover:text-white hover:bg-[#071B3A] font-semibold text-xs border border-transparent hover:border-[#173C73] transition-all group"
+              className="flex items-center gap-3 px-4 py-3 rounded-2xl text-zinc-400 hover:text-white hover:bg-[#171115] font-semibold text-xs border border-transparent hover:border-red-900/50 transition-all group"
             >
-              <ArrowUpRight className="w-4 h-4 text-[#22D3EE] group-hover:scale-110 transition-transform" />
+              <ArrowUpRight className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
               <span>Withdraw</span>
             </Link>
 
             {/* 5. History */}
             <Link
               to="/app/wallet"
-              className="flex items-center gap-3 px-4 py-3 rounded-2xl text-[#B7C6E4] hover:text-white hover:bg-[#071B3A] font-semibold text-xs border border-transparent hover:border-[#173C73] transition-all group"
+              className="flex items-center gap-3 px-4 py-3 rounded-2xl text-zinc-400 hover:text-white hover:bg-[#171115] font-semibold text-xs border border-transparent hover:border-red-900/50 transition-all group"
             >
-              <Clock className="w-4 h-4 text-[#FFD45A] group-hover:scale-110 transition-transform" />
-              <span>History</span>
+              <Clock className="w-4 h-4 text-red-400 group-hover:scale-110 transition-transform" />
+              <span>Wallet & Ledger</span>
             </Link>
 
             {/* 6. Help Center */}
             <button
               onClick={() => setHelpModalOpen(true)}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-[#B7C6E4] hover:text-white hover:bg-[#071B3A] font-semibold text-xs border border-transparent hover:border-[#173C73] transition-all group text-left"
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-zinc-400 hover:text-white hover:bg-[#171115] font-semibold text-xs border border-transparent hover:border-red-900/50 transition-all group text-left"
             >
-              <HelpCircle className="w-4 h-4 text-[#10D6A0] group-hover:scale-110 transition-transform" />
+              <HelpCircle className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform" />
               <span>Help Center</span>
             </button>
           </nav>
 
           {/* Sidebar Mini Promo Card */}
-          <div className="p-4 rounded-2xl bg-gradient-to-b from-[#071B3A] to-[#04132F] border border-[#173C73] text-center space-y-2">
-            <div className="w-9 h-9 rounded-xl bg-[#FFD45A]/15 border border-[#FFD45A]/30 flex items-center justify-center mx-auto text-[#FFD45A]">
+          <div className="p-4 rounded-2xl bg-gradient-to-b from-[#1A0D12] to-[#0B0A0D] border border-red-900/50 text-center space-y-2">
+            <div className="w-9 h-9 rounded-xl bg-red-500/15 border border-red-500/30 flex items-center justify-center mx-auto text-red-400">
               <Sparkles className="w-4 h-4 animate-pulse" />
             </div>
-            <h4 className="text-xs font-bold text-white">Earn Daily Royal Spins</h4>
-            <p className="text-[10px] text-[#B7C6E4] leading-relaxed">
-              Complete level milestones to unlock free wheel spins!
+            <h4 className="text-xs font-bold text-white">Daily Crimson Spins</h4>
+            <p className="text-[10px] text-zinc-400 leading-relaxed">
+              Complete level milestones to unlock instant cash wheel spins!
             </p>
             <Link
               to="/app/tasks"
-              className="inline-block w-full py-1.5 px-3 rounded-xl bg-[#1264F5] hover:bg-[#315BFF] text-white text-[11px] font-bold transition-all"
+              className="inline-block w-full py-1.5 px-3 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:brightness-110 text-white text-[11px] font-bold transition-all"
             >
               Start Tasks
             </Link>
@@ -261,18 +261,18 @@ export const DashboardPage: React.FC = () => {
         <main className="flex-1 w-full min-w-0 space-y-6">
           {/* ========================================================
               C. USER PROFILE SUMMARY & TOP HEADER CONTROLS
-              Avatar, User Name, Member ID, Level + Balance & Notifications
               ======================================================== */}
-          <div className="p-4 sm:p-5 rounded-3xl bg-[#071B3A] border border-[#173C73] shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-[#140C10] via-[#0F0B0E] to-[#0A0A0D] border border-red-900/45 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative overflow-hidden">
+            <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-red-500/70 to-transparent" />
             {/* User Avatar + Name + ID + Level */}
             <div className="flex items-center gap-3.5">
               <div className="relative">
-                <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-[#315BFF] via-[#7B2CFF] to-[#FFD45A] p-0.5 shadow-md">
-                  <div className="w-full h-full bg-[#04132F] rounded-[14px] flex items-center justify-center font-black text-white text-lg">
+                <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-red-600 via-rose-500 to-amber-400 p-0.5 shadow-md shadow-red-600/20">
+                  <div className="w-full h-full bg-[#09090C] rounded-[14px] flex items-center justify-center font-black text-white text-lg">
                     {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
                   </div>
                 </div>
-                <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-lg bg-[#FFD45A] border-2 border-[#04132F] flex items-center justify-center text-[#020B20]">
+                <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-lg bg-red-600 border-2 border-[#09090C] flex items-center justify-center text-white">
                   <Crown className="w-3 h-3" />
                 </div>
               </div>
@@ -280,19 +280,19 @@ export const DashboardPage: React.FC = () => {
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
                   <h1 className="text-base sm:text-lg font-black text-white tracking-tight">
-                    {user?.name || 'Royal Member'}
+                    {user?.name || 'Executive Member'}
                   </h1>
-                  <span className="text-[10px] font-bold text-[#FFD45A] bg-[#FFD45A]/15 border border-[#FFD45A]/30 px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] font-bold text-red-400 bg-red-500/15 border border-red-500/30 px-2 py-0.5 rounded-full">
                     Verified
                   </span>
                 </div>
-                <p className="text-xs text-[#B7C6E4] font-mono font-medium">
-                  Member ID: <span className="text-[#22D3EE] font-bold">{memberId}</span>
+                <p className="text-xs text-zinc-400 font-mono font-medium">
+                  Member ID: <span className="text-red-400 font-bold">{memberId}</span>
                 </p>
-                <div className="flex items-center gap-1.5 text-xs text-[#FFD45A] font-bold pt-0.5">
-                  <Crown className="w-3.5 h-3.5" />
+                <div className="flex items-center gap-1.5 text-xs text-amber-400 font-bold pt-0.5">
+                  <Crown className="w-3.5 h-3.5 text-red-500" />
                   <span>Level {currentLevelNumber}</span>
-                  <span className="text-slate-400 font-normal">• {levelTitle}</span>
+                  <span className="text-zinc-500 font-normal">• {levelTitle}</span>
                 </div>
               </div>
             </div>
@@ -301,9 +301,9 @@ export const DashboardPage: React.FC = () => {
             <div className="flex items-center gap-2 self-start sm:self-center">
               <Link
                 to="/app/profile"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-[#061633] border border-[#173C73] text-xs font-semibold text-[#B7C6E4] hover:text-white hover:border-[#3978FF] transition-all"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-[#161014] border border-red-900/50 text-xs font-semibold text-zinc-300 hover:text-white hover:border-red-500 transition-all"
               >
-                <UserIcon className="w-3.5 h-3.5 text-[#22D3EE]" />
+                <UserIcon className="w-3.5 h-3.5 text-red-400" />
                 <span>My Profile</span>
               </Link>
             </div>
@@ -311,36 +311,35 @@ export const DashboardPage: React.FC = () => {
 
           {/* ========================================================
               D. BALANCE AND CREDIT POINTS (Two Summary Cards)
-              Total Balance (PKR) + Credit Points (Pts)
               ======================================================== */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Total Balance Card */}
-            <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-[#0B2248] via-[#071B3A] to-[#04132F] border border-[#173C73] shadow-xl relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#FFD45A]/10 rounded-full blur-2xl pointer-events-none group-hover:bg-[#FFD45A]/15 transition-all" />
+            <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-[#1C0B10] via-[#110B0E] to-[#0A0A0D] border border-red-900/50 shadow-xl relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-red-600/15 rounded-full blur-2xl pointer-events-none group-hover:bg-red-600/25 transition-all" />
 
               <div className="mb-2">
-                <span className="text-xs font-bold text-[#B7C6E4] uppercase tracking-wider">
+                <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider">
                   Total Balance
                 </span>
               </div>
 
               <div className="space-y-1">
-                <h3 className="text-2xl sm:text-3xl font-black text-[#FFD45A] tracking-tight">
+                <h3 className="text-2xl sm:text-3xl font-black text-amber-400 tracking-tight">
                   PKR {availableBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </h3>
               </div>
 
-              <div className="pt-3 mt-3 border-t border-[#173C73]/40 flex items-center justify-between text-xs">
+              <div className="pt-3 mt-3 border-t border-zinc-800/80 flex items-center justify-between text-xs">
                 <Link
                   to="/app/withdrawals"
-                  className="font-bold text-[#22D3EE] hover:text-white transition-colors flex items-center gap-1"
+                  className="font-bold text-red-400 hover:text-white transition-colors flex items-center gap-1"
                 >
                   <span>Withdraw Funds</span>
                   <ChevronRight className="w-3 h-3" />
                 </Link>
                 <Link
                   to="/app/deposits"
-                  className="font-bold text-[#B7C6E4] hover:text-[#FFD45A] transition-colors"
+                  className="font-bold text-zinc-300 hover:text-red-400 transition-colors"
                 >
                   Deposit
                 </Link>
@@ -348,103 +347,102 @@ export const DashboardPage: React.FC = () => {
             </div>
 
             {/* Credit Points Card */}
-            <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-[#0B2248] via-[#071B3A] to-[#04132F] border border-[#173C73] shadow-xl relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#315BFF]/10 rounded-full blur-2xl pointer-events-none group-hover:bg-[#315BFF]/15 transition-all" />
+            <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-[#190D12] via-[#100C0F] to-[#0A0A0D] border border-red-900/50 shadow-xl relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-rose-600/10 rounded-full blur-2xl pointer-events-none group-hover:bg-rose-600/20 transition-all" />
 
               <div className="mb-2">
-                <span className="text-xs font-bold text-[#B7C6E4] uppercase tracking-wider">
+                <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider">
                   Credit Points
                 </span>
               </div>
 
               <div className="space-y-1">
                 <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                  {creditPoints.toLocaleString()} <span className="text-base font-bold text-[#22D3EE]">Pts</span>
+                  {creditPoints.toLocaleString()} <span className="text-base font-bold text-red-400">Pts</span>
                 </h3>
-                <p className="text-xs font-semibold text-[#10D6A0]">
+                <p className="text-xs font-semibold text-emerald-400">
                   100 CPs awarded upon joining
                 </p>
               </div>
 
-              <div className="pt-3 mt-3 border-t border-[#173C73]/40 flex items-center justify-between text-xs">
-                <span className="font-bold text-[#22D3EE]">
+              <div className="pt-3 mt-3 border-t border-zinc-800/80 flex items-center justify-between text-xs">
+                <span className="font-bold text-red-400">
                   Account Standing Score
                 </span>
-                <span className="text-[11px] text-[#8194B7] font-medium">Rank Tier {currentLevelNumber}</span>
+                <span className="text-[11px] text-zinc-500 font-medium">Rank Tier {currentLevelNumber}</span>
               </div>
             </div>
           </div>
 
           {/* ========================================================
               E. QUICK-ACTION CARDS (Tasks, Spin, Withdraw, History)
-              Four prominent cards with specific accents
               ======================================================== */}
           <div>
-            <h3 className="text-xs font-bold text-[#B7C6E4] uppercase tracking-wider mb-3 px-1">
+            <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-3 px-1">
               Quick Actions
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-              {/* 1. Tasks Card (Blue Accent) */}
+              {/* 1. Tasks Card (Crimson Accent) */}
               <Link
                 to="/app/tasks"
-                className="p-4 sm:p-5 rounded-2xl bg-[#071B3A] border border-[#173C73] hover:border-[#315BFF] transition-all flex flex-col justify-between group shadow-lg hover:shadow-[#315BFF]/20 transform hover:-translate-y-0.5"
+                className="p-4 sm:p-5 rounded-2xl bg-[#110C0F] border border-red-900/40 hover:border-red-500 transition-all flex flex-col justify-between group shadow-lg hover:shadow-red-600/20 transform hover:-translate-y-0.5"
               >
-                <div className="w-11 h-11 rounded-2xl bg-[#315BFF]/20 border border-[#315BFF]/40 flex items-center justify-center text-[#3978FF] group-hover:scale-110 transition-transform mb-3">
+                <div className="w-11 h-11 rounded-2xl bg-red-600/20 border border-red-500/40 flex items-center justify-center text-red-400 group-hover:scale-110 transition-transform mb-3">
                   <CheckSquare className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="text-sm sm:text-base font-black text-white group-hover:text-[#3978FF] transition-colors">
+                  <h4 className="text-sm sm:text-base font-black text-white group-hover:text-red-400 transition-colors">
                     Tasks
                   </h4>
-                  <p className="text-[11px] text-[#B7C6E4] font-medium">Complete & Earn</p>
+                  <p className="text-[11px] text-zinc-400 font-medium">Complete & Earn</p>
                 </div>
               </Link>
 
-              {/* 2. Spin Card (Purple Accent) */}
+              {/* 2. Spin Card (Rose Accent) */}
               <Link
                 to="/app/spin"
-                className="p-4 sm:p-5 rounded-2xl bg-[#071B3A] border border-[#173C73] hover:border-[#592BFF] transition-all flex flex-col justify-between group shadow-lg hover:shadow-[#592BFF]/20 transform hover:-translate-y-0.5"
+                className="p-4 sm:p-5 rounded-2xl bg-[#110C0F] border border-red-900/40 hover:border-rose-500 transition-all flex flex-col justify-between group shadow-lg hover:shadow-rose-600/20 transform hover:-translate-y-0.5"
               >
-                <div className="w-11 h-11 rounded-2xl bg-[#592BFF]/20 border border-[#592BFF]/40 flex items-center justify-center text-[#7B2CFF] group-hover:scale-110 transition-transform mb-3">
+                <div className="w-11 h-11 rounded-2xl bg-rose-600/20 border border-rose-500/40 flex items-center justify-center text-rose-400 group-hover:scale-110 transition-transform mb-3">
                   <Disc className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="text-sm sm:text-base font-black text-white group-hover:text-[#7B2CFF] transition-colors">
+                  <h4 className="text-sm sm:text-base font-black text-white group-hover:text-rose-400 transition-colors">
                     Spin
                   </h4>
-                  <p className="text-[11px] text-[#B7C6E4] font-medium">Win Exciting Rewards</p>
+                  <p className="text-[11px] text-zinc-400 font-medium">Win Exciting Rewards</p>
                 </div>
               </Link>
 
-              {/* 3. Withdraw Card (Teal Accent) */}
+              {/* 3. Withdraw Card (Amber Accent) */}
               <Link
                 to="/app/withdrawals"
-                className="p-4 sm:p-5 rounded-2xl bg-[#071B3A] border border-[#173C73] hover:border-[#22D3EE] transition-all flex flex-col justify-between group shadow-lg hover:shadow-[#22D3EE]/20 transform hover:-translate-y-0.5"
+                className="p-4 sm:p-5 rounded-2xl bg-[#110C0F] border border-red-900/40 hover:border-amber-400 transition-all flex flex-col justify-between group shadow-lg hover:shadow-amber-500/20 transform hover:-translate-y-0.5"
               >
-                <div className="w-11 h-11 rounded-2xl bg-[#22D3EE]/15 border border-[#22D3EE]/30 flex items-center justify-center text-[#22D3EE] group-hover:scale-110 transition-transform mb-3">
+                <div className="w-11 h-11 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform mb-3">
                   <ArrowUpRight className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="text-sm sm:text-base font-black text-white group-hover:text-[#22D3EE] transition-colors">
+                  <h4 className="text-sm sm:text-base font-black text-white group-hover:text-amber-400 transition-colors">
                     Withdraw
                   </h4>
-                  <p className="text-[11px] text-[#B7C6E4] font-medium">Get Your Rewards</p>
+                  <p className="text-[11px] text-zinc-400 font-medium">Get Your Rewards</p>
                 </div>
               </Link>
 
-              {/* 4. History Card (Gold Accent) */}
+              {/* 4. History Card (Red-Gold Accent) */}
               <Link
                 to="/app/wallet"
-                className="p-4 sm:p-5 rounded-2xl bg-[#071B3A] border border-[#173C73] hover:border-[#FFD45A] transition-all flex flex-col justify-between group shadow-lg hover:shadow-[#FFD45A]/20 transform hover:-translate-y-0.5"
+                className="p-4 sm:p-5 rounded-2xl bg-[#110C0F] border border-red-900/40 hover:border-red-400 transition-all flex flex-col justify-between group shadow-lg hover:shadow-red-500/20 transform hover:-translate-y-0.5"
               >
-                <div className="w-11 h-11 rounded-2xl bg-[#FFD45A]/15 border border-[#FFD45A]/30 flex items-center justify-center text-[#FFD45A] group-hover:scale-110 transition-transform mb-3">
+                <div className="w-11 h-11 rounded-2xl bg-red-500/15 border border-red-500/30 flex items-center justify-center text-red-400 group-hover:scale-110 transition-transform mb-3">
                   <Clock className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="text-sm sm:text-base font-black text-white group-hover:text-[#FFD45A] transition-colors">
+                  <h4 className="text-sm sm:text-base font-black text-white group-hover:text-red-400 transition-colors">
                     History
                   </h4>
-                  <p className="text-[11px] text-[#B7C6E4] font-medium">View Records</p>
+                  <p className="text-[11px] text-zinc-400 font-medium">View Records</p>
                 </div>
               </Link>
             </div>
@@ -452,17 +450,15 @@ export const DashboardPage: React.FC = () => {
 
           {/* ========================================================
               F. WELCOME & REWARDS BANNER
-              "Welcome to Royal Rewards! Complete tasks, earn rewards and unlock new levels."
-              Tagline: "Small Steps, Big Rewards" | Button: "View Tasks"
               ======================================================== */}
-          <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-[#0B2248] via-[#1264F5] to-[#071B3A] border border-[#173C73] shadow-2xl relative overflow-hidden">
+          <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-[#22080D] via-[#991B1B] to-[#110A0D] border border-red-500/40 shadow-2xl relative overflow-hidden">
             {/* Glow / Background Artwork Elements */}
-            <div className="absolute top-0 right-0 w-72 h-72 bg-[#FFD45A]/15 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute bottom-0 left-1/3 w-60 h-60 bg-[#7B2CFF]/20 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute top-0 right-0 w-72 h-72 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute bottom-0 left-1/3 w-60 h-60 bg-red-600/20 rounded-full blur-3xl pointer-events-none" />
 
             <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div className="space-y-2.5 max-w-xl">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#020B20]/60 border border-[#FFD45A]/40 text-[#FFD45A] text-xs font-black shadow-sm">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/60 border border-amber-400/40 text-amber-400 text-xs font-black shadow-sm">
                   <Crown className="w-3.5 h-3.5" />
                   <span>Small Steps, Big Rewards</span>
                 </div>
@@ -471,7 +467,7 @@ export const DashboardPage: React.FC = () => {
                   Welcome to Earn Street!
                 </h2>
 
-                <p className="text-xs sm:text-sm text-[#B7C6E4] leading-relaxed">
+                <p className="text-xs sm:text-sm text-zinc-200 leading-relaxed">
                   Complete tasks sequentially, earn verified PKR rewards, and unlock higher prestige tiers for larger bonuses.
                 </p>
               </div>
@@ -480,9 +476,9 @@ export const DashboardPage: React.FC = () => {
               <div className="flex-shrink-0">
                 <Link
                   to="/app/tasks"
-                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-[#FFD45A] to-[#F59E0B] hover:from-[#F59E0B] hover:to-[#FFD45A] text-[#020B20] text-xs sm:text-sm font-black shadow-xl shadow-[#FFD45A]/30 transform hover:scale-[1.03] transition-all"
+                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-white to-zinc-100 hover:from-amber-400 hover:to-amber-500 text-[#09090C] text-xs sm:text-sm font-black shadow-xl shadow-black/40 transform hover:scale-[1.03] transition-all"
                 >
-                  <Crown className="w-4 h-4" />
+                  <Crown className="w-4 h-4 text-red-600" />
                   <span>View Tasks</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
@@ -492,9 +488,8 @@ export const DashboardPage: React.FC = () => {
 
           {/* ========================================================
               G. LEVEL PROGRESS CARD (Strict 10-Task Level System)
-              Level X Progress | X / 10 Tasks Approved | Y Tasks Remaining
               ======================================================== */}
-          <div className="p-5 sm:p-7 rounded-3xl bg-[#071B3A] border border-[#173C73] shadow-xl space-y-4">
+          <div className="p-5 sm:p-7 rounded-3xl bg-[#110C0F] border border-red-900/45 shadow-xl space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <h3 className="text-lg sm:text-xl font-black text-white">
@@ -503,19 +498,19 @@ export const DashboardPage: React.FC = () => {
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="bg-[#061633] px-3.5 py-2 rounded-xl border border-[#173C73] text-left">
-                  <span className="text-[10px] text-[#8194B7] block font-medium uppercase">
+                <div className="bg-[#09090C] px-3.5 py-2 rounded-xl border border-zinc-800 text-left">
+                  <span className="text-[10px] text-zinc-400 block font-medium uppercase">
                     Tasks Approved
                   </span>
                   <span className="text-sm font-black text-white">
                     {approvedTasksCount} / 10
                   </span>
                 </div>
-                <div className="bg-[#061633] px-3.5 py-2 rounded-xl border border-[#173C73] text-left">
-                  <span className="text-[10px] text-[#8194B7] block font-medium uppercase">
+                <div className="bg-[#09090C] px-3.5 py-2 rounded-xl border border-zinc-800 text-left">
+                  <span className="text-[10px] text-zinc-400 block font-medium uppercase">
                     Remaining
                   </span>
-                  <span className="text-sm font-black text-[#FFD45A]">
+                  <span className="text-sm font-black text-red-400">
                     {remainingTasksInLevel} Tasks
                   </span>
                 </div>
@@ -524,28 +519,28 @@ export const DashboardPage: React.FC = () => {
 
             {/* Real Progress Bar */}
             <div className="space-y-1.5 pt-1">
-              <div className="flex items-center justify-between text-xs text-[#B7C6E4]">
+              <div className="flex items-center justify-between text-xs text-zinc-400">
                 <span>Progress Percentage</span>
                 <span className="font-bold text-white">{progressPercent}%</span>
               </div>
-              <div className="w-full h-3 bg-[#061633] rounded-full overflow-hidden border border-[#173C73]">
+              <div className="w-full h-3 bg-[#09090C] rounded-full overflow-hidden border border-zinc-800">
                 <div
-                  className="h-full rounded-full bg-gradient-to-r from-[#315BFF] via-[#22D3EE] to-[#FFD45A] transition-all duration-500 shadow-md"
+                  className="h-full rounded-full bg-gradient-to-r from-red-600 via-rose-500 to-amber-400 transition-all duration-500 shadow-md"
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
             </div>
 
             {/* Level Action Footer */}
-            <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs border-t border-[#173C73]/40">
-              <p className="text-[#B7C6E4]">
+            <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs border-t border-zinc-800/80">
+              <p className="text-zinc-400">
                 {completedLevelsCount === 0
                   ? `Complete Level ${currentLevelNumber} tasks to earn task rewards and unlock 10% account balance withdrawal!`
                   : `Level ${currentLevelNumber} In Progress • Complete tasks to earn task rewards and advance to the next level!`}
               </p>
               <Link
                 to="/app/tasks"
-                className="inline-flex items-center gap-1.5 font-bold text-[#22D3EE] hover:text-white transition-colors self-start sm:self-auto"
+                className="inline-flex items-center gap-1.5 font-bold text-red-400 hover:text-white transition-colors self-start sm:self-auto"
               >
                 <span>Continue Level {currentLevelNumber} Tasks</span>
                 <ChevronRight className="w-3.5 h-3.5" />
@@ -557,17 +552,16 @@ export const DashboardPage: React.FC = () => {
               VIP TASK MILESTONE & PROGRESSION CARD
               ======================================================== */}
           <div>
-            {/* VIP Task Milestone & Progression Card */}
-            <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-[#0B2248] via-[#071B3A] to-[#04132F] border border-[#173C73] shadow-xl space-y-4 relative overflow-hidden flex flex-col justify-between">
+            <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-[#190B0F] via-[#110C0F] to-[#09090C] border border-red-900/45 shadow-xl space-y-4 relative overflow-hidden flex flex-col justify-between">
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-[#FFD45A] to-[#F59E0B] p-0.5 shadow-md flex items-center justify-center">
-                    <div className="w-full h-full bg-[#020B20] rounded-[14px] flex items-center justify-center text-[#FFD45A]">
+                  <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-red-600 to-amber-500 p-0.5 shadow-md flex items-center justify-center">
+                    <div className="w-full h-full bg-[#09090C] rounded-[14px] flex items-center justify-center text-red-500">
                       <Crown className="w-5 h-5" />
                     </div>
                   </div>
-                  <span className="text-[10px] font-bold text-[#10D6A0] bg-[#10D6A0]/15 border border-[#10D6A0]/30 px-2.5 py-1 rounded-full flex items-center gap-1">
-                    <ShieldCheck className="w-3 h-3 text-[#10D6A0]" /> VIP Progression
+                  <span className="text-[10px] font-bold text-red-400 bg-red-500/15 border border-red-500/30 px-2.5 py-1 rounded-full flex items-center gap-1">
+                    <ShieldCheck className="w-3 h-3 text-red-400" /> VIP Progression
                   </span>
                 </div>
 
@@ -575,17 +569,17 @@ export const DashboardPage: React.FC = () => {
                   <h3 className="text-base sm:text-lg font-black text-white">
                     Task Milestone Rewards
                   </h3>
-                  <p className="text-xs text-[#8194B7] leading-relaxed">
-                    Complete your sequential level tasks to claim verified milestone rewards and unlock royal wheel spins!
+                  <p className="text-xs text-zinc-400 leading-relaxed">
+                    Complete your sequential level tasks to claim verified milestone rewards and unlock fortune wheel spins!
                   </p>
                 </div>
 
-                <div className="p-3.5 rounded-2xl bg-[#061633] border border-[#173C73] flex items-center justify-between gap-2">
+                <div className="p-3.5 rounded-2xl bg-[#09090C] border border-zinc-800 flex items-center justify-between gap-2">
                   <div>
-                    <span className="text-[10px] text-slate-400 block font-semibold uppercase">Current Progression</span>
-                    <span className="text-xs font-bold text-[#FFD45A] mt-0.5 block">Level {currentLevelNumber} Active</span>
+                    <span className="text-[10px] text-zinc-400 block font-semibold uppercase">Current Progression</span>
+                    <span className="text-xs font-bold text-amber-400 mt-0.5 block">Level {currentLevelNumber} Active</span>
                   </div>
-                  <span className="text-xs font-bold text-white bg-[#1264F5]/30 border border-[#1264F5]/40 px-2.5 py-1 rounded-xl">
+                  <span className="text-xs font-bold text-white bg-red-600/25 border border-red-500/40 px-2.5 py-1 rounded-xl">
                     {approvedTasksCount} / 10 Tasks Done
                   </span>
                 </div>
@@ -595,7 +589,7 @@ export const DashboardPage: React.FC = () => {
               <div className="pt-2">
                 <Link
                   to="/app/tasks"
-                  className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-[#1264F5] to-[#315BFF] hover:from-[#315BFF] hover:to-[#1264F5] text-white text-xs font-bold shadow-lg shadow-[#1264F5]/25 flex items-center justify-center gap-2 transition-all transform hover:scale-[1.01]"
+                  className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white text-xs font-bold shadow-lg shadow-red-600/25 flex items-center justify-center gap-2 transition-all transform hover:scale-[1.01]"
                 >
                   <CheckSquare className="w-4 h-4" />
                   <span>Continue Level Tasks</span>
@@ -609,33 +603,32 @@ export const DashboardPage: React.FC = () => {
 
       {/* ========================================================
           HELP CENTER MODAL
-          Interactive help modal when user clicks Help Center
           ======================================================== */}
       {helpModalOpen && (
-        <div className="fixed inset-0 z-50 bg-[#020B20]/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in overflow-y-auto overscroll-contain">
-          <div className="w-full max-w-lg max-h-[90dvh] overflow-y-auto overscroll-contain rounded-3xl bg-[#071B3A] border border-[#173C73] p-6 space-y-5 shadow-2xl relative">
-            <div className="flex items-center justify-between border-b border-[#173C73]/50 pb-4">
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in overflow-y-auto overscroll-contain">
+          <div className="w-full max-w-lg max-h-[90dvh] overflow-y-auto overscroll-contain rounded-3xl bg-[#120D10] border border-red-900/50 p-6 space-y-5 shadow-2xl relative">
+            <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-[#10D6A0]/15 border border-[#10D6A0]/30 flex items-center justify-center text-[#10D6A0]">
+                <div className="w-9 h-9 rounded-xl bg-red-500/15 border border-red-500/30 flex items-center justify-center text-red-400">
                   <HelpCircle className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-black text-white">Royal Help Center</h3>
-                  <p className="text-[11px] text-[#B7C6E4]">Support & common inquiries</p>
+                  <h3 className="text-base font-black text-white">Earn Street Help Center</h3>
+                  <p className="text-[11px] text-zinc-400">Support & common inquiries</p>
                 </div>
               </div>
               <button
                 onClick={() => setHelpModalOpen(false)}
-                className="p-2 rounded-xl bg-[#061633] text-slate-400 hover:text-white transition-colors"
+                className="p-2 rounded-xl bg-[#09090C] text-zinc-400 hover:text-white transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="space-y-3 text-xs text-[#B7C6E4]">
-              <div className="p-3.5 rounded-2xl bg-[#061633] border border-[#173C73]/60 space-y-1">
+            <div className="space-y-3 text-xs text-zinc-300">
+              <div className="p-3.5 rounded-2xl bg-[#09090C] border border-zinc-800 space-y-1">
                 <h4 className="font-bold text-white flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#10D6A0]" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-red-500" />
                   How do tasks work?
                 </h4>
                 <p className="leading-relaxed">
@@ -643,9 +636,9 @@ export const DashboardPage: React.FC = () => {
                 </p>
               </div>
 
-              <div className="p-3.5 rounded-2xl bg-[#061633] border border-[#173C73]/60 space-y-1">
+              <div className="p-3.5 rounded-2xl bg-[#09090C] border border-zinc-800 space-y-1">
                 <h4 className="font-bold text-white flex items-center gap-1.5">
-                  <Coins className="w-3.5 h-3.5 text-[#FFD45A]" />
+                  <Coins className="w-3.5 h-3.5 text-amber-400" />
                   How do withdrawals work?
                 </h4>
                 <p className="leading-relaxed">
@@ -653,9 +646,9 @@ export const DashboardPage: React.FC = () => {
                 </p>
               </div>
 
-              <div className="p-3.5 rounded-2xl bg-[#061633] border border-[#173C73]/60 space-y-1">
+              <div className="p-3.5 rounded-2xl bg-[#09090C] border border-zinc-800 space-y-1">
                 <h4 className="font-bold text-white flex items-center gap-1.5">
-                  <Crown className="w-3.5 h-3.5 text-[#22D3EE]" />
+                  <Crown className="w-3.5 h-3.5 text-red-400" />
                   How do I unlock Level 2?
                 </h4>
                 <p className="leading-relaxed">
@@ -667,7 +660,7 @@ export const DashboardPage: React.FC = () => {
             <div className="pt-2 flex items-center justify-end">
               <button
                 onClick={() => setHelpModalOpen(false)}
-                className="px-5 py-2.5 rounded-xl bg-[#1264F5] hover:bg-[#315BFF] text-white text-xs font-bold transition-all shadow-md"
+                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:brightness-110 text-white text-xs font-bold transition-all shadow-md"
               >
                 Got It
               </button>

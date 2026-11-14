@@ -92,9 +92,9 @@ export const MaintenancePage: React.FC<MaintenancePageProps> = ({ settings }) =>
     : null;
 
   return (
-    <div className="min-h-screen bg-[#020712] text-slate-100 flex flex-col items-center justify-center p-4 relative overflow-hidden select-none font-sans">
+    <div className="min-h-screen bg-[#060608] text-zinc-100 flex flex-col items-center justify-center p-4 relative overflow-hidden select-none font-sans">
       {/* Background Ambient Glows */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[480px] h-[480px] bg-[#1459E8]/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[480px] h-[480px] bg-red-600/15 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-lg w-full mx-auto relative z-10 space-y-8 text-center">
         <h1 className="text-2xl sm:text-4xl font-bold text-white tracking-tight">
@@ -104,49 +104,49 @@ export const MaintenancePage: React.FC<MaintenancePageProps> = ({ settings }) =>
         {timeLeft.hasTarget ? (
           <div className="space-y-4">
             <div className="grid grid-cols-4 gap-2 sm:gap-3">
-              <div className="p-3 sm:p-4 rounded-xl bg-[#071739]/80 border border-[#1459E8]/30">
+              <div className="p-3 sm:p-4 rounded-xl bg-[#140B0E]/80 border border-red-500/30">
                 <span className="block text-2xl sm:text-3xl font-black text-white font-mono">
                   {String(timeLeft.days).padStart(2, '0')}
                 </span>
-                <span className="block text-[10px] uppercase font-bold text-slate-400 tracking-wider mt-1">
+                <span className="block text-[10px] uppercase font-bold text-zinc-400 tracking-wider mt-1">
                   Days
                 </span>
               </div>
-              <div className="p-3 sm:p-4 rounded-xl bg-[#071739]/80 border border-[#1459E8]/30">
-                <span className="block text-2xl sm:text-3xl font-black text-[#FFD45A] font-mono">
+              <div className="p-3 sm:p-4 rounded-xl bg-[#140B0E]/80 border border-red-500/30">
+                <span className="block text-2xl sm:text-3xl font-black text-amber-400 font-mono">
                   {String(timeLeft.hours).padStart(2, '0')}
                 </span>
-                <span className="block text-[10px] uppercase font-bold text-slate-400 tracking-wider mt-1">
+                <span className="block text-[10px] uppercase font-bold text-zinc-400 tracking-wider mt-1">
                   Hours
                 </span>
               </div>
-              <div className="p-3 sm:p-4 rounded-xl bg-[#071739]/80 border border-[#1459E8]/30">
+              <div className="p-3 sm:p-4 rounded-xl bg-[#140B0E]/80 border border-red-500/30">
                 <span className="block text-2xl sm:text-3xl font-black text-white font-mono">
                   {String(timeLeft.minutes).padStart(2, '0')}
                 </span>
-                <span className="block text-[10px] uppercase font-bold text-slate-400 tracking-wider mt-1">
+                <span className="block text-[10px] uppercase font-bold text-zinc-400 tracking-wider mt-1">
                   Minutes
                 </span>
               </div>
-              <div className="p-3 sm:p-4 rounded-xl bg-[#071739]/80 border border-[#1459E8]/30">
-                <span className="block text-2xl sm:text-3xl font-black text-emerald-400 font-mono">
+              <div className="p-3 sm:p-4 rounded-xl bg-[#140B0E]/80 border border-red-500/30">
+                <span className="block text-2xl sm:text-3xl font-black text-red-400 font-mono">
                   {String(timeLeft.seconds).padStart(2, '0')}
                 </span>
-                <span className="block text-[10px] uppercase font-bold text-slate-400 tracking-wider mt-1">
+                <span className="block text-[10px] uppercase font-bold text-zinc-400 tracking-wider mt-1">
                   Seconds
                 </span>
               </div>
             </div>
 
             {formattedTargetDate && (
-              <div className="text-xs sm:text-sm font-mono text-slate-400">
+              <div className="text-xs sm:text-sm font-mono text-zinc-400">
                 Time: <strong className="text-white">{formattedTargetDate}</strong>
               </div>
             )}
           </div>
         ) : (
-          <div className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[#071739]/80 border border-[#1459E8]/30 text-slate-300 font-mono text-base sm:text-lg">
-            <Clock className="w-5 h-5 text-[#FFD45A]" />
+          <div className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[#140B0E]/80 border border-red-500/30 text-zinc-300 font-mono text-base sm:text-lg">
+            <Clock className="w-5 h-5 text-red-500" />
             <span>Time: {formattedTargetDate || currentTime}</span>
           </div>
         )}

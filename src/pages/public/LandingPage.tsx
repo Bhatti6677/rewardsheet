@@ -5,16 +5,11 @@ import {
   Sparkles,
   ArrowRight,
   ShieldCheck,
-  CheckCircle2,
-  TrendingUp,
   Disc,
-  Zap,
-  Lock,
-  ChevronRight,
-  HelpCircle,
-  Smartphone,
   Layers,
-  Award,
+  Flame,
+  Zap,
+  CheckCircle2,
 } from 'lucide-react';
 import { api } from '../../api/client';
 
@@ -26,17 +21,21 @@ export const LandingPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#04132F] text-slate-100 flex flex-col selection:bg-[#1459E8] selection:text-white">
+    <div className="min-h-screen bg-[#08080B] text-zinc-100 flex flex-col selection:bg-red-600 selection:text-white relative overflow-hidden">
+      {/* Subtle Carbon Grid & Crimson Ambient Glows */}
+      <div className="fixed inset-0 bg-[radial-gradient(#dc2626_0.6px,transparent_0.6px)] [background-size:28px_28px] opacity-[0.04] pointer-events-none" />
+      <div className="fixed -top-32 left-1/2 -translate-x-1/2 w-[680px] h-[340px] bg-red-600/15 blur-[140px] rounded-full pointer-events-none" />
+
       {/* Top Header */}
-      <header className="sticky top-0 z-50 bg-[#020B20]/90 backdrop-blur-md border-b border-[#214B91]/50 px-4 sm:px-8 py-4">
+      <header className="sticky top-0 z-50 bg-[#050507]/90 backdrop-blur-xl border-b border-red-950/60 px-4 sm:px-8 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5">
-            <div>
-              <span className="text-xl font-black tracking-tight bg-gradient-to-r from-white via-slate-100 to-[#FFD45A] bg-clip-text text-transparent">
+          <Link to="/" className="flex items-center gap-3">
+            <div className="border-l-2 border-red-600 pl-3">
+              <span className="text-xl font-black tracking-wider bg-gradient-to-r from-white via-zinc-100 to-red-500 bg-clip-text text-transparent block leading-none">
                 EARN STREET
               </span>
-              <span className="block text-[10px] text-[#22D3EE] font-bold tracking-widest uppercase">
-                Premier Rewards Platform
+              <span className="block text-[10px] text-red-400 font-bold tracking-[0.2em] uppercase mt-1">
+                Executive Rewards Network
               </span>
             </div>
           </Link>
@@ -44,122 +43,142 @@ export const LandingPage: React.FC = () => {
           <div className="flex items-center gap-3">
             <Link
               to="/login"
-              className="text-xs sm:text-sm font-semibold text-slate-300 hover:text-white px-3 sm:px-4 py-2 rounded-xl transition-colors"
+              className="text-xs sm:text-sm font-semibold text-zinc-300 hover:text-white px-4 py-2 rounded-xl border border-zinc-800 hover:border-red-500/40 bg-zinc-900/60 transition-all"
             >
-              Log In
+              Sign In
             </Link>
             <Link
               to="/register"
-              className="text-xs sm:text-sm font-bold bg-gradient-to-r from-[#1459E8] to-[#2478FF] hover:from-[#2478FF] hover:to-[#1459E8] text-white px-4 sm:px-5 py-2.5 rounded-xl shadow-lg shadow-[#1459E8]/40 border border-[#2478FF]/50 transition-all hover:scale-105"
+              className="text-xs sm:text-sm font-bold bg-gradient-to-r from-red-600 via-red-500 to-rose-600 hover:from-red-500 hover:to-red-600 text-white px-4 sm:px-5 py-2.5 rounded-xl shadow-lg shadow-red-600/30 border border-red-400/30 transition-all hover:scale-[1.03]"
             >
-              Register Now
+              Create Account
             </Link>
           </div>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-12 pb-20 sm:pt-20 sm:pb-32 px-4 sm:px-8">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#1459E8]/20 blur-3xl rounded-full pointer-events-none" />
-        <div className="absolute top-1/3 right-1/4 w-80 h-80 bg-[#792BFF]/15 blur-3xl rounded-full pointer-events-none" />
+      <section className="relative overflow-hidden pt-12 pb-16 sm:pt-20 sm:pb-24 px-4 sm:px-8">
+        <div className="max-w-6xl mx-auto relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            {/* Left Hero Column */}
+            <div className="lg:col-span-7 text-center lg:text-left space-y-6">
+              <div className="inline-flex items-center gap-2 bg-red-950/40 border border-red-500/30 px-4 py-1.5 rounded-full text-xs text-red-300 font-semibold shadow-inner">
+                <Flame className="w-4 h-4 text-red-500 animate-pulse" />
+                <span>Next-Gen Sequential PKR Rewards & Fortune Wheel</span>
+              </div>
 
-        <div className="max-w-5xl mx-auto text-center relative z-10">
-          <div className="inline-flex items-center gap-2 bg-[#1459E8]/20 border border-[#214B91] px-4 py-1.5 rounded-full mb-6 text-xs sm:text-sm text-[#22D3EE] font-semibold">
-            <Sparkles className="w-4 h-4 text-[#FFD45A] animate-spin" style={{ animationDuration: '6s' }} />
-            <span>Verified Sequential PKR Rewards & Daily Wheel</span>
-          </div>
+              <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-[1.08] text-white">
+                Command Your Earnings On{' '}
+                <span className="bg-gradient-to-r from-red-500 via-rose-400 to-amber-400 bg-clip-text text-transparent">
+                  Earn Street
+                </span>
+              </h1>
 
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight leading-tight mb-6">
-            Ascend The Throne Of <br />
-            <span className="bg-gradient-to-r from-[#FFD45A] via-amber-200 to-[#FFD45A] bg-clip-text text-transparent">
-              Earn Street
-            </span>
-          </h1>
+              <p className="text-sm sm:text-lg text-zinc-400 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                Pakistan’s premier 10-level sequential task ecosystem. Complete verified assignments, unlock high-commission VIP tiers, spin the crimson wheel, and withdraw directly to Easypaisa & JazzCash.
+              </p>
 
-          <p className="text-base sm:text-xl text-slate-300 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Experience Pakistan’s leading 10-level reward progression ecosystem. Complete sequential tasks, unlock VIP tiers, spin for instant cash prizes, and withdraw directly to Easypaisa and JazzCash.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
-            <Link
-              to="/register"
-              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-[#FFD45A] to-amber-400 text-[#020B20] font-black text-base px-8 py-4 rounded-xl shadow-xl shadow-[#FFD45A]/20 hover:scale-105 transition-all"
-            >
-              <span>Get Started Now</span>
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link
-              to="/login"
-              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#020B20]/80 hover:bg-[#020B20] border border-[#214B91] text-white font-bold text-base px-8 py-4 rounded-xl transition-all"
-            >
-              <span>Sign In</span>
-            </Link>
-          </div>
-
-          {/* Quick Metrics Bar */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-16 max-w-4xl mx-auto">
-            <div className="royal-card p-4 rounded-2xl">
-              <span className="text-2xl sm:text-3xl font-black text-[#FFD45A] block">10</span>
-              <span className="text-xs text-slate-400 font-medium">Progressive Tiers</span>
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2">
+                <Link
+                  to="/register"
+                  className="w-full sm:w-auto flex items-center justify-center gap-2.5 bg-gradient-to-r from-red-600 via-red-500 to-rose-600 hover:brightness-110 text-white font-black text-sm sm:text-base px-8 py-4 rounded-2xl shadow-xl shadow-red-600/25 border border-red-400/30 transition-all"
+                >
+                  <span>Start Earning Now</span>
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
+                <Link
+                  to="/login"
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#111116] hover:bg-[#18181F] border border-zinc-800 hover:border-red-500/40 text-zinc-100 font-bold text-sm sm:text-base px-8 py-4 rounded-2xl transition-all"
+                >
+                  <span>Member Login</span>
+                </Link>
+              </div>
             </div>
-            <div className="royal-card p-4 rounded-2xl">
-              <span className="text-2xl sm:text-3xl font-black text-[#22D3EE] block">100</span>
-              <span className="text-xs text-slate-400 font-medium">Sequential Tasks</span>
-            </div>
-            <div className="royal-card p-4 rounded-2xl">
-              <span className="text-2xl sm:text-3xl font-black text-[#22C55E] block">PKR 50k+</span>
-              <span className="text-xs text-slate-400 font-medium">Level 10 Prize</span>
-            </div>
-            <div className="royal-card p-4 rounded-2xl">
-              <span className="text-2xl sm:text-3xl font-black text-[#60A5FA] block">100%</span>
-              <span className="text-xs text-slate-400 font-medium">Verified Manual Payouts</span>
+
+            {/* Right Hero Stats Showcase Panel */}
+            <div className="lg:col-span-5">
+              <div className="p-6 sm:p-7 rounded-3xl bg-gradient-to-b from-[#161014] to-[#0B0B0F] border border-red-500/30 shadow-[0_20px_60px_rgba(0,0,0,0.85)] space-y-5 relative overflow-hidden">
+                <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent" />
+                <div className="flex items-center justify-between border-b border-zinc-800/80 pb-4">
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-red-400 block">
+                      Live Platform Architecture
+                    </span>
+                    <h3 className="text-lg font-black text-white mt-0.5">Performance Metrics</h3>
+                  </div>
+                  <span className="px-2.5 py-1 rounded-full bg-red-500/15 border border-red-500/30 text-red-400 text-[10px] font-bold uppercase tracking-wider">
+                    Verified
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3.5">
+                  <div className="p-4 rounded-2xl bg-[#09090D] border border-zinc-800/90 hover:border-red-500/40 transition-colors">
+                    <span className="text-2xl sm:text-3xl font-black text-red-500 block">10</span>
+                    <span className="text-xs text-zinc-400 font-medium mt-0.5 block">Progressive Tiers</span>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-[#09090D] border border-zinc-800/90 hover:border-red-500/40 transition-colors">
+                    <span className="text-2xl sm:text-3xl font-black text-white block">100</span>
+                    <span className="text-xs text-zinc-400 font-medium mt-0.5 block">Sequential Tasks</span>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-[#09090D] border border-zinc-800/90 hover:border-red-500/40 transition-colors">
+                    <span className="text-2xl sm:text-3xl font-black text-amber-400 block">PKR 50k+</span>
+                    <span className="text-xs text-zinc-400 font-medium mt-0.5 block">Tier 10 Rewards</span>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-[#09090D] border border-zinc-800/90 hover:border-red-500/40 transition-colors">
+                    <span className="text-2xl sm:text-3xl font-black text-emerald-400 block">100%</span>
+                    <span className="text-xs text-zinc-400 font-medium mt-0.5 block">Verified Payouts</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* 10-Level System Showcase */}
-      <section className="py-16 bg-[#020B20] border-y border-[#214B91]/50 px-4 sm:px-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center">
-            <div className="inline-flex items-center gap-2 text-xs font-bold text-[#FFD45A] uppercase tracking-wider mb-2">
-              <Layers className="w-4 h-4" /> 10 Levels & 100 Standard Tasks
+      <section className="py-14 bg-[#050507] border-y border-red-950/50 px-4 sm:px-8">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center space-y-3">
+            <div className="inline-flex items-center gap-2 text-xs font-bold text-red-400 uppercase tracking-widest px-3 py-1 rounded-full bg-red-950/40 border border-red-500/20">
+              <Layers className="w-3.5 h-3.5" /> 10 Levels & 100 Standard Tasks
             </div>
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-white">
+            <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
               Strict Sequential Tier Progression
             </h2>
-            <p className="text-sm sm:text-base text-slate-400 max-w-xl mx-auto mt-2">
-              Every level contains exactly 10 tasks. Complete Task 1 to unlock Task 2. Clear all 10 to unlock the next prestige level!
+            <p className="text-sm sm:text-base text-zinc-400 max-w-xl mx-auto">
+              Every level contains 10 structured assignments. Complete Task 1 to unlock Task 2, and clear the level to ascend to higher reward tiers.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Royal Spin Feature */}
+      {/* Crimson Spin Feature */}
       <section className="py-16 px-4 sm:px-8">
-        <div className="max-w-5xl mx-auto royal-card rounded-3xl p-8 sm:p-12 relative overflow-hidden">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+        <div className="max-w-5xl mx-auto rounded-3xl p-8 sm:p-12 bg-gradient-to-br from-[#1A0B0E] via-[#0F0C10] to-[#08080B] border border-red-500/35 shadow-2xl relative overflow-hidden">
+          <div className="absolute -right-20 -bottom-20 w-72 h-72 bg-red-600/15 blur-3xl rounded-full pointer-events-none" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center relative z-10">
             <div>
-              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#FFD45A] uppercase tracking-wider mb-2">
-                <Disc className="w-4 h-4 text-[#FFD45A] animate-spin" /> Daily Royal Spin Wheel
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-red-400 uppercase tracking-wider mb-2">
+                <Disc className="w-4 h-4 text-red-500 animate-spin" /> Daily Fortune Wheel
               </span>
-              <h2 className="text-2xl sm:text-4xl font-extrabold text-white mb-4">
+              <h2 className="text-2xl sm:text-4xl font-black text-white mb-4 leading-tight">
                 Spin & Win Up To <br />
-                <span className="text-[#FFD45A]">PKR 5,000 & Gadgets</span>
+                <span className="text-red-500">PKR 5,000 & Gadgets</span>
               </h2>
-              <p className="text-sm text-slate-300 mb-6 leading-relaxed">
-                Eligible members receive royal spin entitlements. Spin the wheel to claim real cash deposited directly to your wallet, gold watches, and high-end smartphones!
+              <p className="text-sm text-zinc-300 mb-6 leading-relaxed">
+                Eligible members receive spin entitlements upon completing levels. Spin the wheel to claim instant wallet cash, luxury watches, and smartphones!
               </p>
               <div className="flex flex-wrap gap-3">
                 <Link
                   to="/app/spin"
-                  className="bg-[#1459E8] hover:bg-[#2478FF] text-white font-bold text-sm px-6 py-3 rounded-xl transition-all"
+                  className="bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-red-600/25 transition-all"
                 >
                   Explore Spin Wheel
                 </Link>
                 <Link
                   to="/register"
-                  className="bg-white/5 hover:bg-white/10 border border-[#214B91] text-white font-bold text-sm px-6 py-3 rounded-xl transition-all"
+                  className="bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-white font-bold text-sm px-6 py-3 rounded-xl transition-all"
                 >
                   Create Account
                 </Link>
@@ -167,11 +186,13 @@ export const LandingPage: React.FC = () => {
             </div>
 
             <div className="flex justify-center">
-              <div className="w-64 h-64 sm:w-72 sm:h-72 rounded-full border-4 border-[#FFD45A] shadow-2xl shadow-[#FFD45A]/20 flex items-center justify-center bg-gradient-to-tr from-[#1459E8] via-[#792BFF] to-[#020B20] p-4 text-center">
-                <div>
-                  <Crown className="w-12 h-12 text-[#FFD45A] mx-auto mb-2 animate-bounce" />
-                  <span className="text-lg font-black text-white block">ROYAL WHEEL</span>
-                  <span className="text-xs text-[#22D3EE] font-bold">100% Backend Determined</span>
+              <div className="w-60 h-60 sm:w-68 sm:h-68 rounded-full border-4 border-red-500 shadow-[0_0_50px_rgba(220,38,38,0.3)] flex items-center justify-center bg-gradient-to-tr from-[#2A080E] via-[#12090D] to-[#050507] p-4 text-center relative">
+                <div className="w-full h-full rounded-full border border-amber-500/30 flex items-center justify-center">
+                  <div>
+                    <Crown className="w-11 h-11 text-amber-400 mx-auto mb-2 animate-bounce" />
+                    <span className="text-lg font-black text-white tracking-wider block">FORTUNE WHEEL</span>
+                    <span className="text-xs text-red-400 font-bold">100% Instant Wallet Credit</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -180,22 +201,22 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* Payment Methods */}
-      <section className="py-12 bg-[#020B20] border-t border-[#214B91]/50 px-4 sm:px-8 text-center">
+      <section className="py-12 bg-[#050507] border-t border-red-950/50 px-4 sm:px-8 text-center">
         <div className="max-w-4xl mx-auto">
-          <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-4">
+          <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest block mb-5">
             Supported Deposit & Withdrawal Channels
           </span>
-          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-12">
-            <div className="flex items-center gap-2 bg-[#04132F] px-4 py-2 rounded-xl border border-[#214B91]">
-              <span className="w-3 h-3 rounded-full bg-emerald-500" />
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8">
+            <div className="flex items-center gap-2.5 bg-[#0E0E13] px-5 py-2.5 rounded-xl border border-zinc-800 hover:border-red-500/40 transition-colors">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
               <span className="font-bold text-sm text-white">Easypaisa</span>
             </div>
-            <div className="flex items-center gap-2 bg-[#04132F] px-4 py-2 rounded-xl border border-[#214B91]">
-              <span className="w-3 h-3 rounded-full bg-red-500" />
+            <div className="flex items-center gap-2.5 bg-[#0E0E13] px-5 py-2.5 rounded-xl border border-zinc-800 hover:border-red-500/40 transition-colors">
+              <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
               <span className="font-bold text-sm text-white">JazzCash</span>
             </div>
-            <div className="flex items-center gap-2 bg-[#04132F] px-4 py-2 rounded-xl border border-[#214B91]">
-              <span className="w-3 h-3 rounded-full bg-blue-500" />
+            <div className="flex items-center gap-2.5 bg-[#0E0E13] px-5 py-2.5 rounded-xl border border-zinc-800 hover:border-red-500/40 transition-colors">
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
               <span className="font-bold text-sm text-white">All Pakistan Banks</span>
             </div>
           </div>
@@ -203,17 +224,17 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* Footer */}
-      <footer className="mt-auto py-8 bg-[#020B20] border-t border-[#214B91]/40 px-4 sm:px-8 text-xs text-slate-400">
+      <footer className="mt-auto py-8 bg-[#050507] border-t border-zinc-900 px-4 sm:px-8 text-xs text-zinc-500">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <Crown className="w-4 h-4 text-[#FFD45A]" />
-            <span className="font-bold text-slate-200">Earn Street Platform</span>
+            <span className="w-2 h-2 rounded-full bg-red-600" />
+            <span className="font-bold text-zinc-200">Earn Street Platform</span>
             <span>© 2026. All rights reserved.</span>
           </div>
 
           <div className="flex items-center gap-6">
-            <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
-            <Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link to="/terms" className="hover:text-red-400 transition-colors">Terms of Service</Link>
+            <Link to="/privacy" className="hover:text-red-400 transition-colors">Privacy Policy</Link>
           </div>
         </div>
       </footer>

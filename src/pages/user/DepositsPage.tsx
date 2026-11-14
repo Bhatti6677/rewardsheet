@@ -150,20 +150,20 @@ export const DepositsPage: React.FC = () => {
       {/* Title */}
       <div>
         <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-2.5">
-          <ArrowDownLeft className="w-7 h-7 text-[#1459E8]" /> Deposit Funds
+          <ArrowDownLeft className="w-7 h-7 text-red-500" /> Deposit Funds
         </h1>
-        <p className="text-xs text-slate-300 mt-1">
+        <p className="text-xs text-zinc-300 mt-1">
           Add PKR balance to your wallet via Easypaisa, JazzCash, or online banking. Verified manually by administration.
         </p>
       </div>
 
       {queryAmount && (
-        <div className="p-4 bg-gradient-to-r from-[#FFD45A]/15 via-[#071B3A] to-[#1459E8]/20 border border-[#FFD45A]/50 rounded-2xl text-xs shadow-md">
+        <div className="p-4 bg-gradient-to-r from-red-600/15 via-[#140B0F] to-amber-500/15 border border-red-500/50 rounded-2xl text-xs shadow-md">
           <div className="space-y-0.5">
-            <span className="font-bold text-[#FFD45A] block text-sm">
+            <span className="font-bold text-amber-400 block text-sm">
               Prepaid Task Balance Deposit: PKR {parseFloat(queryAmount).toLocaleString()}
             </span>
-            <span className="text-slate-300">
+            <span className="text-zinc-300">
               The required difference of <strong className="text-white font-bold">PKR {parseFloat(queryAmount).toLocaleString()}</strong> needed to unlock your prepaid task has been pre-filled below. Send the funds and submit your transaction ID to activate your task!
             </span>
           </div>
@@ -200,20 +200,20 @@ export const DepositsPage: React.FC = () => {
               onClick={() => handleSelectMethod(key)}
               className={`royal-card p-4 rounded-2xl text-left transition-all cursor-pointer ${
                 isSelected
-                  ? 'border-[#2478FF] bg-[#1459E8]/20 shadow-lg shadow-[#1459E8]/20 ring-1 ring-[#2478FF]'
-                  : 'hover:border-[#214B91] hover:bg-white/5'
+                  ? 'border-red-500 bg-red-600/20 shadow-lg shadow-red-600/20 ring-1 ring-red-500'
+                  : 'hover:border-red-900/60 hover:bg-white/5'
               }`}
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="font-bold text-sm text-white">{name}</span>
                 <span
                   className={`w-3.5 h-3.5 rounded-full border-2 transition-colors ${
-                    isSelected ? 'border-[#22D3EE] bg-[#22D3EE]' : 'border-slate-500'
+                    isSelected ? 'border-red-500 bg-red-500' : 'border-zinc-500'
                   }`}
                 />
               </div>
               <div className="flex items-center justify-between mt-1">
-                <p className="text-[11px] text-slate-400">{subtitle}</p>
+                <p className="text-[11px] text-zinc-400">{subtitle}</p>
                 <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-full">
                   Available
                 </span>
@@ -225,26 +225,26 @@ export const DepositsPage: React.FC = () => {
 
       {/* Account Loading (2 seconds) */}
       {accountLoading && (
-        <div className="royal-card p-6 sm:p-8 rounded-3xl border border-[#2478FF]/50 bg-gradient-to-br from-[#0B2248] via-[#020B20] to-[#04132F] text-center space-y-4 shadow-xl animate-in fade-in duration-300">
-          <div className="w-14 h-14 mx-auto rounded-2xl bg-[#1459E8]/20 border border-[#2478FF]/40 flex items-center justify-center text-[#22D3EE]">
-            <span className="w-7 h-7 border-3 border-[#2478FF]/30 border-t-[#22D3EE] rounded-full animate-spin" />
+        <div className="royal-card p-6 sm:p-8 rounded-3xl border border-red-500/50 bg-gradient-to-br from-[#1B0B10] via-[#09090C] to-[#120A0E] text-center space-y-4 shadow-xl animate-in fade-in duration-300">
+          <div className="w-14 h-14 mx-auto rounded-2xl bg-red-600/20 border border-red-500/40 flex items-center justify-center text-red-400">
+            <span className="w-7 h-7 border-3 border-red-500/30 border-t-red-500 rounded-full animate-spin" />
           </div>
           <div className="space-y-1">
             <h3 className="text-base font-bold text-white">Checking Account Availability...</h3>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-zinc-400">
               Allocating official receiving account for {getMethodDisplayName(method)}
             </p>
           </div>
-          <div className="w-48 h-1.5 bg-[#020B20] rounded-full mx-auto overflow-hidden border border-[#214B91]/50">
-            <div className="h-full bg-gradient-to-r from-[#1459E8] to-[#22D3EE] animate-pulse w-full" />
+          <div className="w-48 h-1.5 bg-[#09090C] rounded-full mx-auto overflow-hidden border border-zinc-800">
+            <div className="h-full bg-gradient-to-r from-red-600 to-rose-500 animate-pulse w-full" />
           </div>
         </div>
       )}
 
       {/* Account is Available & Get Account Option */}
       {!accountLoading && accountReady && (
-        <div className="royal-card p-6 sm:p-8 rounded-3xl border-2 border-emerald-500/40 bg-gradient-to-br from-[#041d1a] via-[#020B20] to-[#04132F] space-y-5 shadow-2xl shadow-emerald-500/10 animate-in fade-in duration-300">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#214B91]/40">
+        <div className="royal-card p-6 sm:p-8 rounded-3xl border-2 border-emerald-500/40 bg-gradient-to-br from-[#071A15] via-[#09090C] to-[#120A0E] space-y-5 shadow-2xl shadow-emerald-500/10 animate-in fade-in duration-300">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800">
             <div className="flex items-center gap-3.5">
               <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center flex-shrink-0 text-emerald-400">
                 <CheckCircle2 className="w-6 h-6" />
@@ -256,27 +256,27 @@ export const DepositsPage: React.FC = () => {
                     Ready to Receive
                   </span>
                 </div>
-                <p className="text-xs text-slate-300 mt-0.5">
+                <p className="text-xs text-zinc-300 mt-0.5">
                   Official {getMethodDisplayName(method)} receiving account has been allocated and verified.
                 </p>
               </div>
             </div>
 
             <div className="flex-shrink-0 sm:text-right">
-              <span className="text-[11px] font-semibold text-slate-400 block">Selected Option</span>
-              <span className="text-sm font-bold text-[#FFD45A] block">
+              <span className="text-[11px] font-semibold text-zinc-400 block">Selected Option</span>
+              <span className="text-sm font-bold text-amber-400 block">
                 {getMethodDisplayName(method)}
               </span>
             </div>
           </div>
 
-          <div className="p-4 bg-[#020B20] border border-[#214B91] rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="p-4 bg-[#08080B] border border-zinc-800 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="space-y-1">
               <div className="flex items-center gap-2 text-xs font-bold text-white">
                 <ShieldCheck className="w-4 h-4 text-emerald-400" />
                 Verified Account Details Ready
               </div>
-              <p className="text-[11px] text-slate-400 leading-relaxed">
+              <p className="text-[11px] text-zinc-400 leading-relaxed">
                 Click below to get your assigned receiving account details and proceed with your deposit.
               </p>
             </div>
@@ -284,7 +284,7 @@ export const DepositsPage: React.FC = () => {
             <button
               type="button"
               onClick={handleGetAccount}
-              className="flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-[#1459E8] via-[#2478FF] to-[#0088cc] hover:brightness-110 active:scale-[0.98] text-white font-black text-sm shadow-xl shadow-[#1459E8]/30 transition-all cursor-pointer whitespace-nowrap"
+              className="flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-red-600 via-red-500 to-rose-600 hover:brightness-110 active:scale-[0.98] text-white font-black text-sm shadow-xl shadow-red-600/30 transition-all cursor-pointer whitespace-nowrap"
             >
               <span>Get Account</span>
               <ArrowDownLeft className="w-4 h-4 rotate-180" />
@@ -299,7 +299,7 @@ export const DepositsPage: React.FC = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+            <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
               Deposit Amount in PKR *
             </label>
             <input
@@ -310,12 +310,12 @@ export const DepositsPage: React.FC = () => {
               placeholder="Enter deposit amount in PKR"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="w-full bg-[#020B20] border border-[#214B91] focus:border-[#2478FF] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none"
+              className="w-full bg-[#08080B] border border-zinc-800 focus:border-red-500 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+            <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
               Transaction ID / TID / Reference *
             </label>
             <input
@@ -324,12 +324,12 @@ export const DepositsPage: React.FC = () => {
               placeholder="e.g. EP-9876543210 or Bank Reference"
               value={trxRef}
               onChange={(e) => setTrxRef(e.target.value)}
-              className="w-full bg-[#020B20] border border-[#214B91] focus:border-[#2478FF] rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none font-mono"
+              className="w-full bg-[#08080B] border border-zinc-800 focus:border-red-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:outline-none font-mono"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+            <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
               Supporting Proof / Sender Account (Optional)
             </label>
             <input
@@ -337,14 +337,14 @@ export const DepositsPage: React.FC = () => {
               placeholder="Sender phone / name or receipt reference"
               value={evidence}
               onChange={(e) => setEvidence(e.target.value)}
-              className="w-full bg-[#020B20] border border-[#214B91] focus:border-[#2478FF] rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none"
+              className="w-full bg-[#08080B] border border-zinc-800 focus:border-red-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:outline-none"
             />
           </div>
 
           <button
             type="submit"
             disabled={submitting}
-            className="w-full py-3 bg-gradient-to-r from-[#1459E8] to-[#2478FF] hover:from-[#2478FF] hover:to-[#1459E8] text-white font-bold text-sm rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+            className="w-full py-3 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-sm rounded-xl shadow-lg shadow-red-600/25 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
           >
             {submitting ? (
               <span className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
@@ -360,7 +360,7 @@ export const DepositsPage: React.FC = () => {
       {/* User Deposit Requests History */}
       <div className="royal-card p-6 rounded-3xl space-y-4">
         <h2 className="text-base font-bold text-white flex items-center gap-2">
-          <Clock className="w-4 h-4 text-[#22D3EE]" /> Deposit Requests History
+          <Clock className="w-4 h-4 text-red-500" /> Deposit Requests History
         </h2>
 
         {deposits.length > 0 ? (

@@ -58,20 +58,20 @@ export const WalletPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-2.5">
-            <Wallet className="w-7 h-7 text-[#FFD45A]" /> Wallet
+            <Wallet className="w-7 h-7 text-red-500" /> Wallet
           </h1>
         </div>
 
         <div className="flex items-center gap-2.5">
           <Link
             to="/app/deposits"
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1459E8] hover:bg-[#2478FF] text-white text-xs font-bold transition-all shadow-md shadow-[#1459E8]/30"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:brightness-110 text-white text-xs font-bold transition-all shadow-md shadow-red-600/30"
           >
             <ArrowDownLeft className="w-4 h-4" /> Deposit
           </Link>
           <Link
             to="/app/withdrawals"
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-[#FFD45A] to-amber-400 text-[#020B20] text-xs font-black transition-all shadow-md shadow-[#FFD45A]/20"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 text-xs font-black transition-all shadow-md shadow-amber-500/20"
           >
             <ArrowUpRight className="w-4 h-4" /> Withdraw
           </Link>
@@ -79,14 +79,14 @@ export const WalletPage: React.FC = () => {
       </div>
 
       {/* Available Balance Card */}
-      <div className="royal-card p-6 sm:p-8 rounded-3xl relative overflow-hidden bg-gradient-to-b from-[#0B2248]/90 via-[#04132F] to-[#020B20] border border-[#214B91]/60 shadow-2xl">
+      <div className="royal-card p-6 sm:p-8 rounded-3xl relative overflow-hidden bg-gradient-to-b from-[#1B0B10]/95 via-[#100A0D] to-[#08080B] border border-red-900/60 shadow-2xl">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div>
-            <span className="text-xs sm:text-sm font-semibold text-slate-400 block uppercase tracking-wider">
+            <span className="text-xs sm:text-sm font-semibold text-zinc-400 block uppercase tracking-wider">
               Available Balance
             </span>
             <div className="flex items-baseline gap-2 mt-2">
-              <span className="text-3xl sm:text-4xl md:text-5xl font-black text-[#FFD45A] tracking-tight">
+              <span className="text-3xl sm:text-4xl md:text-5xl font-black text-amber-400 tracking-tight">
                 PKR {(wallet?.availableBalance || 0).toLocaleString()}
               </span>
             </div>
@@ -95,13 +95,13 @@ export const WalletPage: React.FC = () => {
           <div className="flex items-center gap-3 flex-wrap sm:flex-nowrap">
             <Link
               to="/app/deposits"
-              className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-[#1459E8] hover:bg-[#2478FF] text-white text-sm font-bold transition-all shadow-lg shadow-[#1459E8]/30 active:scale-[0.98]"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 hover:brightness-110 text-white text-sm font-bold transition-all shadow-lg shadow-red-600/30 active:scale-[0.98]"
             >
               <ArrowDownLeft className="w-4 h-4" /> Deposit
             </Link>
             <Link
               to="/app/withdrawals"
-              className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-[#FFD45A] to-amber-400 hover:from-amber-400 hover:to-[#FFD45A] text-[#020B20] text-sm font-black transition-all shadow-lg shadow-[#FFD45A]/25 active:scale-[0.98]"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-slate-950 text-sm font-black transition-all shadow-lg shadow-amber-500/25 active:scale-[0.98]"
             >
               <ArrowUpRight className="w-4 h-4" /> Withdraw
             </Link>
