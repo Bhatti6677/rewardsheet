@@ -47,14 +47,18 @@ export const AdminDeveloperPage: React.FC = () => {
     'Your administrator panel has been temporarily locked by the Developer. Please clear any pending developer payment or contact the Developer to restore access.'
   );
 
-  // 3. Master Admin Popup Notification State
-  const [popupEnabled, setPopupEnabled] = useState(true);
+  // 3. Master Admin Popup Notification State (Turned OFF by default per instructions)
+  const [popupEnabled, setPopupEnabled] = useState(false);
   const [popupTitle, setPopupTitle] = useState('Payment Notice');
   const [popupMessage, setPopupMessage] = useState(
     'Payment needs to be updated. Kindly pay the payment to continue working.'
   );
   const [popupIntervalMinutes, setPopupIntervalMinutes] = useState(15);
   const [previewPopupOpen, setPreviewPopupOpen] = useState(false);
+
+  // 3B. Master Admin Bottom Sticky Marquee Ribbon State (Empty text by default, managed manually by Developer)
+  const [ribbonEnabled, setRibbonEnabled] = useState(true);
+  const [ribbonText, setRibbonText] = useState('');
 
   // 4. Dual-Supabase Database State
   const [primaryUrlMasked, setPrimaryUrlMasked] = useState('');
@@ -93,6 +97,10 @@ export const AdminDeveloperPage: React.FC = () => {
         setPopupMessage(res.masterAdminPopup.message || '');
         setPopupIntervalMinutes(Number(res.masterAdminPopup.intervalMinutes) || 15);
       }
+      if (res?.masterAdminRibbon) {
+        setRibbonEnabled(res.masterAdminRibbon.enabled !== false);
+        setRibbonText(res.masterAdminRibbon.text ?? '');
+      }
       if (res?.database) {
         setPrimaryUrlMasked(res.database.primaryDatabaseUrlMasked || '');
         setSecondaryUrl(res.database.secondaryDatabaseUrl || '');
@@ -116,6 +124,7 @@ export const AdminDeveloperPage: React.FC = () => {
     masterAdminBlocked?: boolean;
     miniAdminBlocked?: boolean;
     popupEnabled?: boolean;
+    ribbonEnabled?: boolean;
     dualSyncEnabled?: boolean;
   }) => {
     setSaving(true);
@@ -139,6 +148,10 @@ export const AdminDeveloperPage: React.FC = () => {
           title: popupTitle.trim(),
           message: popupMessage.trim(),
           intervalMinutes: Math.max(1, Number(popupIntervalMinutes) || 15),
+        },
+        masterAdminRibbon: {
+          enabled: overrides?.ribbonEnabled ?? ribbonEnabled,
+          text: ribbonText,
         },
         database: {
           secondaryDatabaseUrl: secondaryUrl.trim(),
@@ -577,6 +590,66 @@ export const AdminDeveloperPage: React.FC = () => {
               >
                 <Save className="w-3.5 h-3.5" />
                 Save Popup Settings
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* CARD 2B: MASTER ADMIN STICKY BOTTOM MARQUEE RIBBON CONTROL */}
+      <div className="bg-white rounded-2xl border border-[#D9E4F2] shadow-xs overflow-hidden">
+        <div className="px-6 py-4 border-b border-[#E5EBF4] flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-gradient-to-r from-amber-50/70 via-[#F8FAFD] to-[#F8FAFD]">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-amber-100 border border-amber-200 text-amber-700 flex items-center justify-center">
+              <BellRing className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-[#111827]">Master Admin Bottom Sticky Notification Ribbon (Marquee)</h3>
+              <p className="text-[11px] text-[#6B7280]">
+                Animated continuous marquee sticky bar pinned to the bottom of the Master Admin panel
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              const nextVal = !ribbonEnabled;
+              setRibbonEnabled(nextVal);
+              handleSaveAll({ ribbonEnabled: nextVal });
+            }}
+            className={`px-3.5 py-1.5 rounded-full text-xs font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
+              ribbonEnabled
+                ? 'bg-amber-500 text-slate-950 shadow-sm shadow-amber-500/20'
+                : 'bg-slate-200 text-slate-600'
+            }`}
+          >
+            <span className={`w-2 h-2 rounded-full ${ribbonEnabled ? 'bg-slate-950 animate-ping' : 'bg-slate-500'}`} />
+            {ribbonEnabled ? 'STICKY RIBBON: ON' : 'STICKY RIBBON: OFF'}
+          </button>
+        </div>
+
+        <div className="p-6 space-y-4">
+          <div>
+            <label className="block text-xs font-bold text-slate-700 mb-1">
+              Marquee Notification Text (Write manually — leave empty if no text should scroll yet)
+            </label>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <input
+                type="text"
+                value={ribbonText}
+                onChange={(e) => setRibbonText(e.target.value)}
+                placeholder=""
+                className="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-medium text-slate-900 focus:outline-none focus:border-blue-600"
+              />
+              <button
+                type="button"
+                onClick={() => handleSaveAll()}
+                disabled={saving}
+                className="px-5 py-2.5 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-bold flex items-center justify-center gap-1.5 flex-shrink-0 cursor-pointer"
+              >
+                <Save className="w-3.5 h-3.5" />
+                Save Ribbon
               </button>
             </div>
           </div>

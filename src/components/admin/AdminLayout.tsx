@@ -532,10 +532,16 @@ export const AdminLayout: React.FC = () => {
   // Master Admin Recurring Payment Reminder (strictly SUPER_ADMIN / !isMiniAdmin && !isDeveloper)
   const [showPaymentNotice, setShowPaymentNotice] = useState(false);
   const [popupConfig, setPopupConfig] = useState({
-    enabled: true,
+    enabled: false,
     title: 'Payment Notice',
     message: 'Payment needs to be updated. Kindly pay the payment to continue working.',
     intervalMinutes: 15,
+  });
+
+  // Master Admin Sticky Bottom Notification Ribbon with Marquee Effect (Empty text by default, controlled by Developer)
+  const [ribbonConfig, setRibbonConfig] = useState({
+    enabled: true,
+    text: '',
   });
 
   const checkAdminLockAndSettings = useCallback(async () => {
@@ -575,13 +581,18 @@ export const AdminLayout: React.FC = () => {
       }
 
       if (!isMiniAdmin) {
-        const enabled = settings?.masterAdminPopupEnabled !== false;
+        const enabled = settings?.masterAdminPopupEnabled === true;
         const title = settings?.masterAdminPopupTitle || 'Payment Notice';
         const message =
           settings?.masterAdminPopupMessage ||
           'Payment needs to be updated. Kindly pay the payment to continue working.';
         const intervalMinutes = Math.max(1, Number(settings?.masterAdminPopupIntervalMinutes) || 15);
         setPopupConfig({ enabled, title, message, intervalMinutes });
+
+        setRibbonConfig({
+          enabled: settings?.masterAdminRibbonEnabled !== false,
+          text: settings?.masterAdminRibbonText ?? '',
+        });
       }
     } catch {
       // Ignore transient errors
@@ -1183,12 +1194,49 @@ export const AdminLayout: React.FC = () => {
         </header>
 
         {/* Content Body */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+        <main className={`flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 ${!isMiniAdmin && !isDeveloper && ribbonConfig.enabled ? 'pb-16' : ''}`}>
           <div key={location.pathname} className="animate-page-enter">
             <Outlet />
           </div>
         </main>
       </div>
+
+      {/* Master Admin Sticky Bottom Animated Marquee Notification Ribbon */}
+      {!isMiniAdmin && !isDeveloper && ribbonConfig.enabled && (
+        <>
+          <style>{`
+            @keyframes masterAdminMarquee {
+              0% { transform: translateX(100%); }
+              100% { transform: translateX(-100%); }
+            }
+            @keyframes masterAdminRibbonGlow {
+              0%, 100% { background-position: 0% 50%; }
+              50% { background-position: 100% 50%; }
+            }
+            .master-admin-marquee-track {
+              display: inline-block;
+              white-space: nowrap;
+              will-change: transform;
+              animation: masterAdminMarquee 18s linear infinite;
+            }
+            .master-admin-marquee-track:hover {
+              animation-play-state: paused;
+            }
+            .master-admin-ribbon-bar {
+              background: linear-gradient(90deg, #0f172a, #1e3a8a, #0f172a, #1e3a8a);
+              background-size: 300% 100%;
+              animation: masterAdminRibbonGlow 8s ease infinite;
+            }
+          `}</style>
+          <div className="fixed bottom-0 left-0 right-0 z-[9990] h-10 master-admin-ribbon-bar border-t border-amber-400/50 shadow-[0_-4px_20px_rgba(0,0,0,0.25)] flex items-center overflow-hidden">
+            <div className="w-full overflow-hidden flex items-center">
+              <div className="master-admin-marquee-track text-xs sm:text-sm font-extrabold tracking-wide text-amber-300 px-4">
+                {ribbonConfig.text}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Master Admin Payment Reminder Modal */}
       {!isMiniAdmin && !isDeveloper && popupConfig.enabled && showPaymentNotice && (
