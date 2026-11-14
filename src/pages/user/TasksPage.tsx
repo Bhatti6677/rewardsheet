@@ -418,7 +418,7 @@ export const TasksPage: React.FC = () => {
             const isCompleted =
               lvl.levelNumber === 4 ? lvlApproved >= 1 : lvlApproved >= lvlTotal;
             const isLocked = !lvl.isUnlocked && !isCompleted;
-            const isPreviewOnly = isLocked && lvl.levelNumber >= 4 && isUserAtLevel4OrAbove;
+            const isPreviewOnly = false;
 
             return (
               <button
@@ -493,8 +493,6 @@ export const TasksPage: React.FC = () => {
                   className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md ${
                     isSelectedLevelCompleted
                       ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-400/40'
-                      : isSelectedLevelLocked && activeLevelNumber >= 4 && isUserAtLevel4OrAbove
-                      ? 'bg-sky-500/15 text-sky-300 border border-sky-400/30'
                       : isSelectedLevelLocked
                       ? 'bg-slate-800 text-slate-400 border border-slate-700'
                       : 'bg-amber-500/20 text-amber-400 border border-amber-400/40'
@@ -502,8 +500,6 @@ export const TasksPage: React.FC = () => {
                 >
                   {isSelectedLevelCompleted
                     ? 'Completed'
-                    : isSelectedLevelLocked && activeLevelNumber >= 4 && isUserAtLevel4OrAbove
-                    ? 'Tasks Visible'
                     : isSelectedLevelLocked
                     ? 'Locked'
                     : 'Processing'}
@@ -557,13 +553,8 @@ export const TasksPage: React.FC = () => {
         {isSelectedLevelLocked && (
           <div className="p-3.5 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-between gap-3 text-xs">
             <span className="text-slate-200">
-              {selectedLevelSummary?.lockReason
-                ? selectedLevelSummary.lockReason
-                : activeLevelNumber >= 4 && isUserAtLevel4OrAbove
-                ? `You have reached Level 4! All assignments for Level ${activeLevelNumber} are visible below. Complete preceding tasks and await admin approval to execute.`
-                : activeLevelNumber === 5
-                ? 'Complete any one task in Level 4 and await administrator approval to unlock Level 5.'
-                : `Complete all tasks in Level ${activeLevelNumber - 1} to unlock this tier.`}
+              {selectedLevelSummary?.lockReason ||
+                `Level ${activeLevelNumber} is locked. Please complete Level ${userCurrentLevelNumber} first to unlock Level ${activeLevelNumber}.`}
             </span>
             {userCurrentLevelNumber !== activeLevelNumber && (
               <button
@@ -693,22 +684,20 @@ export const TasksPage: React.FC = () => {
                 !isSelectedLevelLocked &&
                 task.userStatus === 'REJECTED';
 
-              // In Levels 1 to 3: if a task is locked, do not show its task name, prize, or allow opening it until reached!
-              // For Levels 4 to 10: If user has reached Level 4, tasks, descriptions, and prizes are NEVER hidden!
-              const isHiddenLockedTask =
-                isTaskLocked && (activeLevelNumber <= 3 || !isUserAtLevel4OrAbove);
+              // For ALL Levels (1 to 10): if a task is locked, hide its task name, free/paid status, and commission!
+              // Clicking on the locked task opens the locked notice instructing the user to complete the current level/task first.
+              const isHiddenLockedTask = isTaskLocked;
 
               return (
                 <div
                   id={`task-row-${task.taskNumber}`}
                   key={task.id}
                   onClick={() => {
-                    if (isHiddenLockedTask) return;
                     navigate(`/app/tasks/${task.id}`);
                   }}
                   className={`flex items-center justify-between gap-3 p-2.5 sm:px-4 sm:py-3 rounded-xl border transition-all duration-150 ${
                     isHiddenLockedTask
-                      ? 'bg-[#040E24]/50 border-[#142C56]/40 opacity-60 cursor-not-allowed'
+                      ? 'bg-[#040E24]/60 border-[#142C56]/50 opacity-80 hover:border-amber-500/40 cursor-pointer'
                       : isTaskLocked
                       ? 'bg-[#040E24]/60 border-[#142C56]/40 opacity-85 hover:border-amber-500/40 cursor-pointer'
                       : isApproved
@@ -780,22 +769,17 @@ export const TasksPage: React.FC = () => {
 
                     {/* Option to Open / View */}
                     <div className="flex-shrink-0">
-                      {isHiddenLockedTask ? (
-                        <span className="px-2.5 py-1.5 rounded-lg bg-slate-900/90 border border-slate-800 text-slate-500 text-xs font-semibold flex items-center gap-1 select-none">
-                          <Lock className="w-3 h-3 text-slate-500" />
-                          <span className="hidden sm:inline">Locked</span>
-                        </span>
-                      ) : isTaskLocked ? (
+                      {isHiddenLockedTask || isTaskLocked ? (
                         <button
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
                             navigate(`/app/tasks/${task.id}`);
                           }}
-                          className="px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-200 hover:text-white text-xs font-semibold flex items-center gap-1 cursor-pointer transition-all"
+                          className="px-2.5 py-1.5 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white text-xs font-semibold flex items-center gap-1 cursor-pointer transition-all"
                         >
-                          <span>View</span>
-                          <ArrowRight className="w-3 h-3 text-slate-400" />
+                          <Lock className="w-3 h-3 text-amber-400" />
+                          <span>Open</span>
                         </button>
                       ) : (
                         <button

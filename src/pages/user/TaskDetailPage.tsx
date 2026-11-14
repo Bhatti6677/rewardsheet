@@ -229,7 +229,7 @@ export const TaskDetailPage: React.FC = () => {
             <span className="text-xs font-semibold text-[#22D3EE]">
               Task #{task?.taskNumber}
             </span>
-            {task?.taskType && (
+            {!isLocked && task?.taskType && (
               <>
                 <span className="text-slate-500">•</span>
                 <span className="text-xs text-slate-300 font-medium">
@@ -237,7 +237,7 @@ export const TaskDetailPage: React.FC = () => {
                 </span>
               </>
             )}
-            {task?.isPaid && (
+            {!isLocked && task?.isPaid && (
               <>
                 <span className="text-slate-500">•</span>
                 <span className="text-xs font-bold text-[#FFD45A] flex items-center gap-1">
@@ -277,20 +277,27 @@ export const TaskDetailPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Title & Description */}
+        {/* Title & Description (Masked when locked) */}
         <div className="space-y-1.5">
-          <h1 className="text-lg sm:text-xl font-bold text-white">
-            {cleanTaskTitle(task?.title)}
+          <h1 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+            {isLocked ? (
+              <>
+                <Lock className="w-5 h-5 text-amber-400 flex-shrink-0" />
+                <span>Locked Task #{task?.taskNumber}</span>
+              </>
+            ) : (
+              cleanTaskTitle(task?.title)
+            )}
           </h1>
-          {task?.description && (
+          {!isLocked && task?.description && (
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
               {task?.description}
             </p>
           )}
         </div>
 
-        {/* Simple Inline Rewards Strip (No boxes) - Visible for Levels 4-10 or unlocked levels */}
-        {!(isLocked && (level?.levelNumber || 1) <= 3 && !taskData?.isLevelUnlocked) && (
+        {/* Simple Inline Rewards Strip (Hidden whenever task is locked) */}
+        {!isLocked && (
           <div className="flex items-center gap-5 sm:gap-8 flex-wrap pt-1 pb-1">
             {task?.isPaid ? (
               <div>
@@ -309,7 +316,7 @@ export const TaskDetailPage: React.FC = () => {
             )}
             <div>
               <span className="text-[10px] text-slate-400 uppercase font-semibold block tracking-wider">
-                {task?.isPaid ? 'Commission (40%)' : 'Reward / Prize'}
+                {task?.isPaid ? 'Commission' : 'Reward / Prize'}
               </span>
               <span className="text-sm sm:text-base font-black text-[#10D6A0]">
                 {task?.rewardAmount > 0 ? `PKR ${task?.rewardAmount?.toLocaleString()}` : 'Free Task'}
@@ -327,15 +334,15 @@ export const TaskDetailPage: React.FC = () => {
               </div>
               <div className="space-y-1 max-w-md mx-auto">
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold mb-1">
-                  <span>{(level?.levelNumber || 1) >= 4 ? 'Level Preview Mode' : 'Task Locked'}</span>
+                  <span>Task Locked</span>
                 </div>
                 <h3 className="text-base font-bold text-white">
-                  {(level?.levelNumber || 1) >= 4 ? `Level ${level?.levelNumber || ''} Assignment Preview` : 'This Task is Locked'}
+                  This Task Is Locked
                 </h3>
                 <p className="text-xs text-slate-300 leading-relaxed">
-                  {(level?.levelNumber || 1) >= 4
-                    ? `Task prize and assignment details are visible above. Advance through your active level requirements to submit this task.`
-                    : (task?.lockMessage || `Task #${task?.taskNumber || ''} is locked. Complete the current task first to unlock this task.`)}
+                  {task?.lockMessage ||
+                    task?.description ||
+                    `Task #${task?.taskNumber || ''} is locked. Please complete your current level tasks first to unlock this task.`}
                 </p>
               </div>
               <div className="pt-1">
