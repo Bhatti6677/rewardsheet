@@ -470,225 +470,85 @@ export const DashboardPage: React.FC = () => {
           </div>
 
           {/* ========================================================
-              E. QUICK-ACTION CARDS (Tasks, Spin, Withdraw, History)
+              E. UNIFIED TRANSPARENT OVERVIEW BOX (Welcome + Tier Progress + Milestone CTA)
               ======================================================== */}
-          <div>
-            <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-3 px-1">
-              Quick Actions
-            </h3>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-              {/* 1. Tasks Card (Crimson Accent) */}
-              <Link
-                to="/app/tasks"
-                className="p-4 sm:p-5 rounded-2xl bg-[#110C0F] border border-red-900/40 hover:border-red-500 transition-all flex flex-col justify-between group shadow-lg hover:shadow-red-600/20 transform hover:-translate-y-0.5"
-              >
-                <div className="w-11 h-11 rounded-2xl bg-red-600/20 border border-red-500/40 flex items-center justify-center text-red-400 group-hover:scale-110 transition-transform mb-3">
-                  <CheckSquare className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="text-sm sm:text-base font-black text-white group-hover:text-red-400 transition-colors">
-                    Tasks
-                  </h4>
-                  <p className="text-[11px] text-zinc-400 font-medium">Complete & Earn</p>
-                </div>
-              </Link>
-
-              {/* 2. Spin Card (Rose Accent) */}
-              <Link
-                to="/app/spin"
-                className="p-4 sm:p-5 rounded-2xl bg-[#110C0F] border border-red-900/40 hover:border-rose-500 transition-all flex flex-col justify-between group shadow-lg hover:shadow-rose-600/20 transform hover:-translate-y-0.5"
-              >
-                <div className="w-11 h-11 rounded-2xl bg-rose-600/20 border border-rose-500/40 flex items-center justify-center text-rose-400 group-hover:scale-110 transition-transform mb-3">
-                  <Disc className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="text-sm sm:text-base font-black text-white group-hover:text-rose-400 transition-colors">
-                    Spin
-                  </h4>
-                  <p className="text-[11px] text-zinc-400 font-medium">Win Exciting Rewards</p>
-                </div>
-              </Link>
-
-              {/* 3. Withdraw Card (Amber Accent) */}
-              <Link
-                to="/app/withdrawals"
-                className="p-4 sm:p-5 rounded-2xl bg-[#110C0F] border border-red-900/40 hover:border-amber-400 transition-all flex flex-col justify-between group shadow-lg hover:shadow-amber-500/20 transform hover:-translate-y-0.5"
-              >
-                <div className="w-11 h-11 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform mb-3">
-                  <ArrowUpRight className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="text-sm sm:text-base font-black text-white group-hover:text-amber-400 transition-colors">
-                    Withdraw
-                  </h4>
-                  <p className="text-[11px] text-zinc-400 font-medium">Get Your Rewards</p>
-                </div>
-              </Link>
-
-              {/* 4. History Card (Red-Gold Accent) */}
-              <Link
-                to="/app/wallet"
-                className="p-4 sm:p-5 rounded-2xl bg-[#110C0F] border border-red-900/40 hover:border-red-400 transition-all flex flex-col justify-between group shadow-lg hover:shadow-red-500/20 transform hover:-translate-y-0.5"
-              >
-                <div className="w-11 h-11 rounded-2xl bg-red-500/15 border border-red-500/30 flex items-center justify-center text-red-400 group-hover:scale-110 transition-transform mb-3">
-                  <Clock className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="text-sm sm:text-base font-black text-white group-hover:text-red-400 transition-colors">
-                    History
-                  </h4>
-                  <p className="text-[11px] text-zinc-400 font-medium">View Records</p>
-                </div>
-              </Link>
-            </div>
-          </div>
-
-          {/* ========================================================
-              F. WELCOME & REWARDS BANNER
-              ======================================================== */}
-          <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-[#22080D] via-[#991B1B] to-[#110A0D] border border-red-500/40 shadow-2xl relative overflow-hidden">
-            {/* Glow / Background Artwork Elements */}
-            <div className="absolute top-0 right-0 w-72 h-72 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute bottom-0 left-1/3 w-60 h-60 bg-red-600/20 rounded-full blur-3xl pointer-events-none" />
-
-            <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-              <div className="space-y-2.5 max-w-xl">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/60 border border-amber-400/40 text-amber-400 text-xs font-black shadow-sm">
-                  <Crown className="w-3.5 h-3.5" />
+          <div className="rounded-3xl bg-transparent backdrop-blur-sm border border-red-900/40 divide-y divide-red-900/30">
+            {/* 1. Welcome & Rewards Header */}
+            <div className="p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="space-y-1.5 max-w-xl">
+                <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-red-400 uppercase tracking-wider">
+                  <Crown className="w-3.5 h-3.5 text-amber-400" />
                   <span>Small Steps, Big Rewards</span>
                 </div>
-
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-white tracking-tight">
+                <h2 className="text-lg sm:text-2xl font-black text-white tracking-tight">
                   Welcome to Earn Street!
                 </h2>
-
-                <p className="text-xs sm:text-sm text-zinc-200 leading-relaxed">
-                  Complete tasks sequentially, earn verified PKR rewards, and unlock higher prestige tiers for larger bonuses.
+                <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                  Complete tasks sequentially, earn verified PKR rewards, and unlock higher prestige tiers.
                 </p>
               </div>
 
-              {/* View Tasks CTA Button */}
-              <div className="flex-shrink-0">
+              <div className="shrink-0">
                 <Link
                   to="/app/tasks"
-                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-white to-zinc-100 hover:from-amber-400 hover:to-amber-500 text-[#09090C] text-xs sm:text-sm font-black shadow-xl shadow-black/40 transform hover:scale-[1.03] transition-all"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 hover:brightness-110 text-white text-xs sm:text-sm font-bold shadow-lg shadow-red-600/20 transition-all"
                 >
-                  <Crown className="w-4 h-4 text-red-600" />
                   <span>View Tasks</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
             </div>
-          </div>
 
-          {/* ========================================================
-              G. LEVEL PROGRESS CARD (Strict 10-Task Level System)
-              ======================================================== */}
-          <div className="p-5 sm:p-7 rounded-3xl bg-[#110C0F] border border-red-900/45 shadow-xl space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div>
-                <h3 className="text-lg sm:text-xl font-black text-white">
-                  Tier Ascent Status
-                </h3>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <div className="bg-[#09090C] px-3.5 py-2 rounded-xl border border-zinc-800 text-left">
-                  <span className="text-[10px] text-zinc-400 block font-medium uppercase">
-                    Tasks Approved
-                  </span>
-                  <span className="text-sm font-black text-white">
-                    {approvedTasksCount} / 10
-                  </span>
-                </div>
-                <div className="bg-[#09090C] px-3.5 py-2 rounded-xl border border-zinc-800 text-left">
-                  <span className="text-[10px] text-zinc-400 block font-medium uppercase">
-                    Remaining
-                  </span>
-                  <span className="text-sm font-black text-red-400">
-                    {remainingTasksInLevel} Tasks
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Real Progress Bar */}
-            <div className="space-y-1.5 pt-1">
-              <div className="flex items-center justify-between text-xs text-zinc-400">
-                <span>Progress Percentage</span>
-                <span className="font-bold text-white">{progressPercent}%</span>
-              </div>
-              <div className="w-full h-3 bg-[#09090C] rounded-full overflow-hidden border border-zinc-800">
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-red-600 via-rose-500 to-amber-400 transition-all duration-500 shadow-md"
-                  style={{ width: `${progressPercent}%` }}
-                />
-              </div>
-            </div>
-
-            {/* Level Action Footer */}
-            <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs border-t border-zinc-800/80">
-              <p className="text-zinc-400">
-                {completedLevelsCount === 0
-                  ? `Complete Level ${currentLevelNumber} tasks to earn task rewards and unlock 10% account balance withdrawal!`
-                  : `Level ${currentLevelNumber} In Progress • Complete tasks to earn task rewards and advance to the next level!`}
-              </p>
-              <Link
-                to="/app/tasks"
-                className="inline-flex items-center gap-1.5 font-bold text-red-400 hover:text-white transition-colors self-start sm:self-auto"
-              >
-                <span>Continue Level {currentLevelNumber} Tasks</span>
-                <ChevronRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
-          </div>
-
-          {/* ========================================================
-              VIP TASK MILESTONE & PROGRESSION CARD
-              ======================================================== */}
-          <div>
-            <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-[#190B0F] via-[#110C0F] to-[#09090C] border border-red-900/45 shadow-xl space-y-4 relative overflow-hidden flex flex-col justify-between">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-red-600 to-amber-500 p-0.5 shadow-md flex items-center justify-center">
-                    <div className="w-full h-full bg-[#09090C] rounded-[14px] flex items-center justify-center text-red-500">
-                      <Crown className="w-5 h-5" />
-                    </div>
-                  </div>
-                  <span className="text-[10px] font-bold text-red-400 bg-red-500/15 border border-red-500/30 px-2.5 py-1 rounded-full flex items-center gap-1">
-                    <ShieldCheck className="w-3 h-3 text-red-400" /> VIP Progression
-                  </span>
-                </div>
-
-                <div className="space-y-1">
+            {/* 2. Tier Ascent & Milestone Progress */}
+            <div className="p-5 sm:p-6 space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
                   <h3 className="text-base sm:text-lg font-black text-white">
-                    Task Milestone Rewards
+                    Tier Ascent Status
                   </h3>
-                  <p className="text-xs text-zinc-400 leading-relaxed">
-                    Complete your sequential level tasks to claim verified milestone rewards and unlock fortune wheel spins!
-                  </p>
+                  <span className="text-[10px] font-bold text-red-400 bg-red-500/10 border border-red-500/30 px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+                    <ShieldCheck className="w-3 h-3" /> Level {currentLevelNumber}
+                  </span>
                 </div>
 
-                <div className="p-3.5 rounded-2xl bg-[#09090C] border border-zinc-800 flex items-center justify-between gap-2">
+                <div className="flex items-center gap-4 text-xs">
                   <div>
-                    <span className="text-[10px] text-zinc-400 block font-semibold uppercase">Current Progression</span>
-                    <span className="text-xs font-bold text-amber-400 mt-0.5 block">Level {currentLevelNumber} Active</span>
+                    <span className="text-zinc-500 font-medium">Approved: </span>
+                    <span className="font-black text-white">{approvedTasksCount} / 10</span>
                   </div>
-                  <span className="text-xs font-bold text-white bg-red-600/25 border border-red-500/40 px-2.5 py-1 rounded-xl">
-                    {approvedTasksCount} / 10 Tasks Done
-                  </span>
+                  <div className="h-3 w-px bg-red-900/40" />
+                  <div>
+                    <span className="text-zinc-500 font-medium">Remaining: </span>
+                    <span className="font-black text-red-400">{remainingTasksInLevel} Tasks</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Bottom Tasks CTA */}
-              <div className="pt-2">
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-xs text-zinc-400">
+                  <span>Milestone Progress</span>
+                  <span className="font-bold text-white">{progressPercent}%</span>
+                </div>
+                <div className="w-full h-2.5 bg-black/40 rounded-full overflow-hidden border border-red-900/35">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-red-600 via-rose-500 to-amber-400 transition-all duration-500"
+                    style={{ width: `${progressPercent}%` }}
+                  />
+                </div>
+              </div>
+
+              <div className="pt-1 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                <p className="text-zinc-400">
+                  {completedLevelsCount === 0
+                    ? `Complete Level ${currentLevelNumber} tasks to earn rewards and unlock 10% withdrawal!`
+                    : `Level ${currentLevelNumber} Active • Complete sequential tasks to advance and unlock spins.`}
+                </p>
                 <Link
                   to="/app/tasks"
-                  className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white text-xs font-bold shadow-lg shadow-red-600/25 flex items-center justify-center gap-2 transition-all transform hover:scale-[1.01]"
+                  className="inline-flex items-center gap-1.5 font-bold text-red-400 hover:text-white transition-colors shrink-0"
                 >
-                  <CheckSquare className="w-4 h-4" />
-                  <span>Continue Level Tasks</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <span>Continue Level {currentLevelNumber} Tasks</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
             </div>
