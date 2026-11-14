@@ -151,13 +151,8 @@ export const UserLayout: React.FC = () => {
       {/* Main Header */}
       <header className="sticky top-0 z-40 bg-[#050507]/95 backdrop-blur-xl border-b border-red-950/60 px-2 sm:px-5 lg:px-6 py-2 sm:py-2.5 w-full max-w-full overflow-hidden shadow-lg shadow-black/50">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-1.5 sm:gap-2 w-full">
-          {/* Logo & Brand */}
-          <Link to="/app" className="flex items-center gap-1.5 sm:gap-2 group flex-shrink-0 min-w-0">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-red-700 via-red-500 to-amber-400 p-0.5 shadow-md shadow-red-600/25 group-hover:scale-105 transition-transform">
-              <div className="w-full h-full bg-[#0A0A0E] rounded-[6px] flex items-center justify-center">
-                <Crown className="w-4 h-4 text-red-500" />
-              </div>
-            </div>
+          {/* Brand */}
+          <Link to="/app" className="flex items-center group flex-shrink-0 min-w-0">
             <div>
               <span className="text-xs sm:text-sm font-extrabold tracking-tight bg-gradient-to-r from-white via-zinc-100 to-red-400 bg-clip-text text-transparent block leading-tight">
                 EARN STREET
