@@ -31,11 +31,6 @@ export const LandingPage: React.FC = () => {
       <header className="sticky top-0 z-50 bg-[#020B20]/90 backdrop-blur-md border-b border-[#214B91]/50 px-4 sm:px-8 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#1459E8] to-[#FFD45A] p-0.5 shadow-lg shadow-[#1459E8]/30">
-              <div className="w-full h-full bg-[#04132F] rounded-[10px] flex items-center justify-center">
-                <Crown className="w-5 h-5 text-[#FFD45A]" />
-              </div>
-            </div>
             <div>
               <span className="text-xl font-black tracking-tight bg-gradient-to-r from-white via-slate-100 to-[#FFD45A] bg-clip-text text-transparent">
                 EARN STREET
@@ -126,7 +121,7 @@ export const LandingPage: React.FC = () => {
       {/* 10-Level System Showcase */}
       <section className="py-16 bg-[#020B20] border-y border-[#214B91]/50 px-4 sm:px-8">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
+          <div className="text-center">
             <div className="inline-flex items-center gap-2 text-xs font-bold text-[#FFD45A] uppercase tracking-wider mb-2">
               <Layers className="w-4 h-4" /> 10 Levels & 100 Standard Tasks
             </div>
@@ -136,38 +131,6 @@ export const LandingPage: React.FC = () => {
             <p className="text-sm sm:text-base text-slate-400 max-w-xl mx-auto mt-2">
               Every level contains exactly 10 tasks. Complete Task 1 to unlock Task 2. Clear all 10 to unlock the next prestige level!
             </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { lvl: 1, name: 'Apprentice Tier', desc: '10 free tasks at PKR 15 per task', tasksInfo: 'PKR 15 / Task' },
-              { lvl: 2, name: 'Bronze Sovereign', desc: '9 free tasks (PKR 40) + 1 prepaid task', tasksInfo: 'Up to PKR 564' },
-              { lvl: 3, name: 'Silver Monarch', desc: '8 free tasks (PKR 60) + 2 prepaid tasks', tasksInfo: 'Up to PKR 5,704' },
-              { lvl: 4, name: 'Gold Viceroy', desc: '10 VIP prepaid tasks with 40% commission', tasksInfo: '40% Commission' },
-              { lvl: 5, name: 'Emerald Regent', desc: '10 standard tasks unlocked after Level 4', tasksInfo: '10 Tasks' },
-              { lvl: 10, name: 'Royal Emperor (Final)', desc: 'The apex tier of Earn Street progression', tasksInfo: '10 Tasks' },
-            ].map((tier) => (
-              <div key={tier.lvl} className="royal-card p-6 rounded-2xl relative overflow-hidden group">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="w-8 h-8 rounded-lg bg-[#1459E8]/30 border border-[#214B91] flex items-center justify-center font-bold text-sm text-[#FFD45A]">
-                    L{tier.lvl}
-                  </span>
-                  <span className="text-xs font-bold text-[#22C55E] bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 rounded-full">
-                    {tier.tasksInfo}
-                  </span>
-                </div>
-                <h3 className="text-lg font-bold text-white mb-1 group-hover:text-[#FFD45A] transition-colors">
-                  {tier.name}
-                </h3>
-                <p className="text-xs text-slate-400 mb-4">{tier.desc}</p>
-                <div className="flex items-center justify-between pt-3 border-t border-[#214B91]/40 text-xs text-slate-300">
-                  <span>10 Sequential Tasks</span>
-                  <span className="text-[#2478FF] font-semibold flex items-center gap-1">
-                    Verified by Admin <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                  </span>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </section>
