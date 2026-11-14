@@ -646,3 +646,38 @@ textarea:focus {
 .mini-btn-water-splash:active {
   transform: translateY(1px) scale(0.98);
 }
+
+/* Smooth Obsidian & Crimson Background Waves */
+@keyframes waveDriftSlow {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-25%, 6px, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes waveDriftFast {
+  0% {
+    transform: translate3d(-25%, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -8px, 0);
+  }
+  100% {
+    transform: translate3d(-25%, 0, 0);
+  }
+}
+
+.animate-wave-slow {
+  animation: waveDriftSlow 18s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-wave-fast {
+  animation: waveDriftFast 12s ease-in-out infinite;
+  will-change: transform;
+}

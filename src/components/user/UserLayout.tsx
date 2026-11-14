@@ -147,7 +147,60 @@ export const UserLayout: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#08080B] text-zinc-100 flex flex-col selection:bg-red-600 selection:text-white w-full max-w-full overflow-x-hidden">
+    <div className="min-h-screen bg-[#08080B] text-zinc-100 flex flex-col selection:bg-red-600 selection:text-white w-full max-w-full overflow-x-hidden relative">
+      {/* Animated Obsidian & Crimson Background Waves */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute -top-24 -left-24 w-96 h-96 bg-red-700/12 rounded-full blur-3xl" />
+        <div className="absolute top-1/3 -right-24 w-80 h-80 bg-rose-700/10 rounded-full blur-3xl" />
+        <svg
+          className="absolute bottom-0 left-0 w-[200%] h-72 sm:h-96 opacity-45 animate-wave-slow"
+          viewBox="0 0 1440 320"
+          preserveAspectRatio="none"
+        >
+          <defs>
+            <linearGradient id="crimsonWave1" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#991B1B" stopOpacity="0.28" />
+              <stop offset="50%" stopColor="#DC2626" stopOpacity="0.16" />
+              <stop offset="100%" stopColor="#7F1D1D" stopOpacity="0.28" />
+            </linearGradient>
+          </defs>
+          <path
+            fill="url(#crimsonWave1)"
+            d="M0,192L60,181.3C120,171,240,149,360,165.3C480,181,600,235,720,240C840,245,960,203,1080,176C1200,149,1320,139,1380,133.3L1440,128L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
+          />
+        </svg>
+        <svg
+          className="absolute bottom-0 left-0 w-[200%] h-56 sm:h-72 opacity-60 animate-wave-fast"
+          viewBox="0 0 1440 320"
+          preserveAspectRatio="none"
+        >
+          <defs>
+            <linearGradient id="crimsonWave2" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#DC2626" stopOpacity="0.22" />
+              <stop offset="50%" stopColor="#450A0A" stopOpacity="0.35" />
+              <stop offset="100%" stopColor="#DC2626" stopOpacity="0.22" />
+            </linearGradient>
+          </defs>
+          <path
+            fill="url(#crimsonWave2)"
+            d="M0,256L80,234.7C160,213,320,171,480,176C640,181,800,235,960,245.3C1120,256,1280,224,1360,208L1440,192L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"
+          />
+        </svg>
+        <svg
+          className="absolute top-14 left-0 w-[200%] h-44 opacity-25 animate-wave-slow"
+          viewBox="0 0 1440 320"
+          preserveAspectRatio="none"
+        >
+          <path
+            fill="none"
+            stroke="#EF4444"
+            strokeOpacity="0.35"
+            strokeWidth="2"
+            d="M0,128L80,149.3C160,171,320,213,480,202.7C640,192,800,128,960,117.3C1120,107,1280,149,1360,170.7L1440,192"
+          />
+        </svg>
+      </div>
+
       {/* Main Header */}
       <header className="sticky top-0 z-40 bg-[#050507]/95 backdrop-blur-xl border-b border-red-950/60 px-2 sm:px-5 lg:px-6 py-2 sm:py-2.5 w-full max-w-full overflow-hidden shadow-lg shadow-black/50">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-1.5 sm:gap-2 w-full">
@@ -338,7 +391,7 @@ export const UserLayout: React.FC = () => {
       )}
 
       {/* Main Content Area */}
-      <main className="flex-1 pb-28 md:pb-16 max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
+      <main className="relative z-10 flex-1 pb-28 md:pb-16 max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
         <div key={location.pathname} className="animate-page-enter">
           <Outlet />
         </div>
