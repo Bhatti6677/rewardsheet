@@ -336,22 +336,22 @@ export const SpinPage: React.FC = () => {
       <style>{`
         @keyframes spinLedEven {
           0%, 100% {
-            background-color: #FFD45A;
-            box-shadow: 0 0 10px #FFD45A, 0 0 18px #FFD45A;
+            background-color: #EF4444;
+            box-shadow: 0 0 10px #EF4444, 0 0 18px #DC2626;
           }
           50% {
-            background-color: #DC2626;
-            box-shadow: 0 0 8px #EF4444;
+            background-color: #FBBF24;
+            box-shadow: 0 0 10px #FBBF24, 0 0 16px #F59E0B;
           }
         }
         @keyframes spinLedOdd {
           0%, 100% {
-            background-color: #DC2626;
-            box-shadow: 0 0 8px #EF4444;
+            background-color: #FBBF24;
+            box-shadow: 0 0 10px #FBBF24, 0 0 16px #F59E0B;
           }
           50% {
-            background-color: #FFD45A;
-            box-shadow: 0 0 10px #FFD45A, 0 0 18px #FFD45A;
+            background-color: #EF4444;
+            box-shadow: 0 0 10px #EF4444, 0 0 18px #DC2626;
           }
         }
         .spin-led-bulb-even {
@@ -396,7 +396,7 @@ export const SpinPage: React.FC = () => {
         </div>
 
         {/* Outer Casino Bezel with 24 Blinking LED Bulbs (Enlarged from 420px to 480px) */}
-        <div className="relative w-[340px] h-[340px] sm:w-[460px] sm:h-[460px] md:w-[480px] md:h-[480px] rounded-full p-4 sm:p-5 flex items-center justify-center bg-gradient-to-b from-[#FFE58F] via-[#B8860B] to-[#78590A] shadow-[0_0_60px_rgba(255,212,90,0.45),inset_0_0_25px_rgba(0,0,0,0.85)] border-4 border-[#FFD45A]">
+        <div className="relative w-[340px] h-[340px] sm:w-[460px] sm:h-[460px] md:w-[480px] md:h-[480px] rounded-full p-4 sm:p-5 flex items-center justify-center bg-gradient-to-b from-[#450A0A] via-[#991B1B] to-[#1A0508] shadow-[0_0_60px_rgba(220,38,38,0.45),inset_0_0_25px_rgba(0,0,0,0.9)] border-4 border-red-500/85">
           {/* LED Bulbs placed circularly - Zero JS Timer, 100% GPU CSS */}
           {ledBulbs.map((_, i) => {
             const angle = (i * 360) / ledBulbs.length;
@@ -415,8 +415,8 @@ export const SpinPage: React.FC = () => {
             );
           })}
 
-          {/* Inner Golden Rim Frame */}
-          <div className="w-full h-full rounded-full p-2 bg-[#020B20] border-2 border-[#FFE58F]/60 shadow-[inset_0_0_25px_rgba(0,0,0,0.9)] relative flex items-center justify-center overflow-hidden">
+          {/* Inner Obsidian & Crimson Rim Frame */}
+          <div className="w-full h-full rounded-full p-2 bg-[#07060A] border-2 border-red-500/60 shadow-[inset_0_0_25px_rgba(0,0,0,0.95)] relative flex items-center justify-center overflow-hidden">
             {/* The Rotating Wheel GPU-Accelerated Wrapper */}
             <div
               className="w-full h-full rounded-full relative"
@@ -436,10 +436,10 @@ export const SpinPage: React.FC = () => {
               >
                 <defs>
                   <linearGradient id="barOverlay" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#020B20" stopOpacity="0.45" />
-                    <stop offset="25%" stopColor="#020B20" stopOpacity="0.08" />
-                    <stop offset="70%" stopColor="#020B20" stopOpacity="0.3" />
-                    <stop offset="100%" stopColor="#020B20" stopOpacity="0.92" />
+                    <stop offset="0%" stopColor="#09090C" stopOpacity="0.4" />
+                    <stop offset="30%" stopColor="#09090C" stopOpacity="0.12" />
+                    <stop offset="72%" stopColor="#1A060B" stopOpacity="0.45" />
+                    <stop offset="100%" stopColor="#09090C" stopOpacity="0.94" />
                   </linearGradient>
 
                   {prizes.map((p: any, idx: number) => {
@@ -470,13 +470,14 @@ export const SpinPage: React.FC = () => {
                   const midAngle = startAngle + segmentAngle / 2;
                   const productImg = getPrizeProductImage(p);
                   const wheelText = getFormattedWheelText(p.displayLabel || p.name);
+                  const isEvenSlice = idx % 2 === 0;
 
                   return (
                     <g key={p.id || idx}>
                       {/* The Prize Bar with Image Background clipped to sector */}
                       <g clipPath={`url(#wedge-clip-${p.id || idx})`}>
-                        {/* Deep dark backing */}
-                        <path d={pathData} fill="#04132F" />
+                        {/* Alternating Obsidian & Deep Crimson backing */}
+                        <path d={pathData} fill={isEvenSlice ? '#0B090E' : '#26080E'} />
 
                         {/* Rotated along the sector's radial axis */}
                         <g transform={`rotate(${midAngle}, 50, 50)`}>
@@ -489,6 +490,7 @@ export const SpinPage: React.FC = () => {
                             width="60"
                             height="52"
                             preserveAspectRatio="xMidYMid slice"
+                            opacity="0.88"
                           />
 
                           {/* High-definition contrast gradient overlay */}
@@ -500,15 +502,22 @@ export const SpinPage: React.FC = () => {
                             fill="url(#barOverlay)"
                           />
 
+                          {/* Subtle Crimson Tint on Alternating Slices */}
+                          <path
+                            d={pathData}
+                            transform={`rotate(${-midAngle}, 50, 50)`}
+                            fill={isEvenSlice ? 'rgba(9, 9, 12, 0.25)' : 'rgba(153, 27, 27, 0.28)'}
+                          />
+
                           {/* Medallion Ring framing the product image */}
                           <circle
                             cx="50"
                             cy="28"
                             r="6.5"
                             fill="none"
-                            stroke="#FFD45A"
-                            strokeWidth="0.5"
-                            opacity="0.8"
+                            stroke="#EF4444"
+                            strokeWidth="0.55"
+                            opacity="0.85"
                           />
 
                           {/* Reward Bar Capsule where the reward is written */}
@@ -518,12 +527,12 @@ export const SpinPage: React.FC = () => {
                             width="35"
                             height="11"
                             rx="5.5"
-                            fill="rgba(2, 11, 32, 0.92)"
-                            stroke="#FFD45A"
+                            fill="rgba(9, 9, 12, 0.94)"
+                            stroke={isEvenSlice ? '#EF4444' : '#FBBF24'}
                             strokeWidth="0.65"
                           />
-                          <circle cx="35" cy="11" r="0.9" fill="#FFD45A" />
-                          <circle cx="65" cy="11" r="0.9" fill="#FFD45A" />
+                          <circle cx="35" cy="11" r="0.9" fill="#FBBF24" />
+                          <circle cx="65" cy="11" r="0.9" fill="#FBBF24" />
 
                           {/* Bold, Crisp Reward Text (Zero CPU filter, hardware accelerated stroke) */}
                           <text
@@ -534,14 +543,14 @@ export const SpinPage: React.FC = () => {
                             fontWeight="900"
                             textAnchor="middle"
                             dominantBaseline="middle"
-                            stroke="#020B20"
+                            stroke="#09090C"
                             strokeWidth="0.35"
                             paintOrder="stroke fill"
                           >
                             {wheelText.line2 ? (
                               <>
                                 <tspan x="50" dy="0">{wheelText.line1}</tspan>
-                                <tspan x="50" dy="3.4" fill="#FFD45A">{wheelText.line2}</tspan>
+                                <tspan x="50" dy="3.4" fill="#FBBF24">{wheelText.line2}</tspan>
                               </>
                             ) : (
                               wheelText.line1
@@ -550,30 +559,34 @@ export const SpinPage: React.FC = () => {
                         </g>
                       </g>
 
-                      {/* Gold Spoke Border Dividers */}
+                      {/* Crimson & Gold Spoke Border Dividers */}
                       <line
                         x1="50"
                         y1="50"
                         x2={x1}
                         y2={y1}
-                        stroke="#FFE58F"
-                        strokeWidth="0.85"
+                        stroke="#EF4444"
+                        strokeWidth="0.8"
                       />
                       <path
                         d={pathData}
                         fill="none"
-                        stroke="#FFD45A"
-                        strokeWidth="0.6"
+                        stroke="#FBBF24"
+                        strokeWidth="0.4"
+                        strokeOpacity="0.55"
                       />
                     </g>
                   );
                 })}
+                {/* Sleek Outer & Inner Accent Rings */}
+                <circle cx="50" cy="50" r="49.2" fill="none" stroke="#EF4444" strokeWidth="0.8" strokeOpacity="0.85" />
+                <circle cx="50" cy="50" r="16.5" fill="none" stroke="#FBBF24" strokeWidth="0.5" strokeOpacity="0.6" />
               </svg>
             </div>
 
-            {/* 3D Realistic Gold Center Medallion (Enlarged) */}
+            {/* Center Obsidian & Crimson Medallion */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-22 h-22 sm:w-26 sm:h-26 rounded-full overflow-hidden border-4 border-[#FFD45A] shadow-[0_0_30px_rgba(255,212,90,0.85)] bg-[#020B20] relative flex items-center justify-center">
+              <div className="w-22 h-22 sm:w-26 sm:h-26 rounded-full overflow-hidden border-4 border-red-500 shadow-[0_0_30px_rgba(220,38,38,0.85)] bg-[#09090C] relative flex items-center justify-center">
                 <img
                   src="/images/spin/spin-gold-center-hub.jpg"
                   alt="Royal Crown Hub"
