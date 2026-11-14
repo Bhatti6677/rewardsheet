@@ -275,7 +275,7 @@ export const SpinPage: React.FC = () => {
           particleCount: 130,
           spread: 85,
           origin: { y: 0.6 },
-          colors: ['#FFD45A', '#1459E8', '#22D3EE', '#792BFF', '#FFFFFF'],
+          colors: ['#EF4444', '#DC2626', '#FBBF24', '#FB7185', '#FFFFFF'],
         });
 
         await refreshUser();
@@ -316,11 +316,42 @@ export const SpinPage: React.FC = () => {
   const ledBulbs = Array.from({ length: 24 });
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 pb-12">
+    <div className="max-w-5xl mx-auto space-y-6 pb-12">
+      {/* Compact Top Header Bar */}
+      <div className="rounded-3xl bg-black/35 backdrop-blur-md border border-red-900/45 px-5 py-4 flex flex-wrap items-center justify-between gap-3 shadow-xl">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-red-600 to-rose-500 flex items-center justify-center text-white shadow-lg shadow-red-600/30">
+            <Disc className="w-5 h-5" />
+          </div>
+          <div>
+            <h1 className="text-base sm:text-xl font-black text-white tracking-tight leading-tight">
+              Crimson Fortune Wheel
+            </h1>
+            <p className="text-[11px] text-zinc-400">
+              Complete levels to unlock instant cash &amp; luxury prizes
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2.5">
+          <div className="px-3.5 py-1.5 rounded-2xl bg-[#120A0D] border border-red-900/50 text-xs flex items-center gap-2">
+            <span className="text-zinc-400 font-medium">Spins:</span>
+            <span className="font-black text-amber-400 text-sm">{remainingSpins}</span>
+          </div>
+          <button
+            onClick={() => setShowRulesModal(true)}
+            className="px-3.5 py-1.5 rounded-2xl bg-red-600/15 hover:bg-red-600/25 border border-red-500/40 text-red-300 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+          >
+            <Info className="w-3.5 h-3.5" />
+            <span>Rules</span>
+          </button>
+        </div>
+      </div>
+
       {/* Realtime Live Update Toast */}
       {liveNotice && (
-        <div className="p-3 bg-gradient-to-r from-emerald-600/30 via-emerald-500/20 to-teal-600/30 border border-emerald-400/50 rounded-2xl text-emerald-200 text-xs flex items-center justify-center gap-2.5 max-w-md mx-auto shadow-xl backdrop-blur-md animate-in fade-in slide-in-from-top-2">
-          <Sparkles className="w-4 h-4 text-[#FFD45A] animate-spin" />
+        <div className="p-3 bg-gradient-to-r from-red-600/25 via-rose-500/20 to-amber-500/20 border border-red-500/50 rounded-2xl text-red-100 text-xs flex items-center justify-center gap-2.5 max-w-md mx-auto shadow-xl backdrop-blur-md animate-in fade-in slide-in-from-top-2">
+          <Sparkles className="w-4 h-4 text-amber-400 animate-spin" />
           <span className="font-bold">{liveNotice}</span>
         </div>
       )}
@@ -332,26 +363,26 @@ export const SpinPage: React.FC = () => {
         </div>
       )}
 
-      {/* Embedded High-Performance Zero-CPU Styles for Casino LED Bulbs */}
+      {/* Embedded High-Performance Zero-CPU Styles for Obsidian & Crimson LED Bulbs */}
       <style>{`
         @keyframes spinLedEven {
           0%, 100% {
-            background-color: #FFD45A;
-            box-shadow: 0 0 10px #FFD45A, 0 0 18px #FFD45A;
+            background-color: #EF4444;
+            box-shadow: 0 0 10px #EF4444, 0 0 18px #DC2626;
           }
           50% {
-            background-color: #DC2626;
-            box-shadow: 0 0 8px #EF4444;
+            background-color: #FBBF24;
+            box-shadow: 0 0 10px #FBBF24, 0 0 16px #F59E0B;
           }
         }
         @keyframes spinLedOdd {
           0%, 100% {
-            background-color: #DC2626;
-            box-shadow: 0 0 8px #EF4444;
+            background-color: #FBBF24;
+            box-shadow: 0 0 10px #FBBF24, 0 0 16px #F59E0B;
           }
           50% {
-            background-color: #FFD45A;
-            box-shadow: 0 0 10px #FFD45A, 0 0 18px #FFD45A;
+            background-color: #EF4444;
+            box-shadow: 0 0 10px #EF4444, 0 0 18px #DC2626;
           }
         }
         .spin-led-bulb-even {
@@ -364,23 +395,23 @@ export const SpinPage: React.FC = () => {
         }
       `}</style>
 
-      {/* The 3D Casino Wheel Main Stage (Optimized Smooth 60fps GPU Compositing) */}
-      <div className="relative rounded-3xl p-4 sm:p-10 md:p-12 flex flex-col items-center justify-center bg-gradient-to-b from-[#1C0B10]/90 via-[#10090D] to-[#08080B] border border-red-900/50 shadow-2xl overflow-hidden">
-        {/* Lightweight Zero-CPU Radial Glow Aura */}
+      {/* The 3D Casino Wheel Main Stage */}
+      <div className="relative rounded-3xl p-5 sm:p-10 md:p-12 flex flex-col items-center justify-center bg-black/35 backdrop-blur-md border border-red-900/45 shadow-2xl overflow-hidden">
+        {/* Radial Glow Aura */}
         <div
           className="absolute w-[420px] h-[420px] rounded-full pointer-events-none -top-10"
           style={{
-            background: 'radial-gradient(circle, rgba(220, 38, 38, 0.22) 0%, rgba(220, 38, 38, 0.08) 45%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(220, 38, 38, 0.22) 0%, rgba(220, 38, 38, 0.06) 45%, transparent 70%)',
           }}
         />
         <div
           className="absolute w-[420px] h-[420px] rounded-full pointer-events-none -bottom-10"
           style={{
-            background: 'radial-gradient(circle, rgba(245, 158, 11, 0.16) 0%, rgba(245, 158, 11, 0.05) 45%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(185, 28, 28, 0.16) 0%, rgba(185, 28, 28, 0.04) 45%, transparent 70%)',
           }}
         />
 
-        {/* Realistic Pointer Needle at Top (Enlarged) */}
+        {/* Pointer Needle at Top */}
         <div className="relative z-30 -mb-8 sm:-mb-9 flex flex-col items-center pointer-events-none">
           <div
             className={`w-14 h-18 sm:w-16 sm:h-22 relative transition-transform duration-100 ${
@@ -389,34 +420,33 @@ export const SpinPage: React.FC = () => {
           >
             <img
               src="/images/spin/spin-golden-pointer.svg"
-              alt="Golden Pointer Needle"
-              className="w-full h-full object-contain filter drop-shadow-[0_12px_18px_rgba(0,0,0,0.9)] drop-shadow-[0_0_18px_rgba(255,212,90,0.8)]"
+              alt="Pointer Needle"
+              className="w-full h-full object-contain filter drop-shadow-[0_12px_18px_rgba(0,0,0,0.95)] drop-shadow-[0_0_16px_rgba(239,68,68,0.75)]"
             />
           </div>
         </div>
 
-        {/* Outer Casino Bezel with 24 Blinking LED Bulbs (Enlarged from 420px to 480px) */}
-        <div className="relative w-[340px] h-[340px] sm:w-[460px] sm:h-[460px] md:w-[480px] md:h-[480px] rounded-full p-4 sm:p-5 flex items-center justify-center bg-gradient-to-b from-[#FFE58F] via-[#B8860B] to-[#78590A] shadow-[0_0_60px_rgba(255,212,90,0.45),inset_0_0_25px_rgba(0,0,0,0.85)] border-4 border-[#FFD45A]">
-          {/* LED Bulbs placed circularly - Zero JS Timer, 100% GPU CSS */}
+        {/* Outer Obsidian & Crimson Bezel with 24 Blinking LED Bulbs */}
+        <div className="relative w-[320px] h-[320px] sm:w-[440px] sm:h-[440px] md:w-[460px] md:h-[460px] rounded-full p-4 sm:p-5 flex items-center justify-center bg-gradient-to-b from-[#450A0A] via-[#991B1B] to-[#1A0508] shadow-[0_0_60px_rgba(220,38,38,0.4),inset_0_0_25px_rgba(0,0,0,0.9)] border-4 border-red-500/80">
           {ledBulbs.map((_, i) => {
             const angle = (i * 360) / ledBulbs.length;
             const isEven = i % 2 === 0;
             return (
               <div
                 key={i}
-                className={`absolute w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full ${
+                className={`absolute w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full ${
                   isEven ? 'spin-led-bulb-even' : 'spin-led-bulb-odd'
                 }`}
                 style={{
-                  top: `calc(50% - 6px + ${48 * Math.sin((angle * Math.PI) / 180)}%)`,
-                  left: `calc(50% - 6px + ${48 * Math.cos((angle * Math.PI) / 180)}%)`,
+                  top: `calc(50% - 5px + ${48 * Math.sin((angle * Math.PI) / 180)}%)`,
+                  left: `calc(50% - 5px + ${48 * Math.cos((angle * Math.PI) / 180)}%)`,
                 }}
               />
             );
           })}
 
-          {/* Inner Golden Rim Frame */}
-          <div className="w-full h-full rounded-full p-2 bg-[#020B20] border-2 border-[#FFE58F]/60 shadow-[inset_0_0_25px_rgba(0,0,0,0.9)] relative flex items-center justify-center overflow-hidden">
+          {/* Inner Obsidian Rim Frame */}
+          <div className="w-full h-full rounded-full p-2 bg-[#070609] border-2 border-red-500/60 shadow-[inset_0_0_25px_rgba(0,0,0,0.95)] relative flex items-center justify-center overflow-hidden">
             {/* The Rotating Wheel GPU-Accelerated Wrapper */}
             <div
               className="w-full h-full rounded-full relative"
@@ -436,10 +466,10 @@ export const SpinPage: React.FC = () => {
               >
                 <defs>
                   <linearGradient id="barOverlay" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#020B20" stopOpacity="0.45" />
-                    <stop offset="25%" stopColor="#020B20" stopOpacity="0.08" />
-                    <stop offset="70%" stopColor="#020B20" stopOpacity="0.3" />
-                    <stop offset="100%" stopColor="#020B20" stopOpacity="0.92" />
+                    <stop offset="0%" stopColor="#070609" stopOpacity="0.45" />
+                    <stop offset="25%" stopColor="#070609" stopOpacity="0.1" />
+                    <stop offset="70%" stopColor="#14070B" stopOpacity="0.35" />
+                    <stop offset="100%" stopColor="#070609" stopOpacity="0.92" />
                   </linearGradient>
 
                   {prizes.map((p: any, idx: number) => {
@@ -473,14 +503,10 @@ export const SpinPage: React.FC = () => {
 
                   return (
                     <g key={p.id || idx}>
-                      {/* The Prize Bar with Image Background clipped to sector */}
                       <g clipPath={`url(#wedge-clip-${p.id || idx})`}>
-                        {/* Deep dark backing */}
-                        <path d={pathData} fill="#04132F" />
+                        <path d={pathData} fill="#09090C" />
 
-                        {/* Rotated along the sector's radial axis */}
                         <g transform={`rotate(${midAngle}, 50, 50)`}>
-                          {/* Real Product/Reward Image filling the bar */}
                           <image
                             href={productImg}
                             xlinkHref={productImg}
@@ -491,7 +517,6 @@ export const SpinPage: React.FC = () => {
                             preserveAspectRatio="xMidYMid slice"
                           />
 
-                          {/* High-definition contrast gradient overlay */}
                           <rect
                             x="18"
                             y="0"
@@ -500,32 +525,29 @@ export const SpinPage: React.FC = () => {
                             fill="url(#barOverlay)"
                           />
 
-                          {/* Medallion Ring framing the product image */}
                           <circle
                             cx="50"
                             cy="28"
                             r="6.5"
                             fill="none"
-                            stroke="#FFD45A"
+                            stroke="#EF4444"
                             strokeWidth="0.5"
-                            opacity="0.8"
+                            opacity="0.85"
                           />
 
-                          {/* Reward Bar Capsule where the reward is written */}
                           <rect
                             x="32.5"
                             y="5.5"
                             width="35"
                             height="11"
                             rx="5.5"
-                            fill="rgba(2, 11, 32, 0.92)"
-                            stroke="#FFD45A"
+                            fill="rgba(9, 9, 12, 0.94)"
+                            stroke="#EF4444"
                             strokeWidth="0.65"
                           />
-                          <circle cx="35" cy="11" r="0.9" fill="#FFD45A" />
-                          <circle cx="65" cy="11" r="0.9" fill="#FFD45A" />
+                          <circle cx="35" cy="11" r="0.9" fill="#FBBF24" />
+                          <circle cx="65" cy="11" r="0.9" fill="#FBBF24" />
 
-                          {/* Bold, Crisp Reward Text (Zero CPU filter, hardware accelerated stroke) */}
                           <text
                             x="50"
                             y={wheelText.line2 ? '9.3' : '11.2'}
@@ -534,14 +556,14 @@ export const SpinPage: React.FC = () => {
                             fontWeight="900"
                             textAnchor="middle"
                             dominantBaseline="middle"
-                            stroke="#020B20"
+                            stroke="#09090C"
                             strokeWidth="0.35"
                             paintOrder="stroke fill"
                           >
                             {wheelText.line2 ? (
                               <>
                                 <tspan x="50" dy="0">{wheelText.line1}</tspan>
-                                <tspan x="50" dy="3.4" fill="#FFD45A">{wheelText.line2}</tspan>
+                                <tspan x="50" dy="3.4" fill="#FBBF24">{wheelText.line2}</tspan>
                               </>
                             ) : (
                               wheelText.line1
@@ -550,20 +572,21 @@ export const SpinPage: React.FC = () => {
                         </g>
                       </g>
 
-                      {/* Gold Spoke Border Dividers */}
                       <line
                         x1="50"
                         y1="50"
                         x2={x1}
                         y2={y1}
-                        stroke="#FFE58F"
-                        strokeWidth="0.85"
+                        stroke="#EF4444"
+                        strokeWidth="0.75"
+                        strokeOpacity="0.85"
                       />
                       <path
                         d={pathData}
                         fill="none"
-                        stroke="#FFD45A"
-                        strokeWidth="0.6"
+                        stroke="#F59E0B"
+                        strokeWidth="0.45"
+                        strokeOpacity="0.6"
                       />
                     </g>
                   );
@@ -571,12 +594,12 @@ export const SpinPage: React.FC = () => {
               </svg>
             </div>
 
-            {/* 3D Realistic Gold Center Medallion (Enlarged) */}
+            {/* Center Obsidian-Crimson Hub */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-22 h-22 sm:w-26 sm:h-26 rounded-full overflow-hidden border-4 border-[#FFD45A] shadow-[0_0_30px_rgba(255,212,90,0.85)] bg-[#020B20] relative flex items-center justify-center">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-4 border-red-500 shadow-[0_0_30px_rgba(220,38,38,0.8)] bg-[#09090C] relative flex items-center justify-center">
                 <img
                   src="/images/spin/spin-gold-center-hub.jpg"
-                  alt="Royal Crown Hub"
+                  alt="Earn Street Hub"
                   className="w-full h-full object-cover scale-110"
                 />
               </div>
@@ -585,38 +608,33 @@ export const SpinPage: React.FC = () => {
         </div>
 
         {/* Action Spin Button & Status */}
-        <div className="text-center space-y-4 mt-8 z-20">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#09090C]/90 border border-red-900/60 rounded-full text-xs text-zinc-300">
-            <span>Remaining Daily Spins:</span>
-            <strong className="text-amber-400 font-black text-sm">{remainingSpins}</strong>
-          </div>
-
+        <div className="text-center space-y-4 mt-7 z-20 w-full">
           <div>
             {isEligible && remainingSpins > 0 ? (
               <button
                 onClick={handleSpin}
                 disabled={isSpinning}
-                className="group relative px-12 py-5 bg-gradient-to-r from-red-600 via-rose-500 to-red-600 hover:from-red-500 hover:to-rose-500 active:scale-95 text-white font-black text-lg rounded-2xl shadow-[0_0_35px_rgba(220,38,38,0.5)] transition-all duration-200 disabled:opacity-50 flex items-center justify-center gap-3 mx-auto cursor-pointer"
+                className="group relative px-10 sm:px-12 py-4 sm:py-5 bg-gradient-to-r from-red-600 via-rose-600 to-red-700 hover:from-red-500 hover:to-rose-500 active:scale-95 text-white font-black text-base sm:text-lg rounded-2xl shadow-[0_0_35px_rgba(220,38,38,0.5)] border border-red-400/40 transition-all duration-200 disabled:opacity-50 flex items-center justify-center gap-3 mx-auto cursor-pointer"
               >
                 {isSpinning ? (
                   <>
-                    <span className="w-6 h-6 border-3 border-white border-t-transparent rounded-full animate-spin" />
+                    <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     <span className="tracking-wide">SPINNING FORTUNE...</span>
                   </>
                 ) : (
                   <>
-                    <Disc className="w-6 h-6 animate-spin" style={{ animationDuration: '6s' }} />
-                    <span className="tracking-wide">SPIN NOW & WIN</span>
+                    <Disc className="w-5 h-5 animate-spin" style={{ animationDuration: '6s' }} />
+                    <span className="tracking-wide">SPIN NOW &amp; WIN</span>
                   </>
                 )}
               </button>
             ) : pendingMilestone ? (
-              <div className="px-8 py-4 bg-amber-500/10 border border-amber-500/40 text-amber-400 rounded-2xl text-xs font-semibold max-w-md mx-auto shadow-lg flex items-center justify-center gap-2">
+              <div className="px-6 py-3.5 bg-amber-500/10 border border-amber-500/40 text-amber-300 rounded-2xl text-xs font-semibold max-w-md mx-auto shadow-lg flex items-center justify-center gap-2">
                 <Lock className="w-4 h-4 flex-shrink-0" />
                 <span>Milestone spin under review. Unlocks automatically live when approved.</span>
               </div>
             ) : (
-              <div className="px-8 py-4 bg-[#140B0F]/80 border border-red-500/40 text-zinc-300 rounded-2xl text-xs font-semibold max-w-md mx-auto shadow-lg flex items-center justify-center gap-2 text-center">
+              <div className="px-6 py-3.5 bg-[#120A0D]/80 border border-red-900/50 text-zinc-300 rounded-2xl text-xs font-semibold max-w-md mx-auto shadow-lg flex items-center justify-center gap-2 text-center">
                 <Lock className="w-4 h-4 text-red-400 flex-shrink-0" />
                 <span>Har level complete karne par 1 Free Spin milta hai jo admin review aur approval ke baad unlock hota hai.</span>
               </div>
@@ -625,23 +643,11 @@ export const SpinPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Terms & Conditions / Rules Footer Trigger (Below rewards products) */}
-      <div className="pt-2 pb-6 flex justify-center">
-        <button
-          onClick={() => setShowRulesModal(true)}
-          className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold px-5 py-2.5 rounded-2xl bg-gradient-to-r from-red-600/15 via-[#140B0E] to-amber-500/15 hover:from-red-600/25 hover:to-amber-500/25 border border-red-500/50 text-amber-400 transition-all shadow-lg active:scale-95 cursor-pointer group backdrop-blur-md"
-        >
-          <Info className="w-4 h-4 text-red-400 group-hover:rotate-12 transition-transform" />
-          <span>Terms & Conditions / Prize Rules (Touch Karein)</span>
-          <ChevronRight className="w-4 h-4 text-red-400/70 group-hover:translate-x-1 transition-transform" />
-        </button>
-      </div>
-
       {/* Recent Won Prizes History */}
       {history && history.length > 0 && (
-        <div className="rounded-2xl bg-[#110C0F]/90 border border-red-900/40 p-6 space-y-4">
+        <div className="rounded-3xl bg-black/35 backdrop-blur-md border border-red-900/40 p-5 sm:p-6 space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-base font-bold text-white flex items-center gap-2">
+            <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
               <HistoryIcon className="w-4 h-4 text-red-500" />
               <span>Your Spin History</span>
             </h3>
@@ -651,7 +657,7 @@ export const SpinPage: React.FC = () => {
             {history.slice(0, 5).map((item: any, i: number) => (
               <div
                 key={i}
-                className="flex items-center justify-between p-3 rounded-xl bg-[#09090C] border border-zinc-800 text-xs"
+                className="flex items-center justify-between p-3 rounded-2xl bg-[#0B090C]/80 border border-red-950/60 text-xs"
               >
                 <div className="flex items-center gap-2.5">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400" />
@@ -673,88 +679,82 @@ export const SpinPage: React.FC = () => {
           onClick={() => setShowRulesModal(false)}
         >
           <div
-            className="bg-gradient-to-b from-[#0B1E48] via-[#04132F] to-[#020B20] border-2 border-[#FFD45A] rounded-3xl max-w-lg w-full max-h-[90dvh] overflow-y-auto overscroll-contain p-6 sm:p-7 shadow-[0_0_50px_rgba(255,212,90,0.35)] space-y-5 relative"
+            className="bg-gradient-to-b from-[#17090D] via-[#0D090C] to-[#070709] border-2 border-red-500/70 rounded-3xl max-w-lg w-full max-h-[90dvh] overflow-y-auto overscroll-contain p-6 sm:p-7 shadow-[0_0_50px_rgba(220,38,38,0.35)] space-y-5 relative"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Top decorative gradient bar */}
-            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#FFD45A] via-[#1459E8] to-[#FFD45A]" />
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-red-600 via-amber-400 to-red-600" />
 
-            <div className="flex items-center justify-between border-b border-[#214B91]/50 pb-3">
+            <div className="flex items-center justify-between border-b border-red-900/40 pb-3">
               <div className="flex items-center gap-2.5">
-                <div className="w-10 h-10 rounded-xl bg-[#FFD45A]/20 border border-[#FFD45A] flex items-center justify-center text-[#FFD45A] shadow-md">
+                <div className="w-10 h-10 rounded-xl bg-red-500/15 border border-red-500/50 flex items-center justify-center text-red-400 shadow-md">
                   <Crown className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-black text-white">Terms & Conditions & Prize Rules</h3>
-                  <p className="text-[11px] text-slate-300">Qawaneen, inaamat delivery & policy details</p>
+                  <h3 className="text-lg font-black text-white">Terms &amp; Conditions &amp; Prize Rules</h3>
+                  <p className="text-[11px] text-zinc-400">Qawaneen, inaamat delivery &amp; policy details</p>
                 </div>
               </div>
               <button
                 onClick={() => setShowRulesModal(false)}
-                className="w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition-colors cursor-pointer"
+                className="w-8 h-8 rounded-full bg-zinc-900 hover:bg-zinc-800 text-zinc-300 flex items-center justify-center transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             {/* Formal Paragraph Design Document Content */}
-            <div className="space-y-4 text-xs leading-relaxed text-slate-300 pr-1">
-              {/* Introduction Paragraph */}
-              <p className="text-[11.5px] text-slate-400 leading-relaxed border-b border-[#214B91]/40 pb-3">
+            <div className="space-y-4 text-xs leading-relaxed text-zinc-300 pr-1">
+              <p className="text-[11.5px] text-zinc-400 leading-relaxed border-b border-red-900/30 pb-3">
                 Ye rasmi sharaait aur qawaneen Earn Street platform par Daily Fortune Wheel se jeete gaye cash inaamat aur physical bumper prizes ki taqseem, verification aur delivery ke nizam ko wazeh karte hain. Spin mein hissa lete waqt tamam arkaan in sharaait ke paband hain.
               </p>
 
-              {/* Clause 1: Instant Cash */}
               <div className="space-y-1">
                 <h4 className="font-bold text-white text-[13px] flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-full bg-[#10D6A0]/20 text-[#10D6A0] text-[10px] font-black flex items-center justify-center flex-shrink-0">1</span>
+                  <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-black flex items-center justify-center flex-shrink-0">1</span>
                   <span>Instant Cash Rewards &amp; Wallet Crediting</span>
                 </h4>
-                <p className="text-slate-300 pl-7 leading-relaxed">
+                <p className="text-zinc-300 pl-7 leading-relaxed">
                   Wheel se jeete gaye tamam cash amounts (<strong>PKR 50, PKR 100, PKR 1,000, PKR 3,000, aur PKR 5,000</strong>) spin mukammal hone ke foran baad <strong>sath sath aap ke account wallet balance mein add</strong> kar diye jaate hain. Cash rewards ke liye kisi qisam ki manual claim ya lambay intizar ki zaroorat nahi hoti; raqam foran aap ke balance mein show ho jaati hai aur platform withdrawal quota ke mutabiq withdrawable hoti hai.
                 </p>
               </div>
 
-              {/* Clause 2: Luxury Bumper Gifts */}
               <div className="space-y-1">
                 <h4 className="font-bold text-white text-[13px] flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-full bg-[#FFD45A]/20 text-[#FFD45A] text-[10px] font-black flex items-center justify-center flex-shrink-0">2</span>
+                  <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 text-[10px] font-black flex items-center justify-center flex-shrink-0">2</span>
                   <span>Luxury Bumper Physical Prizes: Car, Mobile &amp; Watch</span>
                 </h4>
-                <p className="text-slate-300 pl-7 leading-relaxed">
-                  Tamam physical bumper inaamat—jin mein <strong>Suzuki Alto Car, Apple iPhone 15 Pro, aur Expensive Luxury Watch</strong> shamil hain—platform ke grand tier completion inaamat hain. Platform rules ke mutabiq ye physical inaamat client ko <strong className="text-[#FFD45A] underline">Level 10 ke tamam marahil mukammal (complete) karne ke baad</strong> deliver kiye jayenge. Level 10 complete hone ke baad company ki dispatch team aap ke registered address par insured VIP courier ke zariye inaam rawana karegi.
+                <p className="text-zinc-300 pl-7 leading-relaxed">
+                  Tamam physical bumper inaamat—jin mein <strong>Suzuki Alto Car, Apple iPhone 15 Pro, aur Expensive Luxury Watch</strong> shamil hain—platform ke grand tier completion inaamat hain. Platform rules ke mutabiq ye physical inaamat client ko <strong className="text-amber-400 underline">Level 10 ke tamam marahil mukammal (complete) karne ke baad</strong> deliver kiye jayenge. Level 10 complete hone ke baad company ki dispatch team aap ke registered address par insured VIP courier ke zariye inaam rawana karegi.
                 </p>
               </div>
 
-              {/* Clause 3: Spin Allocation & Referrals */}
               <div className="space-y-1">
                 <h4 className="font-bold text-white text-[13px] flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-full bg-[#2478FF]/20 text-[#22D3EE] text-[10px] font-black flex items-center justify-center flex-shrink-0">3</span>
+                  <span className="w-5 h-5 rounded-full bg-red-500/20 text-red-400 text-[10px] font-black flex items-center justify-center flex-shrink-0">3</span>
                   <span>Level Completion Royal Spin Allocation</span>
                 </h4>
-                <p className="text-slate-300 pl-7 leading-relaxed">
+                <p className="text-zinc-300 pl-7 leading-relaxed">
                   Har registered member ko har tier level mukammal karne par <strong>1 Free Spin</strong> faraham kiya jata hai. Level assignments complete hone par admin approval ke baad special spins foran live unlock ho jaate hain.
                 </p>
               </div>
 
-              {/* Clause 4: Fair Play & Security */}
               <div className="space-y-1">
                 <h4 className="font-bold text-white text-[13px] flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-full bg-purple-500/20 text-purple-300 text-[10px] font-black flex items-center justify-center flex-shrink-0">4</span>
+                  <span className="w-5 h-5 rounded-full bg-rose-500/20 text-rose-400 text-[10px] font-black flex items-center justify-center flex-shrink-0">4</span>
                   <span>Fair Play, Anti-Tampering &amp; Cryptographic Audit</span>
                 </h4>
-                <p className="text-slate-300 pl-7 leading-relaxed">
+                <p className="text-zinc-300 pl-7 leading-relaxed">
                   Har member ke liye strictly ek (1) tasdeeq shuda account istemal karne ki ijazat hai. Multiple accounts banana, fake referrals generate karna ya automated bot scripts ka istemal sakht mana hai. Har spin ka result automated cryptographic audit trail mein mehfooz hota hai taake 100% transparency aur barabari barqarar rahay.
                 </p>
               </div>
 
-              {/* Clause 5: Verification & Delivery Protocol */}
               <div className="space-y-1">
                 <h4 className="font-bold text-white text-[13px] flex items-center gap-2">
                   <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-black flex items-center justify-center flex-shrink-0">5</span>
                   <span>Physical Delivery &amp; Identity Verification Protocol</span>
                 </h4>
-                <p className="text-slate-300 pl-7 leading-relaxed">
+                <p className="text-zinc-300 pl-7 leading-relaxed">
                   Physical inaamat ki delivery se qabl member ka valid CNIC (National Identity Card) aur phone contact verify kiya jata hai taake inaam asal haqdar tak puhanche. Dispatch hone ke foran baad VIP courier tracking number member ke dashboard par faraham kiya jayega.
                 </p>
               </div>
@@ -763,7 +763,7 @@ export const SpinPage: React.FC = () => {
             <div className="pt-2">
               <button
                 onClick={() => setShowRulesModal(false)}
-                className="w-full py-3 bg-gradient-to-r from-[#FFD45A] to-yellow-400 hover:from-yellow-400 hover:to-amber-300 text-slate-950 font-black rounded-xl text-xs transition-all shadow-lg active:scale-98 cursor-pointer"
+                className="w-full py-3 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-black rounded-xl text-xs transition-all shadow-lg active:scale-98 cursor-pointer"
               >
                 Samajh Gaya / Understood
               </button>
@@ -774,20 +774,20 @@ export const SpinPage: React.FC = () => {
 
       {/* Winner Congratulation Popup Modal (Auto-closes after 7s, cross button, no timing text) */}
       {wonPrize && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="relative w-full max-w-md p-6 sm:p-8 rounded-3xl border-2 border-[#FFD45A] bg-gradient-to-br from-[#0B1E48] via-[#04132F] to-[#020B20] text-center space-y-4 shadow-2xl shadow-[#FFD45A]/30 overflow-hidden animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="relative w-full max-w-md p-6 sm:p-8 rounded-3xl border-2 border-red-500/80 bg-gradient-to-br from-[#1A090E] via-[#0D090C] to-[#070709] text-center space-y-4 shadow-2xl shadow-red-600/30 overflow-hidden animate-in zoom-in-95 duration-200">
             {/* Cross Button */}
             <button
               type="button"
               onClick={() => setWonPrize(null)}
-              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer z-10"
+              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer z-10"
               title="Close"
             >
               <X className="w-4 h-4" />
             </button>
 
             {/* Prize Image */}
-            <div className="w-24 h-24 mx-auto rounded-2xl overflow-hidden shadow-2xl border-2 border-[#FFD45A] bg-black">
+            <div className="w-24 h-24 mx-auto rounded-2xl overflow-hidden shadow-2xl border-2 border-red-500 bg-black">
               <img
                 src={getPrizeProductImage(wonPrize) || '/images/spin/spin-jackpot-treasure.jpg'}
                 alt="Won Prize"
@@ -796,16 +796,16 @@ export const SpinPage: React.FC = () => {
             </div>
 
             {/* Winner Announcement Badge */}
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#FFD45A]/20 border border-[#FFD45A] text-[#FFD45A] rounded-full text-xs font-bold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-red-600/20 border border-red-500/50 text-red-400 rounded-full text-xs font-bold uppercase tracking-wider">
               <Crown className="w-3.5 h-3.5" />
               <span>Winner Announcement</span>
             </div>
 
             <h2 className="text-2xl sm:text-3xl font-black text-white">Congratulations! 🎉</h2>
 
-            <div className="p-4 bg-[#FFD45A]/10 border border-[#FFD45A]/30 rounded-2xl">
-              <p className="text-2xl font-black text-[#FFD45A]">{wonPrize.name}</p>
-              <p className="text-xs text-slate-200 mt-1.5 font-medium leading-relaxed">
+            <div className="p-4 bg-red-600/10 border border-red-500/30 rounded-2xl">
+              <p className="text-2xl font-black text-amber-400">{wonPrize.name}</p>
+              <p className="text-xs text-zinc-200 mt-1.5 font-medium leading-relaxed">
                 {wonPrize.prizeType === 'CASH'
                   ? `PKR ${wonPrize.monetaryValue.toLocaleString()} aap ke wallet balance mein sath sath add kar diya gaya hai!`
                   : `Mubarak ho! Ye bumper prize (${wonPrize.name}) Level 10 mukammal karne ke baad VIP courier ke zariye aap ke address par deliver kiya jayega.`}
@@ -814,9 +814,9 @@ export const SpinPage: React.FC = () => {
 
             <div className="pt-2 flex justify-center gap-3">
               <Link
-                to="/wallet"
+                to="/app/wallet"
                 onClick={() => setWonPrize(null)}
-                className="px-6 py-2.5 bg-[#1459E8] hover:bg-[#1048bf] text-white text-xs font-bold rounded-xl transition-all flex items-center gap-2 shadow-lg"
+                className="px-6 py-2.5 bg-gradient-to-r from-red-600 to-rose-600 hover:brightness-110 text-white text-xs font-bold rounded-xl transition-all flex items-center gap-2 shadow-lg"
               >
                 <span>View Wallet Balance</span>
                 <ArrowRight className="w-3.5 h-3.5" />
