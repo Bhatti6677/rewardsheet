@@ -28,7 +28,7 @@ VITE_SUPABASE_ANON_KEY=sb_publishable_4EqCtWIiEIwm3ETQvxeOgA_fUcSKkiJ
 
 ## ☁️ Vercel Deployment Settings
 
-1. Connect the repository `https://github.com/royalkingbhatti72-hash/rewardsheet` to Vercel.
+1. Connect the repository `https://github.com/Bhatti6677/rewardsheet` to Vercel.
 2. Framework Preset: **Vite**
 3. Build Command: `npm run build`
 4. Output Directory: `dist`
