@@ -64,7 +64,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://backend-bhatti6677.vercel.app/api/$1"
+      "destination": "https://www.backenddostear.space/api/$1"
     },
     {
       "source": "/(.*)",

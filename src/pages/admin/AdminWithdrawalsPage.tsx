@@ -27,6 +27,7 @@ export const AdminWithdrawalsPage: React.FC = () => {
   // Review Modal State
   const [reviewingReq, setReviewingReq] = useState<any | null>(null);
   const [action, setAction] = useState<'APPROVE' | 'REJECT'>('APPROVE');
+  const [payoutPercent, setPayoutPercent] = useState<10 | 100>(10);
   const [reviewNotes, setReviewNotes] = useState('');
 
   // Mark Paid Modal State
@@ -83,9 +84,11 @@ export const AdminWithdrawalsPage: React.FC = () => {
     setMessage(null);
 
     try {
+      const isLevel2Req = Boolean(reviewingReq.notes?.includes('[LEVEL_2_WITHDRAWAL]'));
       const res = await api.reviewWithdrawal(reviewingReq.id, {
         action,
         reviewNotes: reviewNotes.trim() || undefined,
+        ...(action === 'APPROVE' && isLevel2Req ? { payoutPercent } : {}),
       });
       // Update only this withdrawal in state directly
       const newStatus = action === 'APPROVE' ? 'APPROVED' : 'REJECTED';
@@ -304,6 +307,7 @@ export const AdminWithdrawalsPage: React.FC = () => {
                             onClick={() => {
                               setReviewingReq(w);
                               setAction('APPROVE');
+                              setPayoutPercent(10);
                               setReviewNotes('');
                             }}
                             className="px-2.5 py-1 rounded bg-emerald-50 text-emerald-700 font-semibold hover:bg-emerald-600 hover:text-white transition-colors text-xs"
@@ -314,6 +318,7 @@ export const AdminWithdrawalsPage: React.FC = () => {
                             onClick={() => {
                               setReviewingReq(w);
                               setAction('REJECT');
+                              setPayoutPercent(10);
                               setReviewNotes('');
                             }}
                             className="px-2.5 py-1 rounded bg-red-50 text-red-700 font-semibold hover:bg-red-600 hover:text-white transition-colors text-xs"
@@ -390,17 +395,56 @@ export const AdminWithdrawalsPage: React.FC = () => {
               <p><strong className="text-[#111827]">Recipient:</strong> {reviewingReq.recipientName} ({reviewingReq.recipientAccount})</p>
             </div>
 
-            {reviewingReq.notes?.includes('[LEVEL_2_WITHDRAWAL]') && (
-              <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg text-xs space-y-1">
-                <p className="font-bold text-purple-900">⚡ Level 2 Withdrawal Rule Active</p>
-                <p className="text-purple-800 leading-relaxed">
-                  Total requested: <strong>PKR {reviewingReq.amount.toLocaleString()}</strong><br />
-                  • Payout disbursement (10%): <strong>PKR {Math.round(reviewingReq.amount * 0.10).toLocaleString()}</strong><br />
-                  • Wallet balance restored (90%): <strong>PKR {Math.round(reviewingReq.amount * 0.90).toLocaleString()}</strong><br />
-                  • Withdrawal panel will be locked again until Level 3 is completed.
-                </p>
-              </div>
-            )}
+            {reviewingReq.notes?.includes('[LEVEL_2_WITHDRAWAL]') && (() => {
+              const totalReq = Number(reviewingReq.amount || 0);
+              const livePayout = payoutPercent === 100 ? totalReq : Math.round(totalReq * 0.10);
+              const liveRefund = totalReq - livePayout;
+              const liveReturnPct = 100 - payoutPercent;
+              return (
+                <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg text-xs space-y-2.5">
+                  <p className="font-bold text-purple-900">⚡ Level 2 Withdrawal Approval Setup</p>
+
+                  {action === 'APPROVE' && (
+                    <div>
+                      <label className="block font-semibold text-purple-900 mb-1">
+                        Select Approval Payout Percentage
+                      </label>
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setPayoutPercent(10)}
+                          className={`py-2 px-2.5 rounded-lg font-bold border text-xs transition-all cursor-pointer ${
+                            payoutPercent === 10
+                              ? 'bg-purple-700 border-purple-700 text-white shadow-sm'
+                              : 'bg-white border-purple-300 text-purple-900 hover:bg-purple-100'
+                          }`}
+                        >
+                          10% Payout (PKR {Math.round(totalReq * 0.10).toLocaleString()})
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setPayoutPercent(100)}
+                          className={`py-2 px-2.5 rounded-lg font-bold border text-xs transition-all cursor-pointer ${
+                            payoutPercent === 100
+                              ? 'bg-purple-700 border-purple-700 text-white shadow-sm'
+                              : 'bg-white border-purple-300 text-purple-900 hover:bg-purple-100'
+                          }`}
+                        >
+                          100% Payout (PKR {totalReq.toLocaleString()})
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  <p className="text-purple-800 leading-relaxed">
+                    Total requested: <strong>PKR {totalReq.toLocaleString()}</strong><br />
+                    • Payout disbursement ({payoutPercent}%): <strong>PKR {livePayout.toLocaleString()}</strong><br />
+                    • Wallet balance restored ({liveReturnPct}%): <strong>PKR {liveRefund.toLocaleString()}</strong><br />
+                    • Withdrawal panel will be locked again until Level 3 is completed.
+                  </p>
+                </div>
+              );
+            })()}
 
             <form onSubmit={handleExecuteReview} className="space-y-3 text-xs">
               <div>
