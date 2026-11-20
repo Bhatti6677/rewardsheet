@@ -186,7 +186,7 @@ export const WithdrawalsPage: React.FC = () => {
               </span>
             ) : stage === 'LEVEL_2' ? (
               <span className="inline-flex items-center gap-1.5 text-xs font-bold text-purple-300 bg-purple-500/15 border border-purple-500/30 px-3 py-1 rounded-full">
-                <ShieldCheck className="w-3.5 h-3.5" /> Level 2 Reward: Full Balance Request (10% Disbursal)
+                <ShieldCheck className="w-3.5 h-3.5" /> Level 2 Reward: PKR {exactAvailable.toLocaleString()} (Full Balance Request)
               </span>
             ) : (
               <span className="text-xs font-bold text-[#10D6A0] bg-[#10D6A0]/15 border border-[#10D6A0]/30 px-2.5 py-0.5 rounded-full">
@@ -365,11 +365,7 @@ export const WithdrawalsPage: React.FC = () => {
                       <>
                         Level 2 completion requires requesting your total account balance of{' '}
                         <strong className="text-white">PKR {exactAvailable.toLocaleString()}</strong>.
-                        Upon admin approval, you will receive a{' '}
-                        <strong className="text-emerald-400">10% payout (PKR {(exactAvailable * 0.1).toLocaleString()})</strong>{' '}
-                        and the remaining{' '}
-                        <strong className="text-amber-400">90% (PKR {(exactAvailable * 0.9).toLocaleString()})</strong>{' '}
-                        will return to your balance.
+                        Your request will be reviewed and processed by administration.
                       </>
                     )}
                   </p>
@@ -463,9 +459,14 @@ export const WithdrawalsPage: React.FC = () => {
                     </td>
                     <td className="py-3 px-3 font-semibold text-slate-200">
                       {w.paymentMethod}
-                      {w.notes?.includes('[LEVEL_2_WITHDRAWAL]') && (
-                        <span className="block text-[9px] text-purple-400 font-bold">Level 2 (10% Payout)</span>
-                      )}
+                      {w.notes?.includes('[LEVEL_2_WITHDRAWAL]') && (() => {
+                        const match = w.notes.match(/\[L2_PROCESSED:\s*percent=(\d+)%/);
+                        return (
+                          <span className="block text-[9px] text-purple-400 font-bold">
+                            {match ? `Level 2 (${match[1]}% Payout)` : 'Level 2 Reward'}
+                          </span>
+                        );
+                      })()}
                     </td>
                     <td className="py-3 px-3 text-slate-300">
                       <span className="font-semibold block">{w.recipientName}</span>
