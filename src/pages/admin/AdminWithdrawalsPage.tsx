@@ -146,10 +146,10 @@ export const AdminWithdrawalsPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col h-[calc(100vh-4.25rem-2rem)] sm:h-[calc(100vh-4.5rem-3rem)] lg:h-[calc(100vh-4.5rem-4rem)] min-h-[550px] space-y-3">
       {message && (
         <div
-          className={`p-3.5 rounded-lg border text-xs flex items-center justify-between ${
+          className={`p-3.5 rounded-lg border text-xs flex items-center justify-between flex-shrink-0 ${
             message.type === 'success'
               ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
               : 'bg-red-50 border-red-200 text-red-800'
@@ -163,7 +163,7 @@ export const AdminWithdrawalsPage: React.FC = () => {
       )}
 
       {/* Filter Bar */}
-      <div className="admin-card p-4 flex flex-wrap items-center justify-between gap-3">
+      <div className="admin-card p-3.5 flex flex-wrap items-center justify-between gap-3 flex-shrink-0">
         <div className="flex flex-wrap items-center gap-2 flex-1 min-w-[280px]">
           {/* User Search Input */}
           <div className="relative min-w-[200px] sm:min-w-[260px] flex-1 max-w-sm">
@@ -223,22 +223,22 @@ export const AdminWithdrawalsPage: React.FC = () => {
       </div>
 
       {/* Table */}
-      <div className="admin-card overflow-hidden">
+      <div className="admin-card flex-1 min-h-0 flex flex-col overflow-hidden">
         {loading && withdrawals.length === 0 ? (
-          <div className="py-16 text-center text-xs text-[#6B7280]">Loading withdrawals...</div>
+          <div className="py-16 text-center text-xs text-[#6B7280] flex-1">Loading withdrawals...</div>
         ) : withdrawals.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs admin-table">
-              <thead>
-                <tr>
-                  <th>Requested At</th>
-                  <th>Member</th>
-                  <th>Channel</th>
-                  <th>Recipient Account</th>
-                  <th>Amount (PKR)</th>
-                  <th>Approval Status</th>
-                  <th>Payment Status</th>
-                  <th className="text-right">Actions</th>
+          <div className="flex-1 min-h-0 overflow-auto relative">
+            <table className="w-full text-left text-xs admin-table border-collapse">
+              <thead className="sticky top-0 z-20">
+                <tr className="bg-[#F1F5F9]">
+                  <th className="sticky top-0 z-20 bg-[#F1F5F9]">Requested At</th>
+                  <th className="sticky top-0 z-20 bg-[#F1F5F9]">Member</th>
+                  <th className="sticky top-0 z-20 bg-[#F1F5F9]">Channel</th>
+                  <th className="sticky top-0 z-20 bg-[#F1F5F9]">Recipient Account</th>
+                  <th className="sticky top-0 z-20 bg-[#F1F5F9]">Amount (PKR)</th>
+                  <th className="sticky top-0 z-20 bg-[#F1F5F9]">Approval Status</th>
+                  <th className="sticky top-0 z-20 bg-[#F1F5F9]">Payment Status</th>
+                  <th className="sticky top-0 z-20 bg-[#F1F5F9] text-right">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -357,7 +357,7 @@ export const AdminWithdrawalsPage: React.FC = () => {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="p-4 border-t border-[#D9E4F2] flex items-center justify-between text-xs text-[#4B5563]">
+          <div className="p-3.5 border-t border-[#D9E4F2] bg-white flex items-center justify-between text-xs text-[#4B5563] flex-shrink-0">
             <button
               onClick={() => loadWithdrawals(Math.max(1, page - 1))}
               disabled={page <= 1}
