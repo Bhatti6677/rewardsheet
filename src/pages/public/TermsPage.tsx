@@ -171,7 +171,7 @@ export const TermsPage: React.FC = () => {
                 <strong>6.1 Level 1 Mandatory Total Balance Withdrawal:</strong> Upon completing all tasks in Level 1, members must withdraw their complete wallet balance. Level 2 tasks remain locked until the Level 1 balance payout has been reviewed and disbursed.
               </p>
               <p>
-                <strong>6.2 Level 2 Payout (10% Disbursed):</strong> Upon completing Level 2, members are eligible for a 10% withdrawal payout of their requested withdrawal amount.
+                <strong>6.2 Level 2 Payout (System-Selected Percentage):</strong> Upon completing Level 2, members are eligible for a withdrawal payout percentage (ranging from 10% to 100%) selected according to system rules, with any remaining balance automatically returned to their wallet.
               </p>
               <p>
                 <strong>6.3 Level 3 Through Level 10 Payout (100% Disbursed):</strong> From Level 3 through Level 10, members can request and receive 100% full withdrawals of their eligible earnings.
