@@ -27,7 +27,7 @@ export const AdminWithdrawalsPage: React.FC = () => {
   // Review Modal State
   const [reviewingReq, setReviewingReq] = useState<any | null>(null);
   const [action, setAction] = useState<'APPROVE' | 'REJECT'>('APPROVE');
-  const [payoutPercent, setPayoutPercent] = useState<10 | 100>(10);
+  const [payoutPercent, setPayoutPercent] = useState<number>(10);
   const [reviewNotes, setReviewNotes] = useState('');
 
   // Mark Paid Modal State
@@ -253,11 +253,14 @@ export const AdminWithdrawalsPage: React.FC = () => {
                     </td>
                     <td className="font-semibold text-[#2563EB]">
                       {w.paymentMethod}
-                      {w.notes?.includes('[LEVEL_2_WITHDRAWAL]') ? (
-                        <span className="block mt-0.5 text-[9px] font-bold text-purple-700 bg-purple-50 border border-purple-200 px-1 rounded w-fit">
-                          Level 2 (10% Payout)
-                        </span>
-                      ) : w.notes?.includes('[LEVEL_1_WITHDRAWAL]') ? (
+                      {w.notes?.includes('[LEVEL_2_WITHDRAWAL]') ? (() => {
+                        const match = w.notes.match(/\[L2_PROCESSED:\s*percent=(\d+)%/);
+                        return (
+                          <span className="block mt-0.5 text-[9px] font-bold text-purple-700 bg-purple-50 border border-purple-200 px-1 rounded w-fit">
+                            {match ? `Level 2 (${match[1]}% Payout)` : 'Level 2 (Flexible Payout)'}
+                          </span>
+                        );
+                      })() : w.notes?.includes('[LEVEL_1_WITHDRAWAL]') ? (
                         <span className="block mt-0.5 text-[9px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-1 rounded w-fit">
                           Level 1
                         </span>
@@ -397,50 +400,55 @@ export const AdminWithdrawalsPage: React.FC = () => {
 
             {reviewingReq.notes?.includes('[LEVEL_2_WITHDRAWAL]') && (() => {
               const totalReq = Number(reviewingReq.amount || 0);
-              const livePayout = payoutPercent === 100 ? totalReq : Math.round(totalReq * 0.10);
+              const livePayout = payoutPercent === 100 ? totalReq : Math.round(totalReq * (payoutPercent / 100));
               const liveRefund = totalReq - livePayout;
               const liveReturnPct = 100 - payoutPercent;
+              const percentOptions = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
               return (
                 <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg text-xs space-y-2.5">
                   <p className="font-bold text-purple-900">⚡ Level 2 Withdrawal Approval Setup</p>
 
                   {action === 'APPROVE' && (
                     <div>
-                      <label className="block font-semibold text-purple-900 mb-1">
+                      <label htmlFor="l2-payout-percent" className="block font-semibold text-purple-900 mb-1">
                         Select Approval Payout Percentage
                       </label>
-                      <div className="grid grid-cols-2 gap-2">
-                        <button
-                          type="button"
-                          onClick={() => setPayoutPercent(10)}
-                          className={`py-2 px-2.5 rounded-lg font-bold border text-xs transition-all cursor-pointer ${
-                            payoutPercent === 10
-                              ? 'bg-purple-700 border-purple-700 text-white shadow-sm'
-                              : 'bg-white border-purple-300 text-purple-900 hover:bg-purple-100'
-                          }`}
-                        >
-                          10% Payout (PKR {Math.round(totalReq * 0.10).toLocaleString()})
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setPayoutPercent(100)}
-                          className={`py-2 px-2.5 rounded-lg font-bold border text-xs transition-all cursor-pointer ${
-                            payoutPercent === 100
-                              ? 'bg-purple-700 border-purple-700 text-white shadow-sm'
-                              : 'bg-white border-purple-300 text-purple-900 hover:bg-purple-100'
-                          }`}
-                        >
-                          100% Payout (PKR {totalReq.toLocaleString()})
-                        </button>
-                      </div>
+                      <select
+                        id="l2-payout-percent"
+                        value={payoutPercent}
+                        onChange={(e) => setPayoutPercent(Number(e.target.value))}
+                        className="w-full px-3 py-2 bg-white border border-purple-300 rounded-lg text-xs font-bold text-purple-900 focus:outline-none focus:ring-2 focus:ring-purple-500 cursor-pointer"
+                      >
+                        {percentOptions.map((pct) => {
+                          const optPayout = pct === 100 ? totalReq : Math.round(totalReq * (pct / 100));
+                          const optReturn = totalReq - optPayout;
+                          return (
+                            <option key={pct} value={pct}>
+                              {pct}% Payout (PKR {optPayout.toLocaleString()}) — {100 - pct}% Return (PKR {optReturn.toLocaleString()})
+                            </option>
+                          );
+                        })}
+                      </select>
                     </div>
                   )}
 
-                  <p className="text-purple-800 leading-relaxed">
-                    Total requested: <strong>PKR {totalReq.toLocaleString()}</strong><br />
-                    • Payout disbursement ({payoutPercent}%): <strong>PKR {livePayout.toLocaleString()}</strong><br />
-                    • Wallet balance restored ({liveReturnPct}%): <strong>PKR {liveRefund.toLocaleString()}</strong><br />
-                    • Withdrawal panel will be locked again until Level 3 is completed.
+                  <div className="bg-white/80 border border-purple-200 rounded-lg p-2.5 space-y-1 text-purple-900">
+                    <div className="flex items-center justify-between">
+                      <span className="text-purple-700">Total Requested:</span>
+                      <span className="font-bold">PKR {totalReq.toLocaleString()}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-emerald-700 font-semibold">Withdrawal Payout ({payoutPercent}%):</span>
+                      <span className="font-bold text-emerald-700">PKR {livePayout.toLocaleString()}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-purple-700 font-semibold">Returned to Wallet ({liveReturnPct}%):</span>
+                      <span className="font-bold text-purple-900">PKR {liveRefund.toLocaleString()}</span>
+                    </div>
+                  </div>
+
+                  <p className="text-[11px] text-purple-700">
+                    • Withdrawal panel will remain locked until Level 3 is completed.
                   </p>
                 </div>
               );
