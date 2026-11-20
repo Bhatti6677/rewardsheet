@@ -184,11 +184,7 @@ export const WithdrawalsPage: React.FC = () => {
               <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#10D6A0] bg-[#10D6A0]/15 border border-[#10D6A0]/30 px-3 py-1 rounded-full">
                 <ShieldCheck className="w-3.5 h-3.5" /> Level 1 Reward: PKR {exactAvailable.toLocaleString()} (100% Quota)
               </span>
-            ) : stage === 'LEVEL_2' ? (
-              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-purple-300 bg-purple-500/15 border border-purple-500/30 px-3 py-1 rounded-full">
-                <ShieldCheck className="w-3.5 h-3.5" /> Level 2 Reward: PKR {exactAvailable.toLocaleString()} (Full Balance Request)
-              </span>
-            ) : (
+            ) : stage === 'LEVEL_2' ? null : (
               <span className="text-xs font-bold text-[#10D6A0] bg-[#10D6A0]/15 border border-[#10D6A0]/30 px-2.5 py-0.5 rounded-full">
                 Available for Withdrawal: PKR {exactAvailable.toLocaleString()}
               </span>
